@@ -47,7 +47,7 @@ const LIST_IMAGES_GALLERY_DEMO: (string | StaticImageData)[] = [
 const PRICE = 108;
 
 const ProductDetailPage2 = ({}) => {
-  const { sizes, variants, status, allOfSizes, image } = PRODUCTS[0];
+  const { sizes, variants, status, allOfSizes, thumbnail } = PRODUCTS[0];
   //
   const router = useRouter();
   const thisPathname = usePathname();
@@ -82,7 +82,7 @@ const ProductDetailPage2 = ({}) => {
           <span className="text-sm font-medium">
             Color:
             <span className="ml-1 font-semibold">
-              {variants[variantActive].name}
+              {variants[variantActive].title}
             </span>
           </span>
         </label>
@@ -122,7 +122,7 @@ const ProductDetailPage2 = ({}) => {
     toast.custom(
       (t) => (
         <NotifyAddTocart
-          productImage={image}
+          productImage={thumbnail}
           qualitySelected={qualitySelected}
           show={t.visible}
           sizeSelected={sizeSelected}
