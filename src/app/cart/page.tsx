@@ -26,7 +26,7 @@ const CartPage = () => {
   };
 
   const renderProduct = (item: Product, index: number) => {
-    const { image, price, name } = item;
+    const { thumbnail, price, title } = item;
 
     return (
       <div
@@ -36,8 +36,8 @@ const CartPage = () => {
         <div className="relative h-36 w-24 sm:w-32 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
-            src={image}
-            alt={name}
+            src={thumbnail}
+            alt={title}
             sizes="300px"
             className="h-full w-full object-contain object-center"
           />
@@ -49,7 +49,7 @@ const CartPage = () => {
             <div className="flex justify-between ">
               <div className="flex-[1.5] ">
                 <h3 className="text-base font-semibold">
-                  <Link href="/product-detail">{name}</Link>
+                  <Link href="/product-detail">{title}</Link>
                 </h3>
                 <div className="mt-1.5 sm:mt-2.5 flex text-sm text-slate-600 dark:text-slate-300">
                   <div className="flex items-center space-x-1.5">
