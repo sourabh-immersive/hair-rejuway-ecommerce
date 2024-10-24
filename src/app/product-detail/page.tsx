@@ -31,7 +31,7 @@ import AccordionInfo from "@/components/AccordionInfo";
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
 const ProductDetailPage = () => {
-  const { sizes, variants, status, allOfSizes, image } = PRODUCTS[0];
+  const { sizes, variants, status, allOfSizes, thumbnail } = PRODUCTS[0];
   //
   const [variantActive, setVariantActive] = useState(0);
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : "");
@@ -44,7 +44,7 @@ const ProductDetailPage = () => {
     toast.custom(
       (t) => (
         <NotifyAddTocart
-          productImage={image}
+          productImage={thumbnail}
           qualitySelected={qualitySelected}
           show={t.visible}
           sizeSelected={sizeSelected}
@@ -66,7 +66,7 @@ const ProductDetailPage = () => {
           <span className="text-sm font-medium">
             Color:
             <span className="ml-1 font-semibold">
-              {variants[variantActive].name}
+              {variants[variantActive].title}
             </span>
           </span>
         </label>
