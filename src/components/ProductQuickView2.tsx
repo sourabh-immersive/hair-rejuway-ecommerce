@@ -59,7 +59,7 @@ const ProductQuickView2: FC<ProductQuickView2Props> = ({ className = "" }) => {
           <span className="text-sm font-medium">
             Color:
             <span className="ml-1 font-semibold">
-              {variants[variantActive].name}
+              {variants[variantActive].title}
             </span>
           </span>
         </label>
