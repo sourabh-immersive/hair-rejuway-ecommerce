@@ -8,12 +8,18 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { removeItemFromCart } from "@/lib/features/cart/cartSlice";
 
 export default function CartDropdown() {
+  const cartData = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch();
+  const { items, status, totalItems, totalAmount } = cartData;
+
   const renderProduct = (item: Product, index: number, close: () => void) => {
     const { title, price, thumbnail } = item;
     return (
-      <div key={index} className="flex py-5 last:pb-0">
+      <div key={index} className="flex py-5 last:pb-0 00000000">
         <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
@@ -132,9 +138,62 @@ export default function CartDropdown() {
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
                     <h3 className="text-xl font-semibold">Shopping cart</h3>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700">
-                      {[PRODUCTS[0], PRODUCTS[1], PRODUCTS[2]].map(
-                        (item, index) => renderProduct(item, index, close)
-                      )}
+                      {items.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex py-5 last:pb-0 00000000"
+                        >
+                          <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                            <Image
+                              fill
+                              src={item.thumbnail}
+                              alt={item.name}
+                              className="h-full w-full object-contain object-center"
+                            />
+                            <Link
+                              onClick={close}
+                              className="absolute inset-0"
+                              href={"/product-detail"}
+                            />
+                          </div>
+
+                          <div className="ml-4 flex flex-1 flex-col">
+                            <div>
+                              <div className="flex justify-between ">
+                                <div>
+                                  <h3 className="text-base font-medium ">
+                                    <Link
+                                      onClick={close}
+                                      href={"/product-detail"}
+                                    >
+                                      {item.name}
+                                    </Link>
+                                  </h3>
+                                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                                    <span>{`Natural`}</span>
+                                    <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
+                                    <span>{"XL"}</span>
+                                  </p>
+                                </div>
+                                <Prices price={item.price} className="mt-0.5" />
+                              </div>
+                            </div>
+                            <div className="flex flex-1 items-end justify-between text-sm">
+                              <p className="text-gray-500 dark:text-slate-400">{`Qty ${item.quantity}`}</p>
+
+                              <div className="flex">
+                                <button
+                                  type="button"
+                                  className="font-medium text-primary-6000 dark:text-primary-500 "
+                                  onClick={()=>dispatch(removeItemFromCart(item.id))}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                   <div className="bg-neutral-50 dark:bg-slate-900 p-5">

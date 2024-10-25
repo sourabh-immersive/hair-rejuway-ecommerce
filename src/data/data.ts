@@ -25,10 +25,21 @@ export interface ProductVariant {
   featuredthumbnail: StaticImageData | string;
 }
 
+interface productDetails {
+  packing_id: number,
+  packing_size: string,
+  price: string,
+  packing_qty: string,
+  sale_price: string,
+  GST_price: string,
+  total_price: string
+}
+
 export interface Product {
   id: number;
   title: string;
   price: number;
+  product_details: productDetails[];
   thumbnail: StaticImageData | string;
   description: string;
   category: string;
@@ -114,6 +125,7 @@ export const PRODUCTS: Product[] = [
     title: "Rey Nylon Backpack",
     description: "Brown cockroach wings",
     price: 74,
+    product_details: [],
     thumbnail: productImgs[16],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -131,6 +143,7 @@ export const PRODUCTS: Product[] = [
     title: 'Round Buckle 1" Belt',
     description: "Classic green",
     price: 68,
+    product_details: [],
     thumbnail: productImgs[1],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -146,6 +159,7 @@ export const PRODUCTS: Product[] = [
     title: "Waffle Knit Beanie",
     description: "New blue aqua",
     price: 132,
+    product_details: [],
     thumbnail: productImgs[15],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -162,6 +176,7 @@ export const PRODUCTS: Product[] = [
     title: "Travel Pet Carrier",
     description: "Dark pink 2023",
     price: 28,
+    product_details: [],
     thumbnail: productImgs[3],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -177,6 +192,7 @@ export const PRODUCTS: Product[] = [
     title: "Leather Gloves",
     description: "Perfect mint green",
     price: 42,
+    product_details: [],
     thumbnail: productImgs[4],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -193,6 +209,7 @@ export const PRODUCTS: Product[] = [
     title: "Hoodie Sweatshirt",
     description: "New design 2023",
     price: 30,
+    product_details: [],
     thumbnail: productImgs[5],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -207,6 +224,7 @@ export const PRODUCTS: Product[] = [
     title: "Wool Cashmere Jacket",
     description: "Matte black",
     price: 12,
+    product_details: [],
     thumbnail: productImgs[8],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -222,6 +240,7 @@ export const PRODUCTS: Product[] = [
     title: "Ella Leather Tote",
     description: "Cream pink",
     price: 145,
+    product_details: [],
     thumbnail: productImgs[7],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -242,6 +261,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Mastermind Toys",
     description: "Brown cockroach wings",
     price: 74,
+    product_details: [],
     thumbnail: productSport1,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -259,6 +279,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Jump Rope Kids",
     description: "Classic green",
     price: 68,
+    product_details: [],
     thumbnail: productSport2,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -274,6 +295,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Tee Ball Beanie",
     description: "New blue aqua",
     price: 132,
+    product_details: [],
     thumbnail: productSport3,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -290,6 +312,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Rubber Table Tennis",
     description: "Dark pink 2023",
     price: 28,
+    product_details: [],
     thumbnail: productSport4,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -305,6 +328,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Classic Blue Rugby",
     description: "Perfect mint green",
     price: 42,
+    product_details: [],
     thumbnail: productSport5,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -321,6 +345,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Manhattan Toy WRT",
     description: "New design 2023",
     price: 30,
+    product_details: [],
     thumbnail: productSport6,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -335,6 +360,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Tabletop Football ",
     description: "Matte black",
     price: 12,
+    product_details: [],
     thumbnail: productSport7,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -350,6 +376,7 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Pvc Catching Toy",
     description: "Cream pink",
     price: 145,
+    product_details: [],
     thumbnail: productSport8,
     category: "Category 1",
     tags: ["tag1", "tag2"],

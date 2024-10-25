@@ -1,10 +1,12 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { AppThunk } from "@/lib/store";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { StaticImageData } from "next/image";
 
 export interface CartItem {
   id: string;
   name: string;
+  thumbnail: string | StaticImageData,
   price: number;
   quantity: number;
 }

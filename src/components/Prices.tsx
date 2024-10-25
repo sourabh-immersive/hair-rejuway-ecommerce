@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 export interface PricesProps {
   className?: string;
-  price?: number;
+  price?: number | string;
   contentClass?: string;
 }
 
