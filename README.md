@@ -1,1 +1,1 @@
-Ecommerce Hair Rejuway
+Ecommerce Hair Rejuway Project
