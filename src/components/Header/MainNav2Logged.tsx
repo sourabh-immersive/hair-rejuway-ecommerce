@@ -75,7 +75,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
     return (
       <div className="h-20 flex justify-between">
         <div className="flex items-center lg:hidden flex-1">
-          <MenuBar />
+          <MenuBar />ghg
         </div>
 
         <div className="lg:flex-1 flex items-center">
@@ -103,9 +103,26 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   };
 
   return (
+    <>
+    <div className="toparea relative z-10 bg-gray-800 dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+      <div className="container ">
+        <div className="flex justify-between py-4 text-white text-sm">
+          <p>Order upto 30%-40% | Free Shipping on orders over ₹ 899.00</p>
+          <div className="">
+            <ul className="list-none flex space-x-4 ">
+              <li>About Us</li>
+              <li>Free Delivery</li>
+              <li>Return Policy</li>
+              <li>Help Center</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div className="nc-MainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
       <div className="container ">{renderContent()}</div>
     </div>
+    </>
   );
 };
 

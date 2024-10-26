@@ -178,39 +178,49 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
 ];
 
 export const NAVIGATION_DEMO_2: NavItemType[] = [
+  // {
+  //   id: ncNanoId(),
+  //   href: "/",
+  //   name: "Home",
+  // },
   {
     id: ncNanoId(),
-    href: "/collection",
-    name: "Men",
+    href: "/",
+    name: "Hair Oil",
   },
   {
     id: ncNanoId(),
-    href: "/collection-2",
-    name: "Women",
-  },
-  {
-    id: ncNanoId(),
-    href: "/collection",
-    name: "Beauty",
+    href: "/",
+    name: "Hair Supplement",
   },
 
   {
     id: ncNanoId(),
-    href: "/collection-2",
-    name: "Sport",
+    href: "/",
+    name: "Hair Combo",
   },
   {
     id: ncNanoId(),
-    href: "/collection",
-    name: "Templates",
-    type: "megaMenu",
-    children: MEGAMENU_TEMPLATES,
+    href: "/",
+    name: "Hair Serums",
   },
   {
     id: ncNanoId(),
-    href: "/search",
-    name: "Explore",
-    type: "dropdown",
-    children: OTHER_PAGE_CHILD,
+    href: "/",
+    name: "Hair Shampoos",
   },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/collection",
+  //   name: "Templates",
+  //   type: "megaMenu",
+  //   children: MEGAMENU_TEMPLATES,
+  // },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/search",
+  //   name: "Explore",
+  //   type: "dropdown",
+  //   children: OTHER_PAGE_CHILD,
+  // },
 ];
