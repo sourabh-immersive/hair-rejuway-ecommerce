@@ -22,13 +22,13 @@ const Logo: React.FC<LogoProps> = ({
       {/* PLEASE UN COMMENT BELLOW CODE AND USE IT */}
       {img ? (
         <Image
-          className={`block w-auto ${
+          className={`block ${
             imgLight ? "dark:hidden" : ""
           }`}
           src={img}
           alt="Logo"
-          width={140}
-          height={20}
+          width={127}
+          height={63}
           priority
         />
       ) : (
@@ -36,10 +36,10 @@ const Logo: React.FC<LogoProps> = ({
       )}
       {imgLight && (
         <Image
-          className="hidden w-auto dark:block"
+          className="hidden dark:block"
           src={imgLight}
-          width={140}
-          height={20}
+          width={127}
+          height={63}
           alt="Logo-Light"
           priority
         />

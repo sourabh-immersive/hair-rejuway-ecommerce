@@ -23,7 +23,7 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
       setLoading(true);
       try {
         const fetchedProducts = await getProducts();
-        console.log(fetchedProducts)
+        // console.log(fetchedProducts)
 
         setProducts(fetchedProducts);
       } catch (error) {
