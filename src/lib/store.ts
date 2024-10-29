@@ -1,9 +1,9 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { counterSlice } from "./features/counter/counterSlice";
 import { cartSlice } from "./features/cart/cartSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
+import { wishlistSlice } from "./features/wishlist/wishlistSlice";
 
 // Fallback to noop storage for server
 const createNoopStorage = () => {
@@ -31,7 +31,7 @@ const persistConfig = {
 
 // Root reducer
 const rootReducer = combineReducers({
-  counter: counterSlice.reducer,
+  wishlist: wishlistSlice.reducer,
   cart: cartSlice.reducer,
 });
 

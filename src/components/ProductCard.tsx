@@ -81,6 +81,13 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     }
   };
 
+  const wishlistData = {
+    id: String(id),
+    name: title,
+    thumbnail: thumbnail,
+    price: 55000,
+  };
+
   // console.log('fdfs', typeof(getPrice()))
 
   const notifyAddTocart = ({ packing_size }: { packing_size?: string }) => {
@@ -122,7 +129,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     dispatch(addItemToCart(cartItem));
   };
 
-  const renderProductCartOnNotify = ({ packing_size }: { packing_size?: string }) => {
+  const renderProductCartOnNotify = ({
+    packing_size,
+  }: {
+    packing_size?: string;
+  }) => {
     return (
       <div className="flex ">
         <div className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
@@ -148,10 +159,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
                   <span>{packing_size || "-"}</span>
                 </p>
               </div>
-              <Prices
-                price={ getPrice() }
-                className="mt-0.5"
-              />
+              <Prices price={getPrice()} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
@@ -297,7 +305,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     return (
       <div className="absolute bottom-0 inset-x-1 space-x-1.5 rtl:space-x-reverse flex justify-center opacity-0 invisible group-hover:bottom-4 group-hover:opacity-100 group-hover:visible transition-all">
         {product_details.map((item, index) => {
-          const { packing_size } = item
+          const { packing_size } = item;
           return (
             <div
               key={index}
@@ -331,8 +339,14 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             />
           </Link>
           <ProductStatus status={status} />
-          <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />
-          {product_details.length === 1 ? renderGroupButtons() : renderSizeList() }
+          <LikeButton
+            liked={isLiked}
+            data={wishlistData}
+            className="absolute top-3 end-3 z-10"
+          />
+          {product_details.length === 1
+            ? renderGroupButtons()
+            : renderSizeList()}
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
@@ -347,9 +361,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           </div>
 
           <div className="flex justify-between items-end ">
-            <Prices
-              price={ getPrice() }
-            />
+            <Prices price={getPrice()} />
             <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
