@@ -1,3 +1,5 @@
+'use client'
+
 import { NoSymbolIcon, CheckIcon } from "@heroicons/react/24/outline";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
@@ -5,8 +7,16 @@ import { Product, PRODUCTS } from "@/data/data";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { CartItem } from "@/lib/features/cart/cartSlice";
 
 const CartPage = () => {
+
+  const cartData = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch();
+
+  const { items, status, totalItems, totalAmount } = cartData;
+  
   const renderStatusSoldout = () => {
     return (
       <div className="rounded-full flex items-center justify-center px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
@@ -25,8 +35,8 @@ const CartPage = () => {
     );
   };
 
-  const renderProduct = (item: Product, index: number) => {
-    const { thumbnail, price, title } = item;
+  const renderProduct = (item: CartItem, index: number) => {
+    const { thumbnail, price, name } = item;
 
     return (
       <div
@@ -37,7 +47,7 @@ const CartPage = () => {
           <Image
             fill
             src={thumbnail}
-            alt={title}
+            alt={name}
             sizes="300px"
             className="h-full w-full object-contain object-center"
           />
@@ -49,7 +59,7 @@ const CartPage = () => {
             <div className="flex justify-between ">
               <div className="flex-[1.5] ">
                 <h3 className="text-base font-semibold">
-                  <Link href="/product-detail">{title}</Link>
+                  <Link href="/product-detail">{name}</Link>
                 </h3>
                 <div className="mt-1.5 sm:mt-2.5 flex text-sm text-slate-600 dark:text-slate-300">
                   <div className="flex items-center space-x-1.5">
@@ -206,13 +216,9 @@ const CartPage = () => {
 
         <div className="flex flex-col lg:flex-row">
           <div className="w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-200 dark:divide-slate-700 ">
-            {[
-              PRODUCTS[0],
-              PRODUCTS[1],
-              PRODUCTS[2],
-              PRODUCTS[3],
-              PRODUCTS[4],
-            ].map(renderProduct)}
+          {items.map((item, index) => (
+            renderProduct(item, index)
+          ))}
           </div>
           <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0"></div>
           <div className="flex-1">

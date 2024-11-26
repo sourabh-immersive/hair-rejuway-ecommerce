@@ -29,60 +29,49 @@ export const cartSlice = createAppSlice({
   name: "cart",
   initialState,
   reducers: (create) => ({
-    // Add item to cart, increment quantity if item already exists
     addItemToCart: create.reducer(
       (state, action: PayloadAction<CartItem>) => {
         const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
 
         if (itemIndex >= 0) {
-          // If item exists, update quantity
           state.items[itemIndex].quantity += action.payload.quantity;
         } else {
-          // If item doesn't exist, add new item to cart
           state.items.push({ ...action.payload });
         }
 
-        // Update total items and total amount
         state.totalItems += action.payload.quantity;
         state.totalAmount += action.payload.price * action.payload.quantity;
       }
     ),
 
-    // Remove item from cart by its ID
     removeItemFromCart: create.reducer(
       (state, action: PayloadAction<string>) => {
         const itemIndex = state.items.findIndex(item => item.id === action.payload);
 
         if (itemIndex >= 0) {
           const item = state.items[itemIndex];
-          // Update total items and amount before removing
           state.totalItems -= item.quantity;
           state.totalAmount -= item.price * item.quantity;
 
-          // Remove item from array
           state.items.splice(itemIndex, 1);
         }
       }
     ),
 
-    // Update item quantity in the cart
     updateItemQuantity: create.reducer(
       (state, action: PayloadAction<{ id: string; quantity: number }>) => {
         const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
 
         if (itemIndex >= 0) {
           const item = state.items[itemIndex];
-          // Update total amount and total items
           state.totalAmount += (action.payload.quantity - item.quantity) * item.price;
           state.totalItems += (action.payload.quantity - item.quantity);
           
-          // Update quantity of the item
           item.quantity = action.payload.quantity;
         }
       }
     ),
 
-    // Clear the cart (e.g., after checkout)
     clearCart: create.reducer((state) => {
       state.items = [];
       state.totalItems = 0;
