@@ -1,3 +1,5 @@
+"use client";
+
 import React, { FC } from "react";
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
@@ -6,6 +8,7 @@ import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 
 const loginSocials = [
   {
@@ -25,12 +28,18 @@ const loginSocials = [
   },
 ];
 
+interface Values {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 const PageSignUp = () => {
   return (
     <div className={`nc-PageSignUp `} data-nc-id="PageSignUp">
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Signup
+          Register
         </h2>
         <div className="max-w-md mx-auto space-y-6 ">
           <div className="grid gap-3">
@@ -60,25 +69,50 @@ const PageSignUp = () => {
             <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
           </div>
           {/* FORM */}
-          <form className="grid grid-cols-1 gap-6" action="#" method="post">
-            <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">
-                Email address
-              </span>
-              <Input
+
+          <Formik
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+            }}
+            onSubmit={(
+              values: Values,
+              { setSubmitting }: FormikHelpers<Values>
+            ) => {
+              setTimeout(() => {
+                alert(JSON.stringify(values, null, 2));
+                setSubmitting(false);
+              }, 500);
+            }}
+          >
+            <Form className="grid grid-cols-1 gap-4">
+              <Field id="fullName" name="fullName" placeholder="Full Name" className="border border-gray-200 rounded-md p-3" />
+              <Field
+                id="email"
+                name="email"
+                placeholder="Email Address"
                 type="email"
-                placeholder="example@example.com"
-                className="mt-1"
+                className="border border-gray-200 rounded-md p-3"
               />
-            </label>
-            <label className="block">
-              <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Password
-              </span>
-              <Input type="password" className="mt-1" />
-            </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
-          </form>
+              <Field
+                id="phone"
+                name="phone"
+                placeholder="Phone Number"
+                type="tel"
+                className="border border-gray-200 rounded-md p-3"
+              />
+              <Field
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter Password"
+                className="border border-gray-200 rounded-md p-3"
+              />
+
+              <ButtonPrimary type="submit">Continue</ButtonPrimary>
+            </Form>
+          </Formik>
 
           {/* ==== */}
           <span className="block text-center text-neutral-700 dark:text-neutral-300">

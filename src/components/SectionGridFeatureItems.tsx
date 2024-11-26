@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import { Product } from "@/data/data"; // Assuming `Product` is the type
 import { getProducts } from "@/api/products";
+import Heading from "./Heading/Heading";
 
 export interface SectionGridFeatureItemsProps {
   data?: Product[];
@@ -52,6 +53,7 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
   return (
     <div className="nc-SectionGridFeatureItems relative">
       {/* <HeaderFilterSection /> */}
+      <Heading>{`What's trending now`}</Heading>
       {loading ? (
         <div className="text-center">Loading products...</div>
       ) : (
