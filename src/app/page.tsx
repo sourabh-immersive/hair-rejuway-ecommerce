@@ -10,6 +10,10 @@ import SectionGridMoreExplore from "@/components/SectionGridMoreExplore/SectionG
 import SectionPromo2 from "@/components/SectionPromo2";
 import SectionSliderCategories from "@/components/SectionSliderCategories/SectionSliderCategories";
 import SectionPromo3 from "@/components/SectionPromo3";
+import SectionPromo4 from "@/components/SectionPromo4";
+import SectionFeatures from "@/components/SectionFeatures";
+import SectionServices from "@/components/SectionServices";
+import SectionHairgrowth from "@/components/SectionHairgrowth";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import Heading from "@/components/Heading/Heading";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
@@ -50,14 +54,22 @@ function PageHome() {
         <div className="relative py-24 lg:py-32">
           <BackgroundSection />
           <SectionGridMoreExplore />
+        </div>*/}
+
+        <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">  
+          <SectionSliderProductCard heading="Best Sellers" subHeading="Best selling of the month"/>
         </div>
 
-        <SectionSliderProductCard
-          heading="Best Sellers"
-          subHeading="Best selling of the month"
-        />
+        <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">  
+          <SectionPromo4 />
+        </div>
 
-        <SectionPromo2 />
+        <SectionFeatures />
+
+        <SectionServices />
+
+        
+        {/*<SectionPromo2 />
 
         <SectionSliderLargeProduct cardStyle="style2" />
 
@@ -78,8 +90,11 @@ function PageHome() {
               <ButtonSecondary>Show all blog articles</ButtonSecondary>
             </div>
           </div>
-        </div> */}
-        <SectionClientSay />
+        </div>
+        <SectionClientSay /> */}
+        <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">  
+          <SectionHairgrowth />
+        </div>
       {/* </div> */}
     </div>
   );
