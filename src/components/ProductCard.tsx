@@ -8,6 +8,7 @@ import { Product, PRODUCTS } from "@/data/data";
 import { StarIcon } from "@heroicons/react/24/solid";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
+import AddToCartButton from "@/shared/Button/AddToCartButton";
 import BagIcon from "./BagIcon";
 import toast from "react-hot-toast";
 import { Transition } from "@/app/headlessui";
@@ -19,6 +20,7 @@ import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
 import { useAppDispatch } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
+
 
 export interface ProductCardProps {
   className?: string;
@@ -327,7 +329,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       >
         <Link href={"/products/slug"} className="absolute inset-0"></Link>
 
-        <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
+        <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-lg overflow-hidden z-1 group">
           <Link href={"/products/slug"} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
@@ -355,18 +357,29 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
               {title}
             </h2>
-            <p className={`text-sm text-slate-500 dark:text-slate-400 mt-1 `}>
+            <p className={`text-sm text-slate-300 dark:text-slate-400 mt-1 `}>
               {description}
             </p>
+            <div className="flex items-center mb-0.5 mt-2">
+              <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
+              <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
+                {rating || ""} ({numberOfReviews || 0} reviews)
+              </span>
+            </div>
           </div>
 
           <div className="flex justify-between items-end ">
             <Prices price={getPrice()} />
             <div className="flex items-center mb-0.5">
-              <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
-              <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
-                {rating || ""} ({numberOfReviews || 0} reviews)
-              </span>
+              <AddToCartButton
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+                radius="rounded-lg"
+                isActive={true}
+                onClick={() => console.log("Added to cart!")}
+              >
+                Add to Cart
+              </AddToCartButton>
+
             </div>
           </div>
         </div>
