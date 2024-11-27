@@ -14,6 +14,7 @@ import clientSay5 from "@/images/clientSay5.png";
 import clientSay6 from "@/images/clientSay6.png";
 import quotationImg from "@/images/quotation.png";
 import quotationImg2 from "@/images/quotation2.png";
+import GoogleSvg from "@/images/google-svg.png";
 import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { DEMO_DATA } from "./data";
@@ -29,7 +30,17 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
 
   useEffect(() => {
     const OPTIONS: Partial<Glide.Options> = {
-      perView: 1,
+      type: 'carousel',
+      perView: 5, // Number of fully visible slides
+      focusAt: 'center', // Center the active slide
+      peek: 100, // Show 100px of adjacent slides on both sides
+      gap: 10, // Space between slides
+      autoplay: 3000, // Autoplay every 3 seconds
+      animationDuration: 800, // Animation speed in milliseconds
+      breakpoints: {
+        1024: { perView: 2, peek: 50 },
+        768: { perView: 1, peek: 50 },
+      },
     };
 
     if (!sliderRef.current) return;
@@ -44,7 +55,7 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
 
   const renderBg = () => {
     return (
-      <div className="hidden md:block">
+      {/*<div className="hidden md:block">
         <Image
           sizes="100px"
           className="absolute top-9 -left-20"
@@ -81,53 +92,67 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
           src={clientSay6}
           alt=""
         />
-      </div>
+      </div>*/}
     );
   };
 
   return (
     <div
-      className={`nc-SectionClientSay relative flow-root ${className} `}
+      className={`nc-SectionClientSay clientssay relative flow-root ${className} `}
       data-nc-id="SectionClientSay"
     >
-      <Heading desc="Let's see what people think of Ciseco" isCenter>
-        Good news from far away 🥇
+      <div className="text-md text-blue-500 mb-2 text-center">Clients Reactions</div>
+      <Heading isCenter>
+        What Our People Says
       </Heading>
-      <div className="relative md:mb-16 max-w-2xl mx-auto">
-        {renderBg()}
+      <div className="relative md:mb-16 max-w-8xl mx-auto">
+        {/*{renderBg()}*/}
 
-        <Image className="mx-auto" src={clientSayMain} alt="" />
         <div
           ref={sliderRef}
           className={`mt-12 lg:mt-16 relative ${isShow ? "" : "invisible"}`}
         >
-          <Image
-            className="opacity-50 md:opacity-100 absolute -mr-16 lg:mr-3 right-full top-1"
-            src={quotationImg}
-            alt=""
-          />
-          <Image
-            className="opacity-50 md:opacity-100 absolute -ml-16 lg:ml-3 left-full top-1"
-            src={quotationImg2}
-            alt=""
-          />
           <div className="glide__track " data-glide-el="track">
-            <ul className="glide__slides ">
+            <ul className="glide__slides">
               {DEMO_DATA.map((item) => (
                 <li
                   key={item.id}
-                  className="glide__slide flex flex-col items-center text-center"
+                  className="glide__slide flex flex-col mr-2 bg-blue-600 px-4 py-5 rounded-3xl"
                 >
-                  <span className="block text-2xl">{item.content}</span>
-                  <span className="block mt-8 text-2xl font-semibold">
-                    {item.clientName}
-                  </span>
-                  <div className="flex items-center space-x-0.5 mt-3.5 text-yellow-500">
-                    <StarIcon className="w-6 h-6" />
-                    <StarIcon className="w-6 h-6" />
-                    <StarIcon className="w-6 h-6" />
-                    <StarIcon className="w-6 h-6" />
-                    <StarIcon className="w-6 h-6" />
+                  <div className="flex justify-between items-center mb-0.5 relative">
+                    {/* Rating Section */}
+                    <div className="flex items-center space-x-0.5 mt-3.5 text-white">
+                      <StarIcon className="w-6 h-6" />
+                      <StarIcon className="w-6 h-6" />
+                      <StarIcon className="w-6 h-6" />
+                      <StarIcon className="w-6 h-6" />
+                      <StarIcon className="w-6 h-6" />
+                    </div>
+
+                    {/* Google Image Section */}
+                    <div className="mx-auto relative">
+                      <Image
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        fill
+                        className="w-16 h-auto object-contain" 
+                        src={GoogleSvg}
+                        alt="Google"
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                  <span className="block text-sm text-left text-white mt-3 mb-5">{item.content}</span>
+                  <div className="flex items-center mt-5">
+                    <div className="initials-wrap bg-customBlue rounded-full px-3 py-1 text-white mr-2">
+                      E
+                    </div>
+                    <div className="text-left">
+                      <span className="block text-sm font-semibold text-white">
+                        {item.clientName}
+                      </span>
+                      <h6 className="font-normal text-xs text-white">Modal</h6>
+                    </div>
                   </div>
                 </li>
               ))}

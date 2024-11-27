@@ -70,7 +70,10 @@ function PageHome() {
           />
         </div>
 
-        <SectionFeatures />
+        <SectionFeatures />\
+        <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
+          <SectionClientSay />
+        </div>
 
         <SectionServices />
 
@@ -96,8 +99,8 @@ function PageHome() {
               <ButtonSecondary>Show all blog articles</ButtonSecondary>
             </div>
           </div>
-        </div>
-        <SectionClientSay /> */}
+        </div> */}
+        
         <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">  
           <SectionHairgrowth />
         </div>

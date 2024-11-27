@@ -23,4 +23,20 @@
 .bg-violet{background-color: #e9cfb8;}
 .bg-redd{background-color: #ffdbcd;}
 .bg-greeen{background-color: #cce8dc;}
+.clientssay .glide__slide {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0.9);
+}
+.clientssay .glide__slide--active {
+    opacity: 1;
+    transform: scale(1);
+}
+.clientssay .glide__track {
+    overflow: hidden;
+}
+.clientssay .glide__slides {
+    display: flex;
+    align-items: center;
+}
+  
 

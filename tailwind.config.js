@@ -28,6 +28,7 @@ module.exports = {
 
     extend: {
       colors: {
+        customBlue: '#0E384C',
         primary: {
           50: customColors("--c-primary-50"),
           100: customColors("--c-primary-100"),
