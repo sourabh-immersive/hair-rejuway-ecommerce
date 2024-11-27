@@ -65,6 +65,10 @@ module.exports = {
           900: customColors("--c-neutral-900"),
         },
       },
+      letterSpacing: {
+        extraWide: '0.3em',
+        superTight: '-0.1em',
+      },
     },
   },
   variants: {

@@ -352,7 +352,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
-          {renderVariants()}
+          {/*{renderVariants()}*/}
           <div>
             <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
               {title}
@@ -369,7 +369,17 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           </div>
 
           <div className="flex justify-between items-end ">
-            <Prices price={getPrice()} />
+            <div className="flex items-center mb-0.5">
+              <h4 className="text-black-600 text-lg">
+                <i className="fa fa-rupee" aria-hidden="true"></i> <Prices price={getPrice()} />
+              </h4>
+              <h6 className="text-gray-400 text-md mr-2 line-through">
+                <i className="fa fa-rupee" aria-hidden="true"></i>775
+              </h6>
+              <span className="text-green-300 text-xs">
+                5% off
+              </span>
+            </div>
             <div className="flex items-center mb-0.5">
               <AddToCartButton
                 className="bg-blue-500 hover:bg-blue-600 text-white"
