@@ -103,7 +103,7 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
     >
       <div className="text-md text-blue-500 mb-2 text-center">Clients Reactions</div>
       <Heading isCenter>
-        What Our People Says
+        What Our People Say
       </Heading>
       <div className="relative md:mb-16 max-w-8xl mx-auto">
         {/*{renderBg()}*/}
