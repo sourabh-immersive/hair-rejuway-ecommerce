@@ -1,21 +1,17 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import Link from "next/link";
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
 import googleSvg from "@/images/Google.svg";
-import Input from "@/shared/Input/Input";
+import * as Yup from "yup";
+import { auth, signIn } from "@/auth";
+import { doCredentialLogin, doLogout } from "../server-actions/actions";
+import { useRouter } from "next/navigation";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
-import Link from "next/link";
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import {
-  getAuthError,
-  getAuthStatus,
-} from "@/lib/features/authSlice/authSlice";
-import { loginUser } from "@/lib/actions/authActions";
+import { SigninFormSchema } from "@/lib/definitions";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -49,13 +45,48 @@ const loginSocials = [
   },
 ];
 
-const PageLogin = () => {
-  const dispatch = useAppDispatch();
-  const authStatus = useAppSelector(getAuthStatus);
-  const authError = useAppSelector(getAuthError);
+const SignIn = () => {
+  const router = useRouter();
+  const [error, setError] = useState("");
 
+  async function onSubmit(event: any) {
+    event.preventDefault();
+
+    try {
+      const formData = new FormData(event.currentTarget);
+
+      const validatedFields = SigninFormSchema.safeParse({
+        // name: formData.get('name'),
+        email: formData.get("email"),
+        password: formData.get("password"),
+      });
+
+      // If any form fields are invalid, return early
+      if (!validatedFields.success) {
+        return {
+          errors: validatedFields.error.flatten().fieldErrors,
+        };
+      }
+
+      const response = await doCredentialLogin(formData);
+
+      if (!!response.error) {
+        console.error(response.error);
+        setError(response.error.message);
+      } else {
+        // router.push("/account");
+        // console.log('tokenff', session?.apiToken)
+      }
+    } catch (e) {
+      console.error(e);
+      setError("Check your Credentials");
+    }
+  }
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
+      <button className="text-red-500" onClick={() => doLogout()}>
+        Sign Out
+      </button>
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Login
@@ -89,55 +120,21 @@ const PageLogin = () => {
           </div>
           {/* FORM */}
 
-          <Formik
-            initialValues={{
-              email: "",
-              password: "",
-            }}
-            validationSchema={LoginSchema}
-            onSubmit={(
-              values: LoginValues,
-              { setSubmitting }: FormikHelpers<LoginValues>
-            ) => {
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                dispatch(loginUser(values));
-              }, 500);
-            }}
-          >
-            <Form className="grid grid-cols-1 gap-4">
-              <Field
-                id="email"
-                name="email"
-                placeholder="Email Address"
-                type="email"
-                className="border border-gray-200 rounded-md p-3"
-              />
-              <ErrorMessage
-                name="email"
-                component="span"
-                className="text-sm text-[#FF0000]"
-              />
-              <Field
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter Password"
-                className="border border-gray-200 rounded-md p-3"
-              />
-              <ErrorMessage
-                name="password"
-                component="span"
-                className="text-sm text-[#FF0000]"
-              />
-
-              <ButtonPrimary type="submit">Continue</ButtonPrimary>
-
-              {authStatus === "loading" && <p>Loading...</p>}
-              {authError && <p style={{ color: "red" }}>{authError}</p>}
-            </Form>
-          </Formik>
+          <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4">
+            <input
+              name="email"
+              type="email"
+              className="border border-gray-200 rounded-md p-3"
+              placeholder="Enter your email"
+            />
+            <input
+              name="password"
+              type="password"
+              className="border border-gray-200 rounded-md p-3"
+              placeholder="Enter your password"
+            />
+            <ButtonPrimary type="submit">Login</ButtonPrimary>
+          </form>
 
           {/* ==== */}
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
@@ -152,4 +149,4 @@ const PageLogin = () => {
   );
 };
 
-export default PageLogin;
+export default SignIn;

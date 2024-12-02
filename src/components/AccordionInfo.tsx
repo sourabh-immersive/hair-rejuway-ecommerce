@@ -2,7 +2,7 @@
 
 import { Disclosure } from "@/app/headlessui";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 const DEMO_DATA = [
   {
@@ -52,7 +52,10 @@ const DEMO_DATA = [
 
 interface Props {
   panelClassName?: string;
-  data?: typeof DEMO_DATA;
+  data?: {
+    name: string;
+    content: ReactNode;
+  }[];
 }
 
 const AccordionInfo: FC<Props> = ({
@@ -75,11 +78,29 @@ const AccordionInfo: FC<Props> = ({
                     <MinusIcon className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                   )}
                 </Disclosure.Button>
-                <Disclosure.Panel
-                  className={panelClassName}
-                  as="div"
-                  dangerouslySetInnerHTML={{ __html: item.content }}
-                ></Disclosure.Panel>
+                {/* {item?.content && (
+                  <Disclosure.Panel
+                    className={panelClassName}
+                    as="div"
+                    dangerouslySetInnerHTML={{ __html: item.content }}
+                  ></Disclosure.Panel>
+                )} */}
+                {item?.content && (
+                  <Disclosure.Panel className={panelClassName}>
+                    {Array.isArray(item.content) ? (
+                      item.content.map((child, i) => (
+                        <div key={i} className="mb-2">
+                          {child}
+                        </div>
+                      ))
+                    ) : (
+                      <div
+                        className={panelClassName}
+                        dangerouslySetInnerHTML={{ __html: item.content }}
+                      ></div>
+                    )}
+                  </Disclosure.Panel>
+                )}
               </>
             )}
           </Disclosure>

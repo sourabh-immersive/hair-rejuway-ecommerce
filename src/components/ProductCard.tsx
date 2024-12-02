@@ -41,6 +41,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     title,
     description,
     product_details,
+    slug,
     sizes,
     variants,
     variantType,
@@ -323,12 +324,12 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   return (
     <>
       <div
-        className={`nc-ProductCard relative flex flex-col bg-transparent ${className}`}
+        className={`nc-ProductCard relative flex flex-col bg-transparent pb-10 ${className}`}
       >
-        <Link href={"/products/slug"} className="absolute inset-0"></Link>
+        <Link href={`/products/${slug}`} className="absolute inset-0"></Link>
 
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
-          <Link href={"/products/slug"} className="block">
+          <Link href={`/products/${slug}`} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
               src={thumbnail}

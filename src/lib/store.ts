@@ -4,6 +4,7 @@ import { cartSlice } from "./features/cart/cartSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { wishlistSlice } from "./features/wishlist/wishlistSlice";
+import authSlice from "./features/authSlice/authSlice";
 
 // Fallback to noop storage for server
 const createNoopStorage = () => {
@@ -33,6 +34,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   wishlist: wishlistSlice.reducer,
   cart: cartSlice.reducer,
+  auth: authSlice.reducer,
 });
 
 // Persisted reducer
