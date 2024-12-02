@@ -23,7 +23,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   headingFontClassName,
   headingClassName,
   heading,
-  subHeading = "REY backpacks & bags",
+  subHeading = "",
   data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
 }) => {
   const sliderRef = useRef(null);
@@ -72,18 +72,22 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   return (
     <div className={`nc-SectionSliderProductCard ${className}`}>
       <div ref={sliderRef} className={`flow-root ${isShow ? "" : "invisible"}`}>
+        <div className="text-md text-blue-500 mb-2">Hot Sale</div>
         <Heading
           className={headingClassName}
           fontClass={headingFontClassName}
           rightDescText={subHeading}
           hasNextPrev
         >
-          {heading || `New Arrivals`}
+          {heading || `Imported Products`}
         </Heading>
         <div className="glide__track" data-glide-el="track">
           <ul className="glide__slides">
             {data.map((item, index) => (
-              <li key={index} className={`glide__slide ${itemClassName}`}>
+              <li
+                key={index}
+                className={`glide__slide ${itemClassName} border border-gray-300 rounded-md`}
+              >
                 <ProductCard data={item} />
               </li>
             ))}

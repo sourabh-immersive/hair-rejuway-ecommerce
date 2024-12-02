@@ -14,9 +14,9 @@ const Prices: FC<PricesProps> = ({
   return (
     <div className={`${className}`}>
       <div
-        className={`flex items-center border-2 border-green-500 rounded-lg ${contentClass}`}
+        className={`flex items-center ${contentClass}`}
       >
-        <span className="text-green-500 !leading-none">${String(price)}</span>
+        <span className="text-black text-lg bold !leading-none">${String(price)}</span>
       </div>
     </div>
   );

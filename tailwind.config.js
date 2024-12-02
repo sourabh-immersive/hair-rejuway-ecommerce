@@ -28,6 +28,7 @@ module.exports = {
 
     extend: {
       colors: {
+        customBlue: '#0E384C',
         primary: {
           50: customColors("--c-primary-50"),
           100: customColors("--c-primary-100"),
@@ -64,6 +65,10 @@ module.exports = {
           800: customColors("--c-neutral-800"),
           900: customColors("--c-neutral-900"),
         },
+      },
+      letterSpacing: {
+        extraWide: '0.3em',
+        superTight: '-0.1em',
       },
     },
   },

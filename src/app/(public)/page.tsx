@@ -2,7 +2,7 @@ import React from "react";
 import SectionHowItWork from "@/components/SectionHowItWork/SectionHowItWork";
 import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
 import SectionPromo1 from "@/components/SectionPromo1";
-import SectionHero2 from "@/components/SectionHero/SectionHero2";
+import SectionHero3 from "@/components/SectionHero/SectionHero3";
 import SectionSliderLargeProduct from "@/components/SectionSliderLargeProduct";
 import SectionSliderProductCard from "@/components/SectionSliderProductCard";
 import DiscoverMoreSlider from "@/components/DiscoverMoreSlider";
@@ -10,6 +10,10 @@ import SectionGridMoreExplore from "@/components/SectionGridMoreExplore/SectionG
 import SectionPromo2 from "@/components/SectionPromo2";
 import SectionSliderCategories from "@/components/SectionSliderCategories/SectionSliderCategories";
 import SectionPromo3 from "@/components/SectionPromo3";
+import SectionPromo4 from "@/components/SectionPromo4";
+import SectionFeatures from "@/components/SectionFeatures";
+import SectionServices from "@/components/SectionServices";
+import SectionHairgrowth from "@/components/SectionHairgrowth";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import Heading from "@/components/Heading/Heading";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
@@ -20,29 +24,23 @@ import SectionMagazine5 from "./blog/SectionMagazine5";
 function PageHome() {
   return (
     <div className="nc-PageHome relative overflow-hidden">
-      <SectionHero2 />
+      <SectionHero3 />
 
 
       <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">
       <SectionGridFeatureItems />
       </div>
 
+      
+
+
       {/* <div className="mt-24 lg:mt-32">
         <DiscoverMoreSlider />
       </div>
 
-      <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">
-        <SectionSliderProductCard
-          data={[
-            PRODUCTS[4],
-            SPORT_PRODUCTS[5],
-            PRODUCTS[7],
-            SPORT_PRODUCTS[1],
-            PRODUCTS[6],
-          ]}
-        />
-
-        <div className="py-24 lg:py-32 border-t border-b border-slate-200 dark:border-slate-700">
+      <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">*/}
+        
+       {/* <div className="py-24 lg:py-32 border-t border-b border-slate-200 dark:border-slate-700">
           <SectionHowItWork />
         </div>
         <SectionPromo1 />
@@ -52,12 +50,35 @@ function PageHome() {
           <SectionGridMoreExplore />
         </div>
 
-        <SectionSliderProductCard
-          heading="Best Sellers"
-          subHeading="Best selling of the month"
-        />
+        <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">  
+          <SectionSliderProductCard heading="Best Sellers" subHeading="Best selling of the month"/>
+        </div>*/}
 
-        <SectionPromo2 />
+        <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">  
+          <SectionPromo4 />
+        </div>
+
+        <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
+          <SectionSliderProductCard
+            data={[
+              PRODUCTS[4],
+              SPORT_PRODUCTS[5],
+              PRODUCTS[7],
+              SPORT_PRODUCTS[1],
+              PRODUCTS[6],
+            ]}
+          />
+        </div>
+
+        <SectionFeatures />\
+        <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
+          <SectionClientSay />
+        </div>
+
+        <SectionServices />
+
+        
+        {/*<SectionPromo2 />
 
         <SectionSliderLargeProduct cardStyle="style2" />
 
@@ -79,7 +100,10 @@ function PageHome() {
             </div>
           </div>
         </div> */}
-        <SectionClientSay />
+        
+        <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">  
+          <SectionHairgrowth />
+        </div>
       {/* </div> */}
     </div>
   );
