@@ -38,7 +38,7 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
         </div>
       </div>
 
-      <div className="relative z-[1] lg:aspect-w-16 lg:aspect-h-8 2xl:aspect-h-5">
+      <div className="relative z-[1] lg:aspect-w-16 lg:aspect-h-5 2xl:aspect-h-5">
         <div className=" ">
           <div className="mt-5 lg:mt-0 lg:absolute right-0 bottom-0 top-0 w-full max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl ml-auto">
           {/*<Image
