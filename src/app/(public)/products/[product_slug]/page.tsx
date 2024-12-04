@@ -1,12 +1,12 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import LikeButton from "@/components/LikeButton";
 import { StarIcon } from "@heroicons/react/24/solid";
 import BagIcon from "@/components/BagIcon";
 import NcInputNumber from "@/components/NcInputNumber";
-import { PRODUCTS } from "@/data/data";
+import { Product, PRODUCTS } from "@/data/data";
 import {
   NoSymbolIcon,
   ClockIcon,
@@ -27,11 +27,46 @@ import ModalViewAllReviews from "./ModalViewAllReviews";
 import NotifyAddTocart from "@/components/NotifyAddTocart";
 import Image from "next/image";
 import AccordionInfo from "@/components/AccordionInfo";
+import { getProductBySlug } from "@/api/products";
+import { usePathname } from "next/navigation";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
-const ProductDetailPage = () => {
+export interface ProductDetailsItemsProps {
+  data?: Product;
+}
+
+const ProductDetailPage = ({
+  params,
+  data,
+}: {
+  data: Product;
+  params: { product_slug: string };
+}) => {
+  const { product_slug } = params;
+  const [productData, setProductData] = useState<Product>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showMoreLoading, setShowMoreLoading] = useState<boolean>(false);
+
   const { sizes, variants, status, allOfSizes, thumbnail } = PRODUCTS[0];
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const ProductDetail = await getProductBySlug(product_slug);
+        // console.log(ProductDetail)
+        setProductData(ProductDetail.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [product_slug]);
+
   //
   const [variantActive, setVariantActive] = useState(0);
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : "");
@@ -199,19 +234,30 @@ const ProductDetailPage = () => {
   };
 
   const renderSectionContent = () => {
+    const accData = [
+      {
+        name: "Description",
+        content: `${productData?.details}`,
+      },
+      // {
+      //   name: "Specializations",
+      //   content: `${productData?.specializations}`,
+      // }
+    ];
+    console.log(accData)
     return (
       <div className="space-y-7 2xl:space-y-8">
         {/* ---------- 1 HEADING ----------  */}
         <div>
           <h2 className="text-2xl sm:text-3xl font-semibold">
-            Heavy Weight Shoes
+            {productData?.title}
           </h2>
 
           <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
             {/* <div className="flex text-xl font-semibold">$112.00</div> */}
             <Prices
               contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
-              price={112}
+              price={productData?.price}
             />
 
             <div className="h-7 border-l border-slate-300 dark:border-slate-700"></div>
@@ -233,7 +279,7 @@ const ProductDetailPage = () => {
               <span className="hidden sm:block mx-2.5">·</span>
               <div className="hidden sm:flex items-center text-sm">
                 <SparklesIcon className="w-3.5 h-3.5" />
-                <span className="ml-1 leading-none">{status}</span>
+                <span className="ml-1 leading-none">{"New"}</span>
               </div>
             </div>
           </div>
@@ -265,7 +311,7 @@ const ProductDetailPage = () => {
         {/*  */}
 
         {/* ---------- 5 ----------  */}
-        <AccordionInfo />
+        {accData && <AccordionInfo data={accData} />}
 
         {/* ---------- 6 ----------  */}
         <div className="hidden xl:block">
@@ -276,30 +322,15 @@ const ProductDetailPage = () => {
   };
 
   const renderDetailSection = () => {
+    if (!productData?.details || typeof productData.details !== "string") {
+      return null; // Render nothing if details is undefined, null, or not a string
+    }
     return (
       <div className="">
         <h2 className="text-2xl font-semibold">Product Details</h2>
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
-          <p>
-            The patented eighteen-inch hardwood Arrowhead deck --- finely
-            mortised in, makes this the strongest and most rigid canoe ever
-            built. You cannot buy a canoe that will afford greater satisfaction.
-          </p>
-          <p>
-            The St. Louis Meramec Canoe Company was founded by Alfred Wickett in
-            1922. Wickett had previously worked for the Old Town Canoe Co from
-            1900 to 1914. Manufacturing of the classic wooden canoes in Valley
-            Park, Missouri ceased in 1978.
-          </p>
-          <ul>
-            <li>Regular fit, mid-weight t-shirt</li>
-            <li>Natural color, 100% premium combed organic cotton</li>
-            <li>
-              Quality cotton grown without the use of herbicides or pesticides -
-              GOTS certified
-            </li>
-            <li>Soft touch water based printed in the USA</li>
-          </ul>
+          {/* Use dangerouslySetInnerHTML to render raw HTML */}
+          <div dangerouslySetInnerHTML={{ __html: productData.details }} />
         </div>
       </div>
     );
@@ -368,19 +399,21 @@ const ProductDetailPage = () => {
             {/* HEADING */}
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
-                <Image
-                  fill
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                  src={LIST_IMAGES_DEMO[0]}
-                  className="w-full rounded-2xl object-cover"
-                  alt="product detail 1"
-                />
+                {productData?.first_image && (
+                  <Image
+                    fill
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    src={productData?.first_image}
+                    className="w-full rounded-2xl object-cover"
+                    alt="product detail 1"
+                  />
+                )}
               </div>
               {renderStatus()}
               {/* META FAVORITES */}
               {/* <LikeButton className="absolute right-3 top-3 " /> */}
             </div>
-            <div className="grid grid-cols-2 gap-3 mt-3 sm:gap-6 sm:mt-6 xl:gap-8 xl:mt-8">
+            <div className="grid grid-cols-2 gap-3 mt-3 sm:gap-6 sm:mt-6 xl:gap-8 xl:mt-8 hidden">
               {[LIST_IMAGES_DEMO[1], LIST_IMAGES_DEMO[2]].map((item, index) => {
                 return (
                   <div
@@ -414,24 +447,24 @@ const ProductDetailPage = () => {
 
           {renderDetailSection()}
 
-          <hr className="border-slate-200 dark:border-slate-700" />
+          {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
 
-          {renderReviews()}
+          {/* {renderReviews()} */}
 
           <hr className="border-slate-200 dark:border-slate-700" />
 
           {/* OTHER SECTION */}
           <SectionSliderProductCard
-            heading="Customers also purchased"
+            heading="Related Products"
             subHeading=""
             headingFontClassName="text-2xl font-semibold"
             headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"
           />
 
           {/* SECTION */}
-          <div className="pb-20 xl:pb-28 lg:pt-14">
+          {/* <div className="pb-20 xl:pb-28 lg:pt-14">
             <SectionPromo2 />
-          </div>
+          </div> */}
         </div>
       </main>
 

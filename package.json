@@ -39,7 +39,8 @@
     "redux-persist": "^6.0.0",
     "sass": "^1.69.5",
     "typescript": "5.2.2",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "20.2.5",

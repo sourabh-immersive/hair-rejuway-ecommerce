@@ -23,7 +23,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   const { id, name, thumbnail, price } = data
   const existingItemIndex = wishlistData.items.findIndex(item => item.id === id);
 
-  console.log('wishlist data ',wishlistData)
+  // console.log('wishlist data ',wishlistData)
 
   const handleAddToWishlist = (item: WishlistItem) => {
     dispatch(addItemToWishlist(item));

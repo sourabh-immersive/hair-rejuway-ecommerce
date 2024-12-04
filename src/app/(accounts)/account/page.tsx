@@ -6,8 +6,12 @@ import Select from "@/shared/Select/Select";
 import Textarea from "@/shared/Textarea/Textarea";
 import { avatarImgs } from "@/contains/fakeData";
 import Image from "next/image";
+import { auth, signOut } from "@/auth";
+import { redirect } from "next/navigation";
 
-const AccountPage = () => {
+const AccountPage = async () => {
+
+  // console.log('sdfsdfds',session.user.apiToken)
   return (
     <div className={`nc-AccountPage `}>
       <div className="space-y-10 sm:space-y-12">

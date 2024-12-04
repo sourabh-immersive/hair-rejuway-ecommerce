@@ -8,7 +8,8 @@ import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
-import { Field, Form, Formik, FormikHelpers } from "formik";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
+import * as Yup from "yup";
 
 const loginSocials = [
   {
@@ -29,10 +30,29 @@ const loginSocials = [
 ];
 
 interface Values {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
+  phone: string;
+  password: string;
 }
+
+const SignupSchema = Yup.object().shape({
+  fullName: Yup.string()
+    .min(2, "Full Name is too short!")
+    .max(100, "Full Name is too long!")
+    .required("Full Name is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: Yup.string()
+    .matches(/^\d+$/, "Phone number must be digits only")
+    .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number can't exceed 15 digits")
+    .required("Phone number is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters long")
+    .required("Password is required"),
+});
 
 const PageSignUp = () => {
   return (
@@ -72,10 +92,12 @@ const PageSignUp = () => {
 
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: "",
+              fullName: "",
               email: "",
+              phone: "",
+              password: "",
             }}
+            validationSchema={SignupSchema}
             onSubmit={(
               values: Values,
               { setSubmitting }: FormikHelpers<Values>
@@ -87,13 +109,28 @@ const PageSignUp = () => {
             }}
           >
             <Form className="grid grid-cols-1 gap-4">
-              <Field id="fullName" name="fullName" placeholder="Full Name" className="border border-gray-200 rounded-md p-3" />
+              <Field
+                id="fullName"
+                name="fullName"
+                placeholder="Full Name"
+                className="border border-gray-200 rounded-md p-3"
+              />
+              <ErrorMessage
+                name="fullName"
+                component="span"
+                className="text-sm text-[#FF0000]"
+              />
               <Field
                 id="email"
                 name="email"
                 placeholder="Email Address"
                 type="email"
                 className="border border-gray-200 rounded-md p-3"
+              />
+              <ErrorMessage
+                name="email"
+                component="span"
+                className="text-sm text-[#FF0000]"
               />
               <Field
                 id="phone"
@@ -102,12 +139,22 @@ const PageSignUp = () => {
                 type="tel"
                 className="border border-gray-200 rounded-md p-3"
               />
+              <ErrorMessage
+                name="phone"
+                component="span"
+                className="text-sm text-[#FF0000]"
+              />
               <Field
                 type="password"
                 id="password"
                 name="password"
                 placeholder="Enter Password"
                 className="border border-gray-200 rounded-md p-3"
+              />
+              <ErrorMessage
+                name="password"
+                component="span"
+                className="text-sm text-[#FF0000]"
               />
 
               <ButtonPrimary type="submit">Continue</ButtonPrimary>

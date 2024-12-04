@@ -43,6 +43,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     title,
     description,
     product_details,
+    slug,
     sizes,
     variants,
     variantType,
@@ -325,9 +326,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   return (
     <>
       <div
-        className={`nc-ProductCard relative flex flex-col bg-transparent ${className}`}
+        className={`nc-ProductCard relative flex flex-col bg-transparent pb-10 ${className}`}
       >
-        <Link href={"/products/slug"} className="absolute inset-0"></Link>
+        <Link href={`/products/${slug}`} className="absolute inset-0"></Link>
 
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-lg overflow-hidden z-1 group">
           <Link href={"/products/slug"} className="block">

@@ -8,7 +8,7 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { CartItem } from "@/lib/features/cart/cartSlice";
+import { CartItem, removeItemFromCart } from "@/lib/features/cart/cartSlice";
 
 const CartPage = () => {
 
@@ -180,12 +180,14 @@ const CartPage = () => {
               ? renderStatusSoldout()
               : renderStatusInstock()}
 
-            <a
-              href="##"
-              className="relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
+            <p
+              className="relative cursor-pointer z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
+              onClick={() =>
+                dispatch(removeItemFromCart(item.id))
+              }
             >
               <span>Remove</span>
-            </a>
+            </p>
           </div>
         </div>
       </div>
