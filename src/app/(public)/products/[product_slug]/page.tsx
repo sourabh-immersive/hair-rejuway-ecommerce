@@ -37,10 +37,10 @@ export interface ProductDetailsItemsProps {
 }
 
 const ProductDetailPage = ({
+  // data,
   params,
-  data,
 }: {
-  data: Product;
+  // data: Product;
   params: { product_slug: string };
 }) => {
   const { product_slug } = params;
