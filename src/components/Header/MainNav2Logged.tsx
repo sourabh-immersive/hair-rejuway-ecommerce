@@ -8,6 +8,8 @@ import Navigation from "@/shared/Navigation/Navigation";
 import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import { auth } from "@/auth";
+import { useSession } from "next-auth/react"
 
 export interface MainNav2LoggedProps {}
 
@@ -15,6 +17,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const inputRef = createRef<HTMLInputElement>();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession()
+
+  console.log(status);
+  console.log(session);
 
   const renderMagnifyingGlassIcon = () => {
     return (
@@ -95,7 +101,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
               {renderMagnifyingGlassIcon()}
             </button>
           )}
-          <AvatarDropdown />
+          { session ? <AvatarDropdown /> : ''}
+          {/* <AvatarDropdown /> */}
           <CartDropdown />
         </div>
       </div>
@@ -104,24 +111,24 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
 
   return (
     <>
-    <div className="toparea relative z-10 bg-half-black dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
-      <div className="container">
-        <div className="flex justify-between py-4 text-white text-sm">
-          <p>Order upto 30%-40% | Free Shipping on orders over ₹ 899.00</p>
-          <div className="">
-            <ul className="list-none flex space-x-4 ">
-              <li>About Us</li>
-              <li>Free Delivery</li>
-              <li>Return Policy</li>
-              <li>Help Center</li>
-            </ul>
+      <div className="toparea relative z-10 bg-half-black dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+        <div className="container">
+          <div className="flex justify-between py-4 text-white text-sm">
+            <p>Order upto 30%-40% | Free Shipping on orders over ₹ 899.00</p>
+            <div className="">
+              <ul className="list-none flex space-x-4 ">
+                <li>About Us</li>
+                <li>Free Delivery</li>
+                <li>Return Policy</li>
+                <li>Help Center</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div className="nc-MainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
-      <div className="container ">{renderContent()}</div>
-    </div>
+      <div className="nc-MainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+        <div className="container ">{renderContent()}</div>
+      </div>
     </>
   );
 };

@@ -4,12 +4,17 @@ import CommonClient from "../CommonClient";
 import Footer from "@/shared/Footer/Footer";
 import Tabs from "./tabs";
 import SessionProvider from "./SessionProvider";
+import { auth } from "@/auth";
 
 export interface CommonLayoutProps {
   children?: React.ReactNode;
 }
 
-const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
+const CommonLayout: FC<CommonLayoutProps> = async ({ children }) => {
+  const session = await auth();
+
+  if (!session?.user) return null;
+  console.log(session);
   return (
     <>
       <SessionProvider>
@@ -21,9 +26,11 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
                 <h2 className="text-3xl xl:text-4xl font-semibold">Account</h2>
                 <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
                   <span className="text-slate-900 dark:text-slate-200 font-semibold">
-                    Enrico Cole,
+                    {session.user.name}
                   </span>{" "}
-                  ciseco@gmail.com · Los Angeles, CA
+                  {session.user.email} · Los Angeles, CA
+                  <br />
+                  <p>{session.user.apiToken}</p>
                 </span>
               </div>
               <hr className="mt-10 border-slate-200 dark:border-slate-700" />

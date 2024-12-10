@@ -8,8 +8,12 @@ import { avatarImgs } from "@/contains/fakeData";
 import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const AccountPage = async () => {
+  const session = await auth()
+ 
+  if (!session?.user) return null
 
   // console.log('sdfsdfds',session.user.apiToken)
   return (
@@ -22,6 +26,7 @@ const AccountPage = async () => {
         <div className="flex flex-col md:flex-row">
           <div className="flex-shrink-0 flex items-start">
             {/* AVATAR */}
+            
             <div className="relative rounded-full overflow-hidden flex">
               <Image
                 src={avatarImgs[2]}
@@ -58,6 +63,7 @@ const AccountPage = async () => {
           <div className="flex-grow mt-10 md:mt-0 md:pl-16 max-w-3xl space-y-6">
             <div>
               <Label>Full name</Label>
+              <p>{}</p>
               <Input className="mt-1.5" defaultValue="Enrico Cole" />
             </div>
 

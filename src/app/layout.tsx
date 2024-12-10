@@ -8,6 +8,7 @@ import Footer from "@/shared/Footer/Footer";
 import SiteHeader from "@/app/SiteHeader";
 import CommonClient from "./CommonClient";
 import { StoreProvider } from "./StoreProvider";
+import { SessionProvider } from "next-auth/react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,16 +18,19 @@ const poppins = Poppins({
 
 export default function RootLayout({
   children,
-  params,
+  params
 }: {
   children: React.ReactNode;
   params: any;
 }) {
+ 
   return (
     <html lang="en" dir="" className={poppins.className}>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <StoreProvider>
-          {children}
+          <SessionProvider>
+            {children}
+          </SessionProvider>
         </StoreProvider>
       </body>
     </html>
