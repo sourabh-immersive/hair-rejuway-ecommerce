@@ -35,10 +35,10 @@ interface Attribute  {
 interface productDetails {
   attribute_id: number;
   product_qty: string;
-  price: string;
-  sale_price: string;
-  gst_price: string;
-  total_price: string;
+  price: number;
+  sale_price: number;
+  gst_price: number;
+  total_price: number;
   // packing_id: number;
   // packing_size: string;
   attribute: Attribute[];
@@ -72,6 +72,7 @@ export interface Product {
     image: string;
   }[];
   product_variations: productDetails[];
+  images?: {id: string, image: string}[];
   thumbnail: StaticImageData | string;
   description: string;
   category: string;

@@ -9,22 +9,24 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { removeItemFromCart } from "@/lib/features/cart/cartSlice";
+import { CartItem, removeItemFromCart } from "@/lib/features/cart/cartSlice";
 
 export default function CartDropdown() {
   const cartData = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { items, status, totalItems, totalAmount } = cartData;
+  console.log("stateD", items);
 
-  const renderProduct = (item: Product, index: number, close: () => void) => {
-    const { title, price, thumbnail } = item;
+  const renderProduct = (items: CartItem, index: number, close: () => void) => {
+    const { name, price, thumbnail, attributesData, salePrice, productType } = items;
+
     return (
       <div key={index} className="flex py-5 last:pb-0 00000000">
         <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
-            src={`${process.env.NEXT_PUBLIC_BASE_URL}${thumbnail}`}
-            alt={title}
+            src={`${thumbnail}`}
+            alt={name}
             className="h-full w-full object-contain object-center"
           />
           <Link
@@ -40,16 +42,26 @@ export default function CartDropdown() {
               <div>
                 <h3 className="text-base font-medium ">
                   <Link onClick={close} href={"/product-detail"}>
-                    {title}
+                    {name}
                   </Link>
                 </h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  <span>{`Natural`}</span>
-                  <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{"XL"}</span>
+                  {Array.isArray(attributesData) && (
+                    <>
+                      {attributesData.map((att, i) => (
+                        <>
+                          <p>
+                            <span>{att.name}</span>
+                            <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
+                            <span>{att.value}</span>
+                          </p>
+                        </>
+                      ))}
+                    </>
+                  )}
                 </p>
               </div>
-              <Prices price={price} className="mt-0.5" />
+              <Prices price={price} salePrice={salePrice} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
@@ -189,7 +201,7 @@ export default function CartDropdown() {
                               {item.thumbnail && (
                                 <Image
                                   fill
-                                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.thumbnail}`}
+                                  src={`${item.thumbnail}`}
                                   alt={item.name}
                                   className="h-full w-full object-contain object-center"
                                 />
@@ -214,13 +226,24 @@ export default function CartDropdown() {
                                       </Link>
                                     </h3>
                                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                                      <span>{`Natural`}</span>
-                                      <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                                      <span>{"XL"}</span>
+                                      {Array.isArray(item.attributesData) && (
+                                        <>
+                                          {item.attributesData.map((att, i) => (
+                                            <>
+                                              <p>
+                                                <span>{att.name}</span>
+                                                <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
+                                                <span>{att.value}</span>
+                                              </p>
+                                            </>
+                                          ))}
+                                        </>
+                                      )}
                                     </p>
                                   </div>
                                   <Prices
                                     price={item.price}
+                                    salePrice={item.salePrice}
                                     className="mt-0.5"
                                   />
                                 </div>
@@ -232,9 +255,20 @@ export default function CartDropdown() {
                                   <button
                                     type="button"
                                     className="font-medium text-primary-6000 dark:text-primary-500 "
-                                    onClick={() =>
-                                      dispatch(removeItemFromCart(item.id))
-                                    }
+                                    onClick={() => {
+                                      item.productType === 'simple' ? 
+                                      dispatch(
+                                        removeItemFromCart({
+                                          id: item.id,
+                                        })
+                                      ) : 
+                                      dispatch(
+                                        removeItemFromCart({
+                                          id: item.id,
+                                          attributesData: item.attributesData,
+                                        })
+                                      ) 
+                                    }}
                                   >
                                     Remove
                                   </button>
@@ -255,7 +289,7 @@ export default function CartDropdown() {
                           Shipping and taxes calculated at checkout.
                         </span>
                       </span>
-                      <span className="">$299.00</span>
+                      <span className="">₹{totalAmount}</span>
                     </p>
                     <div className="flex space-x-2 mt-5">
                       <ButtonSecondary

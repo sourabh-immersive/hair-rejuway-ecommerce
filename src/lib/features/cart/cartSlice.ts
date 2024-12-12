@@ -3,12 +3,20 @@ import type { AppThunk } from "@/lib/store";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { StaticImageData } from "next/image";
 
+interface AttributeOptions {
+  name: string;
+  options: string[];
+}
+
 export interface CartItem {
   id: string;
   name: string;
-  thumbnail: string | StaticImageData,
+  thumbnail: string | StaticImageData | null,
   price: number;
+  salePrice: number;
+  attributesData?: any;
   quantity: number;
+  productType?: string;
 }
 
 export interface CartSliceState {
@@ -29,34 +37,103 @@ export const cartSlice = createAppSlice({
   name: "cart",
   initialState,
   reducers: (create) => ({
+    // addItemToCart: create.reducer(
+    //   (state, action: PayloadAction<CartItem>) => {
+    //     const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
+    //     (action.payload.productType === 'simple') ? (
+    //        (itemIndex >= 0) ?
+    //         state.items[itemIndex].quantity += action.payload.quantity
+    //        :
+    //         state.items.push({ ...action.payload })
+    //     ) : (
+    //       ''
+    //     )
+        
+
+    //     state.totalItems += action.payload.quantity;
+    //     state.totalAmount += action.payload.price * action.payload.quantity;
+    //   }
+    // ),
+
     addItemToCart: create.reducer(
       (state, action: PayloadAction<CartItem>) => {
-        const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
-
-        if (itemIndex >= 0) {
-          state.items[itemIndex].quantity += action.payload.quantity;
-        } else {
-          state.items.push({ ...action.payload });
+        const { id, productType, attributesData, quantity, price } = action.payload;
+    
+        if (productType === 'simple') {
+          // Handle simple products
+          const itemIndex = state.items.findIndex(item => item.id === id);
+          if (itemIndex >= 0) {
+            state.items[itemIndex].quantity += quantity;
+          } else {
+            state.items.push({ ...action.payload });
+          }
+        } else if (productType === 'variable') {
+          // Handle variable products
+          const existingItemIndex = state.items.findIndex(item => {
+            return (
+              item.id === id &&
+              item.attributesData?.length === attributesData?.length &&
+              item.attributesData.every((attr: any, index: any) => 
+                attr.name === attributesData[index]?.name &&
+                attr.value === attributesData[index]?.value
+              )
+            );
+          });
+    
+          if (existingItemIndex >= 0) {
+            // If the item exists with the same attributes, increase its quantity
+            state.items[existingItemIndex].quantity += quantity;
+          } else {
+            // If not, add a new item
+            state.items.push({ ...action.payload });
+          }
         }
-
-        state.totalItems += action.payload.quantity;
-        state.totalAmount += action.payload.price * action.payload.quantity;
+    
+        // Update total items and total amount
+        state.totalItems += quantity;
+        state.totalAmount += price * quantity;
       }
     ),
 
     removeItemFromCart: create.reducer(
-      (state, action: PayloadAction<string>) => {
-        const itemIndex = state.items.findIndex(item => item.id === action.payload);
-
+      (
+        state,
+        action: PayloadAction<{ id: string; attributesData?: { name: string; value: string }[] }>
+      ) => {
+        const { id, attributesData } = action.payload;
+    
+        // Find the index of the item
+        const itemIndex = state.items.findIndex((item) => {
+          if (item.id !== id) return false;
+    
+          if (attributesData) {
+            // Check if the attributes match
+            return (
+              item.attributesData &&
+              item.attributesData.length === attributesData.length &&
+              item.attributesData.every((attr: any, index:any) => {
+                return (
+                  attr.name === attributesData[index].name &&
+                  attr.value === attributesData[index].value
+                );
+              })
+            );
+          }
+    
+          return true; // If no attributes provided, match by id only
+        });
+    
+        // If an item is found, remove it
         if (itemIndex >= 0) {
           const item = state.items[itemIndex];
           state.totalItems -= item.quantity;
-          state.totalAmount -= item.price * item.quantity;
-
-          state.items.splice(itemIndex, 1);
+          state.totalAmount -= (item.price) * item.quantity;
+    
+          state.items.splice(itemIndex, 1); // Remove the item
         }
       }
     ),
+    
 
     updateItemQuantity: create.reducer(
       (state, action: PayloadAction<{ id: string; quantity: number }>) => {

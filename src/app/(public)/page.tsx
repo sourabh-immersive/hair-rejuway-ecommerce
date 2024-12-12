@@ -53,7 +53,7 @@ async function PageHome() {
       <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
         <SectionPromo4 />
       </div>
-      <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
+      {/* <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
         <SectionSliderProductCard
           data={[
             PRODUCTS[4],
@@ -63,8 +63,8 @@ async function PageHome() {
             PRODUCTS[6],
           ]}
         />
-      </div>
-      <SectionFeatures />\
+      </div> */}
+      <SectionFeatures />
       <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
         <SectionClientSay />
       </div>

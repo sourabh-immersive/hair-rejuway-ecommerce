@@ -6,7 +6,6 @@ import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
 import googleSvg from "@/images/Google.svg";
 import * as Yup from "yup";
-import { auth, signIn } from "@/auth";
 import {
   doCredentialLogin,
   doLogout,
@@ -17,8 +16,6 @@ import {
 import { redirect, useRouter } from "next/navigation";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
-import { SigninFormSchema } from "@/lib/definitions";
-import { useSession, SessionProvider } from "next-auth/react";
 import { useAppDispatch } from "@/lib/hooks";
 import { AuthUser, initializeSession } from "@/lib/features/authSlice/authSlice";
 
@@ -65,7 +62,6 @@ const LoginForm = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const dispatch = useAppDispatch();
-  const { data: session, status } = useSession();
 
   async function onSubmit(event: any) {
     event.preventDefault();
@@ -92,7 +88,6 @@ const LoginForm = () => {
         console.error(response.error);
         setError(response.error.message);
       } else {
-        console.log('loginpage se444444444444444444444444',session);
         const sessionData = await getSessionData();
         console.log('after serverfunc call', sessionData)
         if (sessionData?.user) {

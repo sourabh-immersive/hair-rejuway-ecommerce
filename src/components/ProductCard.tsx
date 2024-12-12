@@ -74,14 +74,16 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   let largestPrice: number | string;
   let price: number;
 
+  const productType = product_variations.length === 1 ? "simple" : "variable";
+
   const getPrice = () => {
     if (product_variations.length === 1) {
-      const singlePrice = parseFloat(product_variations[0].sale_price);
+      const singlePrice = (product_variations[0].sale_price);
       price = singlePrice;
       return price;
     } else if (product_variations.length > 1) {
       const salePrices = product_variations.map((item) =>
-        parseFloat(item.sale_price)
+        (item.sale_price)
       );
       lowestPrice = Math.min(...salePrices);
       largestPrice = Math.max(...salePrices);
@@ -132,10 +134,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     const cartItem = {
       id: String(id),
       name: title,
-      thumbnail: feature_image 
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}${feature_image}` 
-    : null,
-      price: (product_variations.length === 1 ? parseFloat(product_variations[0].sale_price) : 0),
+      thumbnail: feature_image ? `${feature_image}` : null,
+      price: (product_variations[0].price),
+      salePrice: (product_variations[0].sale_price),
       quantity: 1,
     };
 
@@ -172,7 +173,12 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
                   <span>{attribute_id || "-"}</span>
                 </p>
               </div>
-              <Prices price={getPrice()} className="mt-0.5" />
+              <Prices
+                price={""}
+                salePrice={""}
+                priceRange={getPrice()}
+                className="mt-0.5"
+              />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
@@ -314,15 +320,15 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     return (
       <div className="absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
         <Link href={`/products/${slug}`} className="">
-        <ButtonPrimary
-          className="shadow-lg"
-          fontSize="text-xs"
-          sizeClass="py-2 px-4"
-          // onClick={() => notifyAddTocart({ attribute_id: "XL" })}
-        >
-          <BagIcon className="w-3.5 h-3.5 mb-0.5" />
-          <span className="ms-1">View Product</span>
-        </ButtonPrimary>
+          <ButtonPrimary
+            className="shadow-lg"
+            fontSize="text-xs"
+            sizeClass="py-2 px-4"
+            // onClick={() => notifyAddTocart({ attribute_id: "XL" })}
+          >
+            <BagIcon className="w-3.5 h-3.5 mb-0.5" />
+            <span className="ms-1">View Product</span>
+          </ButtonPrimary>
         </Link>
         <ButtonSecondary
           className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
@@ -375,7 +381,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           <Link href={`/products/${slug}`} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={`${process.env.NEXT_PUBLIC_BASE_URL}${feature_image}`}
+              src={`${feature_image}`}
               className="object-cover w-full h-full drop-shadow-xl"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
@@ -405,7 +411,12 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           </div>
 
           <div className="flex justify-between items-end ">
-            <Prices price={getPrice()} />
+            <Prices
+              price={""}
+              salePrice={""}
+              priceRange={getPrice()}
+              className="mt-0.5"
+            />
             <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
