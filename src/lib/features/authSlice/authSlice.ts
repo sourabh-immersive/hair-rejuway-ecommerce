@@ -4,16 +4,16 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export interface AuthUser {
-  id: string;
+  id: string | number;
   name: string;
   email: string;
   token: string;
 }
 
 export interface AuthSliceState {
-  user: AuthUser | null; // Stores authenticated user's details
-  status: "idle" | "loading" | "authenticated" | "failed"; // Tracks authentication status
-  error: string | null; // Stores authentication errors
+  user: AuthUser | null;
+  status: "idle" | "loading" | "authenticated" | "failed";
+  error: string | null;
 }
 
 const initialState: AuthSliceState = {
@@ -26,10 +26,26 @@ const authSlice = createAppSlice({
   name: "auth",
   initialState,
   reducers: (create) => ({
+
+    initializeSession: create.reducer(
+      (state, action: PayloadAction<AuthUser | null>) => {
+        if (action.payload) {
+          state.user = action.payload;
+          state.status = "authenticated";
+        } else {
+          state.user = null;
+          state.status = "idle";
+        }
+      }
+    ),
+
+
     loginRequest: create.reducer((state) => {
       state.status = "loading";
       state.error = null;
     }),
+
+
 
     loginSuccess: create.reducer((state, action: PayloadAction<AuthUser>) => {
       state.user = action.payload;
@@ -57,7 +73,7 @@ const authSlice = createAppSlice({
 
 export default authSlice;
 
-export const { loginRequest, loginSuccess, loginFailure, logout } =
+export const { initializeSession, loginRequest, loginSuccess, loginFailure, logout } =
   authSlice.actions;
 
 // Selectors

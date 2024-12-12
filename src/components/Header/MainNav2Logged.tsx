@@ -10,6 +10,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { auth } from "@/auth";
 import { useSession } from "next-auth/react"
+import { useAppSelector } from "@/lib/hooks";
 
 export interface MainNav2LoggedProps {}
 
@@ -18,6 +19,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession()
+  const authStateData = useAppSelector((state) => state.auth);
+  
 
   console.log(status);
   console.log(session);
@@ -101,7 +104,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
               {renderMagnifyingGlassIcon()}
             </button>
           )}
-          { session ? <AvatarDropdown /> : ''}
+          {/* { session ? <AvatarDropdown /> : ''} */}
+          { authStateData.status === 'authenticated' ?  <AvatarDropdown /> : '' }
           {/* <AvatarDropdown /> */}
           <CartDropdown />
         </div>

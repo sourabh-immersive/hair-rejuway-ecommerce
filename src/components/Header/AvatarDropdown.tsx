@@ -8,8 +8,11 @@ import SwitchDarkMode2 from "@/shared/SwitchDarkMode/SwitchDarkMode2";
 import Link from "next/link";
 import { doLogout } from "@/app/server-actions/actions";
 import { signOut } from "@/auth";
+import { useAppDispatch } from "@/lib/hooks";
+import { initializeSession } from "@/lib/features/authSlice/authSlice";
 
 export default function AvatarDropdown() {
+  const dispatch = useAppDispatch();
   return (
     <div className="AvatarDropdown ">
       <Popover className="relative">
@@ -324,7 +327,10 @@ export default function AvatarDropdown() {
                       <div className="ml-4">
                         <p
                           className="text-sm font-medium"
-                          onClick={() => doLogout()}
+                          onClick={() => {
+                            dispatch(initializeSession(null));
+                            doLogout()
+                           } }
                         >
                           {"Log out"}
                         </p>

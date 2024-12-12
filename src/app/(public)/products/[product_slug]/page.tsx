@@ -29,11 +29,33 @@ import Image from "next/image";
 import AccordionInfo from "@/components/AccordionInfo";
 import { getProductBySlug } from "@/api/products";
 import { usePathname } from "next/navigation";
+import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
 export interface ProductDetailsItemsProps {
   data?: Product;
+}
+
+const attributesDataDummy = [
+  {
+    name: "Test A",
+    options: ["value 1", "value 2"],
+  },
+  {
+    name: "Test B",
+    options: ["Value B1", "Value B2"],
+  },
+];
+
+interface Variation {
+  attribute_id: number;
+  product_qty: string;
+  price: string;
+  sale_price: string;
+  gst_price: string;
+  total_price: string;
+  attribute: { attribute_title: string; attribute_value: string }[];
 }
 
 const ProductDetailPage = ({
@@ -47,8 +69,12 @@ const ProductDetailPage = ({
   const [productData, setProductData] = useState<Product>();
   const [loading, setLoading] = useState<boolean>(false);
   const [showMoreLoading, setShowMoreLoading] = useState<boolean>(false);
-
-  const { sizes, variants, status, allOfSizes, thumbnail } = PRODUCTS[0];
+  const [selectedAttributes, setSelectedAttributes] = useState<
+    Record<string, string>
+  >({});
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -67,184 +93,134 @@ const ProductDetailPage = ({
     fetchProducts();
   }, [product_slug]);
 
+  useEffect(() => {
+    // Find matching variation when attributes change
+    const matchingVariation = productData?.product_variations.find(
+      (variation) => {
+        return variation.attribute.every((attr) => {
+          const selectedValue = selectedAttributes[attr.attribute_title];
+          return selectedValue === attr.attribute_value;
+        });
+      }
+    );
+
+    setSelectedVariation(matchingVariation || null);
+  }, [selectedAttributes]);
+
+  const handleAttributeChange = (name: string, value: string) => {
+    setSelectedAttributes((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  // console.log(selectedAttributes)
   //
   const [variantActive, setVariantActive] = useState(0);
-  const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : "");
   const [qualitySelected, setQualitySelected] = useState(1);
   const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
     useState(false);
 
   //
   const notifyAddTocart = () => {
-    toast.custom(
-      (t) => (
-        <NotifyAddTocart
-          productImage={thumbnail}
-          qualitySelected={qualitySelected}
-          show={t.visible}
-          sizeSelected={sizeSelected}
-          variantActive={variantActive}
-        />
-      ),
-      { position: "top-right", id: "nc-product-notify", duration: 3000 }
-    );
+    // toast.custom(
+    //   (t) => (
+    //     <NotifyAddTocart
+    //       productImage={thumbnail}
+    //       qualitySelected={qualitySelected}
+    //       show={t.visible}
+    //       sizeSelected={sizeSelected}
+    //       variantActive={variantActive}
+    //     />
+    //   ),
+    //   { position: "top-right", id: "nc-product-notify", duration: 3000 }
+    // );
   };
 
   const renderVariants = () => {
-    if (!variants || !variants.length) {
+    if (
+      productData?.product_variations.length === 1 ||
+      productData?.product_variations.length === 0
+    ) {
       return null;
     }
 
     return (
       <div>
-        <label htmlFor="">
-          <span className="text-sm font-medium">
-            Color:
-            <span className="ml-1 font-semibold">
-              {variants[variantActive].title}
-            </span>
-          </span>
-        </label>
-        <div className="flex mt-3">
-          {variants.map((variant, index) => (
-            <div
-              key={index}
-              onClick={() => setVariantActive(index)}
-              className={`relative flex-1 max-w-[75px] h-10 sm:h-11 rounded-full border-2 cursor-pointer ${
-                variantActive === index
-                  ? "border-primary-6000 dark:border-primary-500"
-                  : "border-transparent"
-              }`}
-            >
-              <div
-                className="absolute inset-0.5 rounded-full overflow-hidden z-0 object-cover bg-cover"
-                style={{
-                  backgroundImage: `url(${
-                    // @ts-ignore
-                    typeof variant.thumbnail?.src === "string"
-                      ? // @ts-ignore
-                        variant.thumbnail?.src
-                      : typeof variant.thumbnail === "string"
-                      ? variant.thumbnail
-                      : ""
-                  })`,
-                }}
-              ></div>
+        <div className="varDisplay">
+          <div>
+            {productData?.attributes &&
+              productData?.attributes.map((attr) => (
+                <div key={attr.name}>
+                  <label>{attr.name}:</label>
+                  <select
+                    value={selectedAttributes[attr.name] || ""}
+                    onChange={(e) =>
+                      handleAttributeChange(attr.name, e.target.value)
+                    }
+                  >
+                    <option value="">Select {attr.name}</option>
+                    {attr.options.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+          </div>
+
+          {/* Display Price and Variation Details */}
+          {selectedVariation ? (
+            <div>
+              <h2>Selected Variation Details</h2>
+              <p>Price: {selectedVariation.price}</p>
+              <p>Sale Price: {selectedVariation.sale_price}</p>
+              <p>Total Price: {selectedVariation.total_price}</p>
+              <p>Stock: {selectedVariation.product_qty}</p>
             </div>
-          ))}
+          ) : (
+            <p>Please select all attributes to see price and details.</p>
+          )}
         </div>
       </div>
     );
-  };
-
-  const renderSizeList = () => {
-    if (!allOfSizes || !sizes || !sizes.length) {
-      return null;
-    }
-    return (
-      <div>
-        <div className="flex justify-between font-medium text-sm">
-          <label htmlFor="">
-            <span className="">
-              Size:
-              <span className="ml-1 font-semibold">{sizeSelected}</span>
-            </span>
-          </label>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="##"
-            className="text-primary-6000 hover:text-primary-500"
-          >
-            See sizing chart
-          </a>
-        </div>
-        <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 mt-3">
-          {allOfSizes.map((size, index) => {
-            const isActive = size === sizeSelected;
-            const sizeOutStock = !sizes.includes(size);
-            return (
-              <div
-                key={index}
-                className={`relative h-10 sm:h-11 rounded-2xl border flex items-center justify-center 
-                text-sm sm:text-base uppercase font-semibold select-none overflow-hidden z-0 ${
-                  sizeOutStock
-                    ? "text-opacity-20 dark:text-opacity-20 cursor-not-allowed"
-                    : "cursor-pointer"
-                } ${
-                  isActive
-                    ? "bg-primary-6000 border-primary-6000 text-white hover:bg-primary-6000"
-                    : "border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-200 hover:bg-neutral-50 dark:hover:bg-neutral-700"
-                }`}
-                onClick={() => {
-                  if (sizeOutStock) {
-                    return;
-                  }
-                  setSizeSelected(size);
-                }}
-              >
-                {size}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const renderStatus = () => {
-    if (!status) {
-      return null;
-    }
-    const CLASSES =
-      "absolute top-3 left-3 px-2.5 py-1.5 text-xs bg-white dark:bg-slate-900 nc-shadow-lg rounded-full flex items-center justify-center text-slate-700 text-slate-900 dark:text-slate-300";
-    if (status === "New in") {
-      return (
-        <div className={CLASSES}>
-          <SparklesIcon className="w-3.5 h-3.5" />
-          <span className="ml-1 leading-none">{status}</span>
-        </div>
-      );
-    }
-    if (status === "50% Discount") {
-      return (
-        <div className={CLASSES}>
-          <IconDiscount className="w-3.5 h-3.5" />
-          <span className="ml-1 leading-none">{status}</span>
-        </div>
-      );
-    }
-    if (status === "Sold Out") {
-      return (
-        <div className={CLASSES}>
-          <NoSymbolIcon className="w-3.5 h-3.5" />
-          <span className="ml-1 leading-none">{status}</span>
-        </div>
-      );
-    }
-    if (status === "limited edition") {
-      return (
-        <div className={CLASSES}>
-          <ClockIcon className="w-3.5 h-3.5" />
-          <span className="ml-1 leading-none">{status}</span>
-        </div>
-      );
-    }
-    return null;
   };
 
   const renderSectionContent = () => {
     const accData = [
       {
-        name: "Description",
-        content: `${productData?.details}`,
+        name: "Specializations",
+        content: `${productData?.specializations}`,
       },
-      // {
-      //   name: "Specializations",
-      //   content: `${productData?.specializations}`,
-      // }
     ];
-    console.log(accData)
+
+    let lowestPrice: number | string;
+    let largestPrice: number | string;
+    let price: number | string;
+
+    const getPrice = () => {
+      if (productData?.product_variations.length === 1) {
+        const singlePrice = parseFloat(
+          productData?.product_variations[0].sale_price
+        );
+        price = singlePrice;
+        return price;
+      } else if (
+        productData?.product_variations &&
+        productData?.product_variations.length > 1
+      ) {
+        const salePrices = productData?.product_variations.map((item) =>
+          parseFloat(item.sale_price)
+        );
+        lowestPrice = Math.min(...salePrices);
+        largestPrice = Math.max(...salePrices);
+
+        return productData?.product_variations.length === 1
+          ? price
+          : `${lowestPrice} - ${largestPrice}`;
+      }
+    };
+
     return (
       <div className="space-y-7 2xl:space-y-8">
         {/* ---------- 1 HEADING ----------  */}
@@ -257,7 +233,7 @@ const ProductDetailPage = ({
             {/* <div className="flex text-xl font-semibold">$112.00</div> */}
             <Prices
               contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
-              price={productData?.price}
+              price={getPrice()}
             />
 
             <div className="h-7 border-l border-slate-300 dark:border-slate-700"></div>
@@ -287,7 +263,7 @@ const ProductDetailPage = ({
 
         {/* ---------- 3 VARIANTS AND SIZE LIST ----------  */}
         <div className="">{renderVariants()}</div>
-        <div className="">{renderSizeList()}</div>
+        {/* <div className="">{renderSizeList()}</div> */}
 
         {/*  ---------- 4  QTY AND ADD TO CART BUTTON */}
         <div className="flex space-x-3.5">
@@ -311,7 +287,22 @@ const ProductDetailPage = ({
         {/*  */}
 
         {/* ---------- 5 ----------  */}
-        {accData && <AccordionInfo data={accData} />}
+        {/* {accData && <AccordionInfo data={accData} />} */}
+
+        {/* ---------- Specializations ----------  */}
+        <h3 className="text-xl font-semibold">Specializations</h3>
+        {productData?.specializations && (
+          productData.specializations.map( (s, i) => (
+            <p key={i}><b>{i+1}. {s.title}</b><br />{s.value}</p>
+          ))
+        )}
+        {/* ---------- Ingredient ----------  */}
+        <h3 className="text-xl font-semibold">Ingredient</h3>
+        {productData?.ingredient && (
+          productData.ingredient.map( (s, i) => (
+            <p key={i}><b>{i+1}. {s.title}</b><br />{s.image}</p>
+          ))
+        )}
 
         {/* ---------- 6 ----------  */}
         <div className="hidden xl:block">
@@ -336,59 +327,6 @@ const ProductDetailPage = ({
     );
   };
 
-  const renderReviews = () => {
-    return (
-      <div className="">
-        {/* HEADING */}
-        <h2 className="text-2xl font-semibold flex items-center">
-          <StarIcon className="w-7 h-7 mb-0.5" />
-          <span className="ml-1.5"> 4,87 · 142 Reviews</span>
-        </h2>
-
-        {/* comment */}
-        <div className="mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28">
-            <ReviewItem />
-            <ReviewItem
-              data={{
-                comment: `I love the charcoal heavyweight hoodie. Still looks new after plenty of washes. 
-                  If you’re unsure which hoodie to pick.`,
-                date: "December 22, 2021",
-                name: "Stiven Hokinhs",
-                starPoint: 5,
-              }}
-            />
-            <ReviewItem
-              data={{
-                comment: `The quality and sizing mentioned were accurate and really happy with the purchase. Such a cozy and comfortable hoodie. 
-                Now that it’s colder, my husband wears his all the time. I wear hoodies all the time. `,
-                date: "August 15, 2022",
-                name: "Gropishta keo",
-                starPoint: 5,
-              }}
-            />
-            <ReviewItem
-              data={{
-                comment: `Before buying this, I didn't really know how I would tell a "high quality" sweatshirt, but after opening, I was very impressed. 
-                The material is super soft and comfortable and the sweatshirt also has a good weight to it.`,
-                date: "December 12, 2022",
-                name: "Dahon Stiven",
-                starPoint: 5,
-              }}
-            />
-          </div>
-
-          <ButtonSecondary
-            onClick={() => setIsOpenModalViewAllReviews(true)}
-            className="mt-10 border border-slate-300 dark:border-slate-700 "
-          >
-            Show me all 142 reviews
-          </ButtonSecondary>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className={`nc-ProductDetailPage `}>
       {/* MAIn */}
@@ -399,17 +337,18 @@ const ProductDetailPage = ({
             {/* HEADING */}
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
-                {productData?.first_image && (
+                {productData?.feature_image && (
                   <Image
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
-                    src={productData?.first_image}
+                    // src={productData?.feature_image}
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${productData?.feature_image}`}
                     className="w-full rounded-2xl object-cover"
                     alt="product detail 1"
                   />
                 )}
               </div>
-              {renderStatus()}
+              {/* {renderStatus()} */}
               {/* META FAVORITES */}
               {/* <LikeButton className="absolute right-3 top-3 " /> */}
             </div>
@@ -454,12 +393,13 @@ const ProductDetailPage = ({
           <hr className="border-slate-200 dark:border-slate-700" />
 
           {/* OTHER SECTION */}
-          <SectionSliderProductCard
+          <SectionGridFeatureItems />
+          {/* <SectionSliderProductCard
             heading="Related Products"
             subHeading=""
             headingFontClassName="text-2xl font-semibold"
             headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"
-          />
+          /> */}
 
           {/* SECTION */}
           {/* <div className="pb-20 xl:pb-28 lg:pt-14">

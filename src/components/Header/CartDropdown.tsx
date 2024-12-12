@@ -23,7 +23,7 @@ export default function CartDropdown() {
         <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             fill
-            src={thumbnail}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL}${thumbnail}`}
             alt={title}
             className="h-full w-full object-contain object-center"
           />
@@ -186,12 +186,14 @@ export default function CartDropdown() {
                         items.map((item, index) => (
                           <div key={index} className="flex py-5 last:pb-0">
                             <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
-                              <Image
-                                fill
-                                src={item.thumbnail}
-                                alt={item.name}
-                                className="h-full w-full object-contain object-center"
-                              />
+                              {item.thumbnail && (
+                                <Image
+                                  fill
+                                  src={`${process.env.NEXT_PUBLIC_BASE_URL}${item.thumbnail}`}
+                                  alt={item.name}
+                                  className="h-full w-full object-contain object-center"
+                                />
+                              )}
                               <Link
                                 onClick={close}
                                 className="absolute inset-0"

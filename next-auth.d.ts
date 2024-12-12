@@ -20,7 +20,7 @@ declare module "next-auth" {
       email: string;
       apiToken: string;
     };
-    apiToken: string; // Add apiToken to the session
+    // apiToken: string;
   }
 
   interface JWT {

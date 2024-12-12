@@ -40,19 +40,29 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   const {
     title,
     description,
-    product_details,
+    product_variations,
     slug,
     sizes,
     variants,
     variantType,
     status,
-    thumbnail,
+    feature_image,
     rating,
     id,
     numberOfReviews,
   } = data;
 
-  // const { packing_id, packing_size, price, packing_qty, sale_price, GST_price, total_price } = product_details
+  // const {
+  //   attribute_id,
+  //   product_qty,
+  //   price,
+  //   sale_price,
+  //   gst_price,
+  //   total_price,
+  //   // packing_id: number;
+  //   // packing_size: string;
+  //   attribute,
+  // } = product_variations;
 
   const dispatch = useAppDispatch();
   const [variantActive, setVariantActive] = useState(0);
@@ -62,21 +72,21 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
 
   let lowestPrice: number | string;
   let largestPrice: number | string;
-  let price: number | string;
+  let price: number;
 
   const getPrice = () => {
-    if (product_details.length === 1) {
-      const singlePrice = parseFloat(product_details[0].sale_price);
+    if (product_variations.length === 1) {
+      const singlePrice = parseFloat(product_variations[0].sale_price);
       price = singlePrice;
       return price;
-    } else if (product_details.length > 1) {
-      const salePrices = product_details.map((item) =>
+    } else if (product_variations.length > 1) {
+      const salePrices = product_variations.map((item) =>
         parseFloat(item.sale_price)
       );
       lowestPrice = Math.min(...salePrices);
       largestPrice = Math.max(...salePrices);
 
-      return product_details.length === 1
+      return product_variations.length === 1
         ? price
         : `${lowestPrice} - ${largestPrice}`;
     }
@@ -85,13 +95,13 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   const wishlistData = {
     id: String(id),
     name: title,
-    thumbnail: thumbnail,
+    thumbnail: feature_image,
     price: 55000,
   };
 
   // console.log('fdfs', typeof(getPrice()))
 
-  const notifyAddTocart = ({ packing_size }: { packing_size?: string }) => {
+  const notifyAddTocart = ({ attribute_id }: { attribute_id?: string }) => {
     toast.custom(
       (t) => (
         <Transition
@@ -109,7 +119,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             Added to cart!
           </p>
           <div className="border-t border-slate-200 dark:border-slate-700 my-4" />
-          {renderProductCartOnNotify({ packing_size })}
+          {renderProductCartOnNotify({ attribute_id })}
         </Transition>
       ),
       {
@@ -122,8 +132,10 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     const cartItem = {
       id: String(id),
       name: title,
-      thumbnail: thumbnail,
-      price: 34343,
+      thumbnail: feature_image 
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}${feature_image}` 
+    : null,
+      price: (product_variations.length === 1 ? parseFloat(product_variations[0].sale_price) : 0),
       quantity: 1,
     };
 
@@ -131,9 +143,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   };
 
   const renderProductCartOnNotify = ({
-    packing_size,
+    attribute_id,
   }: {
-    packing_size?: string;
+    attribute_id?: string;
   }) => {
     return (
       <div className="flex ">
@@ -141,7 +153,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           <Image
             width={80}
             height={96}
-            src={thumbnail}
+            src={feature_image}
             alt={title}
             className="absolute object-cover object-center"
           />
@@ -157,7 +169,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
                     {variants ? variants[variantActive].title : `Natural`}
                   </span>
                   <span className="mx-2 border-s border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{packing_size || "-"}</span>
+                  <span>{attribute_id || "-"}</span>
                 </p>
               </div>
               <Prices price={getPrice()} className="mt-0.5" />
@@ -277,7 +289,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           className="shadow-lg"
           fontSize="text-xs"
           sizeClass="py-2 px-4"
-          onClick={() => notifyAddTocart({ packing_size: "XL" })}
+          onClick={() => notifyAddTocart({ attribute_id: "XL" })}
         >
           <BagIcon className="w-3.5 h-3.5 mb-0.5" />
           <span className="ms-1">Add to bag</span>
@@ -298,28 +310,59 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     );
   };
 
-  const renderSizeList = () => {
-    if (product_details.length === 1) {
-      return null;
-    }
-
+  const renderGroupVariationButtons = () => {
     return (
-      <div className="absolute bottom-0 inset-x-1 space-x-1.5 rtl:space-x-reverse flex justify-center opacity-0 invisible group-hover:bottom-4 group-hover:opacity-100 group-hover:visible transition-all">
-        {product_details.map((item, index) => {
-          const { packing_size } = item;
-          return (
-            <div
-              key={index}
-              className="nc-shadow-lg w-10 h-10 rounded-xl bg-white hover:bg-slate-900 hover:text-white transition-colors cursor-pointer flex items-center justify-center uppercase font-semibold tracking-tight text-sm text-slate-900"
-              onClick={() => notifyAddTocart({ packing_size })}
-            >
-              {item.packing_size}
-            </div>
-          );
-        })}
+      <div className="absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+        <Link href={`/products/${slug}`} className="">
+        <ButtonPrimary
+          className="shadow-lg"
+          fontSize="text-xs"
+          sizeClass="py-2 px-4"
+          // onClick={() => notifyAddTocart({ attribute_id: "XL" })}
+        >
+          <BagIcon className="w-3.5 h-3.5 mb-0.5" />
+          <span className="ms-1">View Product</span>
+        </ButtonPrimary>
+        </Link>
+        <ButtonSecondary
+          className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
+          fontSize="text-xs"
+          sizeClass="py-2 px-4"
+          onClick={() => {
+            setModalContent(data);
+            setShowModalQuickView(true);
+          }}
+        >
+          <ArrowsPointingOutIcon className="w-3.5 h-3.5" />
+          <span className="ms-1">Quick view</span>
+        </ButtonSecondary>
       </div>
     );
   };
+
+  // const renderSizeList = () => {
+  //   if (product_variations.length === 1) {
+  //     return null;
+  //   }
+
+  //   return (
+  //     <div className="absolute bottom-0 inset-x-1 space-x-1.5 rtl:space-x-reverse flex justify-center opacity-0 invisible group-hover:bottom-4 group-hover:opacity-100 group-hover:visible transition-all">
+  //       {product_variations.map((item, index) => {
+  //         console.log('zzzzz',item);
+  //         const { attribute } = item;
+  //         return (
+  //           <div
+  //             key={index}
+  //             className="nc-shadow-lg w-10 h-10 rounded-xl bg-white hover:bg-slate-900 hover:text-white transition-colors cursor-pointer flex items-center justify-center uppercase font-semibold tracking-tight text-sm text-slate-900"
+  //             onClick={() => notifyAddTocart({ attribute })}
+  //           >
+  //             {item.attribute_id}
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
@@ -332,7 +375,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           <Link href={`/products/${slug}`} className="block">
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={thumbnail}
+              src={`${process.env.NEXT_PUBLIC_BASE_URL}${feature_image}`}
               className="object-cover w-full h-full drop-shadow-xl"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
@@ -345,9 +388,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             data={wishlistData}
             className="absolute top-3 end-3 z-10"
           />
-          {product_details.length === 1
+          {product_variations.length === 1
             ? renderGroupButtons()
-            : renderSizeList()}
+            : renderGroupVariationButtons()}
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">

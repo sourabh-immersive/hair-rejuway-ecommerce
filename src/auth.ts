@@ -36,6 +36,9 @@ export const {
             { email, password }
           );
 
+          // set session in redux 
+          
+
           if (response.data.status) {
             const { user, token } = response.data.data;
             console.log("token rtest", token);

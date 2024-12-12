@@ -26,14 +26,31 @@ export interface ProductVariant {
   featuredthumbnail: StaticImageData | string;
 }
 
+interface Attribute  {
+  attribute_title: string,
+  attribute_field_type: string,
+  attribute_value: string
+}
+
 interface productDetails {
-  packing_id: number,
-  packing_size: string,
-  price: string,
-  packing_qty: string,
-  sale_price: string,
-  GST_price: string,
-  total_price: string
+  attribute_id: number;
+  product_qty: string;
+  price: string;
+  sale_price: string;
+  gst_price: string;
+  total_price: string;
+  // packing_id: number;
+  // packing_size: string;
+  attribute: Attribute[];
+
+  // packing_qty: string;
+
+  // GST_price: string;
+}
+
+interface AttributeOptions {
+  name: string;
+  options: string[];
 }
 
 export interface Product {
@@ -42,14 +59,19 @@ export interface Product {
   price: number;
   slug: string;
   details: string;
+  attributes?: AttributeOptions[];
   first_image?: string;
-  specializations?: 
-    {
-      name: string,
-      content: ReactNode,
-    }[]
-  ;
-  product_details: productDetails[];
+  feature_image: StaticImageData | string;
+  specializations?: {
+    title: string;
+    value: ReactNode;
+  }[];
+  ingredient?: {
+    id: number;
+    title: string;
+    image: string;
+  }[];
+  product_variations: productDetails[];
   thumbnail: StaticImageData | string;
   description: string;
   category: string;
@@ -135,10 +157,11 @@ export const PRODUCTS: Product[] = [
     title: "Rey Nylon Backpack",
     description: "Brown cockroach wings",
     price: 74,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
     thumbnail: productImgs[16],
+    feature_image: productImgs[16],
     category: "Category 1",
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
@@ -155,10 +178,11 @@ export const PRODUCTS: Product[] = [
     title: 'Round Buckle 1" Belt',
     description: "Classic green",
     price: 68,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
     thumbnail: productImgs[1],
+    feature_image: productImgs[16],
     category: "Category 1",
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
@@ -173,9 +197,10 @@ export const PRODUCTS: Product[] = [
     title: "Waffle Knit Beanie",
     description: "New blue aqua",
     price: 132,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
+    feature_image: productImgs[16],
     thumbnail: productImgs[15],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -192,9 +217,10 @@ export const PRODUCTS: Product[] = [
     title: "Travel Pet Carrier",
     description: "Dark pink 2023",
     price: 28,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
+    feature_image: productImgs[16],
     thumbnail: productImgs[3],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -210,9 +236,10 @@ export const PRODUCTS: Product[] = [
     title: "Leather Gloves",
     description: "Perfect mint green",
     price: 42,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
+    product_variations: [],
     thumbnail: productImgs[4],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -229,9 +256,10 @@ export const PRODUCTS: Product[] = [
     title: "Hoodie Sweatshirt",
     description: "New design 2023",
     price: 30,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
+    product_variations: [],
     thumbnail: productImgs[5],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -246,9 +274,10 @@ export const PRODUCTS: Product[] = [
     title: "Wool Cashmere Jacket",
     description: "Matte black",
     price: 12,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
+    product_variations: [],
     thumbnail: productImgs[8],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -264,9 +293,10 @@ export const PRODUCTS: Product[] = [
     title: "Ella Leather Tote",
     description: "Cream pink",
     price: 145,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    feature_image: productImgs[16],
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
     thumbnail: productImgs[7],
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -287,9 +317,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Mastermind Toys",
     description: "Brown cockroach wings",
     price: 74,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
+    product_variations: [],
     thumbnail: productSport1,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -307,9 +338,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Jump Rope Kids",
     description: "Classic green",
     price: 68,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
+    feature_image: productImgs[16],
     thumbnail: productSport2,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -325,9 +357,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Tee Ball Beanie",
     description: "New blue aqua",
     price: 132,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
+    feature_image: productImgs[16],
     thumbnail: productSport3,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -344,10 +377,11 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Rubber Table Tennis",
     description: "Dark pink 2023",
     price: 28,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
     thumbnail: productSport4,
+    feature_image: productImgs[16],
     category: "Category 1",
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANT_COLORS,
@@ -362,9 +396,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Classic Blue Rugby",
     description: "Perfect mint green",
     price: 42,
-    slug: 'slugstatic',
-    product_details: [],
-    details: '<p>dfhgfh</p>',
+    slug: "slugstatic",
+    product_variations: [],
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
     thumbnail: productSport5,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -381,9 +416,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Manhattan Toy WRT",
     description: "New design 2023",
     price: 30,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    feature_image: productImgs[16],
+    product_variations: [],
     thumbnail: productSport6,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -398,9 +434,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Tabletop Football ",
     description: "Matte black",
     price: 12,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    feature_image: productImgs[16],
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
     thumbnail: productSport7,
     category: "Category 1",
     tags: ["tag1", "tag2"],
@@ -416,9 +453,10 @@ export const SPORT_PRODUCTS: Product[] = [
     title: "Pvc Catching Toy",
     description: "Cream pink",
     price: 145,
-    slug: 'slugstatic',
-    details: '<p>dfhgfh</p>',
-    product_details: [],
+    slug: "slugstatic",
+    details: "<p>dfhgfh</p>",
+    product_variations: [],
+    feature_image: productImgs[16],
     thumbnail: productSport8,
     category: "Category 1",
     tags: ["tag1", "tag2"],

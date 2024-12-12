@@ -11,6 +11,7 @@ import {
   doCredentialLogin,
   doLogout,
   doSocialLogin,
+  getSessionData,
   isAuthenticated,
 } from "../server-actions/actions";
 import { redirect, useRouter } from "next/navigation";
@@ -18,6 +19,8 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import { SigninFormSchema } from "@/lib/definitions";
 import { useSession, SessionProvider } from "next-auth/react";
+import { useAppDispatch } from "@/lib/hooks";
+import { AuthUser, initializeSession } from "@/lib/features/authSlice/authSlice";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -61,6 +64,8 @@ const LoginForm = () => {
 //   }
   const router = useRouter();
   const [error, setError] = useState("");
+  const dispatch = useAppDispatch();
+  const { data: session, status } = useSession();
 
   async function onSubmit(event: any) {
     event.preventDefault();
@@ -87,6 +92,20 @@ const LoginForm = () => {
         console.error(response.error);
         setError(response.error.message);
       } else {
+        console.log('loginpage se444444444444444444444444',session);
+        const sessionData = await getSessionData();
+        console.log('after serverfunc call', sessionData)
+        if (sessionData?.user) {
+          const user: AuthUser = {
+            id: sessionData.user.id || "",
+            name: sessionData.user.name || "",
+            email: sessionData.user.email || "",
+            token: sessionData.user.apiToken || "",
+          };
+          dispatch(initializeSession(user));
+        } else {
+          dispatch(initializeSession(null));
+        }
         router.push("/account");
         // console.log('tokenff', session?.apiToken)
       }
