@@ -123,7 +123,7 @@ const ProductDetailPage2 = ({}) => {
       (t) => (
         <NotifyAddTocart
           productImage={thumbnail}
-          qualitySelected={qualitySelected}
+          quantitySelected={qualitySelected}
           show={t.visible}
           sizeSelected={sizeSelected}
           variantActive={variantActive}
