@@ -38,7 +38,7 @@ const ProductQuickView2: FC<ProductQuickView2Props> = ({ className = "" }) => {
       (t) => (
         <NotifyAddTocart
           productImage={LIST_IMAGES_DEMO[0]}
-          qualitySelected={qualitySelected}
+          quantitySelected={qualitySelected}
           show={t.visible}
           sizeSelected={sizeSelected}
           variantActive={variantActive}
