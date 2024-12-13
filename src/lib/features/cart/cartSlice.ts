@@ -58,11 +58,14 @@ export const cartSlice = createAppSlice({
     addItemToCart: create.reducer(
       (state, action: PayloadAction<CartItem>) => {
         const { id, productType, attributesData, quantity, price, salePrice } = action.payload;
+        console.log('action data',productType)
         if (productType === 'simple') {
           const itemIndex = state.items.findIndex(item => item.id === id);
           if (itemIndex >= 0) {
             state.items[itemIndex].quantity += quantity;
+            console.log('existing prod to cart', {...action.payload})
           } else {
+            console.log('new prod to cart', {...action.payload})
             state.items.push({ ...action.payload });
           }
         } else if (productType === 'variable') {

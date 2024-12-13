@@ -136,6 +136,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       name: title,
       thumbnail: feature_image ? `${feature_image}` : null,
       price: (product_variations[0].price),
+      productType: productType,
       salePrice: (product_variations[0].sale_price),
       quantity: 1,
     };
@@ -154,7 +155,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           <Image
             width={80}
             height={96}
-            src={feature_image}
+            src={feature_image} 
             alt={title}
             className="absolute object-cover object-center"
           />
