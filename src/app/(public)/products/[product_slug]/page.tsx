@@ -160,6 +160,7 @@ const ProductDetailPage = ({
     );
 
     if (productType === "simple") {
+      
       const cartItem = {
         id: String(productData?.id),
         name: productData?.title ? productData.title : "Product",
@@ -172,9 +173,12 @@ const ProductDetailPage = ({
         salePrice: productData?.product_variations[0].sale_price
           ? productData?.product_variations[0].sale_price
           : 0,
+          attributesData: [],
         quantity: quantitySelected,
         productType: productType,
       };
+
+      console.log('simple', cartItem);
       dispatch(addItemToCart(cartItem));
     } else {
       const cartItem = {

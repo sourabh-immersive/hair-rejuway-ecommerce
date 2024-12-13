@@ -57,10 +57,8 @@ export const cartSlice = createAppSlice({
 
     addItemToCart: create.reducer(
       (state, action: PayloadAction<CartItem>) => {
-        const { id, productType, attributesData, quantity, price } = action.payload;
-    
+        const { id, productType, attributesData, quantity, price, salePrice } = action.payload;
         if (productType === 'simple') {
-          // Handle simple products
           const itemIndex = state.items.findIndex(item => item.id === id);
           if (itemIndex >= 0) {
             state.items[itemIndex].quantity += quantity;
@@ -68,7 +66,6 @@ export const cartSlice = createAppSlice({
             state.items.push({ ...action.payload });
           }
         } else if (productType === 'variable') {
-          // Handle variable products
           const existingItemIndex = state.items.findIndex(item => {
             return (
               item.id === id &&
@@ -81,17 +78,14 @@ export const cartSlice = createAppSlice({
           });
     
           if (existingItemIndex >= 0) {
-            // If the item exists with the same attributes, increase its quantity
             state.items[existingItemIndex].quantity += quantity;
           } else {
-            // If not, add a new item
             state.items.push({ ...action.payload });
           }
         }
     
-        // Update total items and total amount
         state.totalItems += quantity;
-        state.totalAmount += price * quantity;
+        state.totalAmount += salePrice * quantity;
       }
     ),
 
@@ -127,7 +121,7 @@ export const cartSlice = createAppSlice({
         if (itemIndex >= 0) {
           const item = state.items[itemIndex];
           state.totalItems -= item.quantity;
-          state.totalAmount -= (item.price) * item.quantity;
+          state.totalAmount -= (item.salePrice) * item.quantity;
     
           state.items.splice(itemIndex, 1); // Remove the item
         }
