@@ -40,20 +40,21 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({
 
   // console.log(data)
 
-  const notifyAddTocart = () => {
-    toast.custom(
-      (t) => (
-        <NotifyAddTocart
-          productImage={LIST_IMAGES_DEMO[0]}
-          quantitySelected={qualitySelected}
-          show={t.visible}
-          sizeSelected={sizeSelected}
-          variantActive={variantActive}
-        />
-      ),
-      { position: "top-right", id: "nc-product-notify", duration: 3000 }
-    );
-  };
+  // const notifyAddTocart = () => {
+  //   toast.custom(
+  //     (t) => (
+  //       <NotifyAddTocart
+  //         productImage={'https://placehold.co/100x50'}
+  //         quantitySelected={qualitySelected}
+  //         show={t.visible}
+  //         title={'df'}
+  //         sizeSelected={sizeSelected}
+  //         variantActive={variantActive}
+  //       />
+  //     ),
+  //     { position: "top-right", id: "nc-product-notify", duration: 3000 }
+  //   );
+  // };
 
   const renderVariants = () => {
     if (!variants || !variants.length) {
@@ -253,7 +254,7 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({
           </div>
           <ButtonPrimary
             className="flex-1 flex-shrink-0"
-            onClick={notifyAddTocart}
+            // onClick={notifyAddTocart}
           >
             <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
             <span className="ms-3">Add to cart</span>
