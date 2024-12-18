@@ -6,20 +6,25 @@ import Image, { StaticImageData } from "next/image";
 
 interface Props {
   show: boolean;
+  title: string;
   productImage: string | StaticImageData;
   variantActive: number;
   sizeSelected: string;
   quantitySelected: number;
+  price: number;
+  salePrice: number;
 }
 
 const NotifyAddTocart: FC<Props> = ({
   show,
+  title,
   productImage,
   variantActive,
   quantitySelected,
   sizeSelected,
+  price,
+  salePrice,
 }) => {
-  const { title, price, variants } = PRODUCTS[0];
 
   const renderProductCartOnNotify = () => {
     return (
@@ -39,15 +44,19 @@ const NotifyAddTocart: FC<Props> = ({
             <div className="flex justify-between ">
               <div>
                 <h3 className="text-base font-medium ">{title}</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {/* <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   <span>
                     {variants ? variants[variantActive].title : `Natural`}
                   </span>
                   <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
                   <span>{sizeSelected || "XL"}</span>
-                </p>
+                </p> */}
               </div>
-              <Prices price={price} className="mt-0.5" />
+              <Prices
+                price={price}
+                salePrice={salePrice}
+                className="mt-0.5"
+              />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">

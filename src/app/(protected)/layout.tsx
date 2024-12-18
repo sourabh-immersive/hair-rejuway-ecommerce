@@ -5,6 +5,7 @@ import Footer from "@/shared/Footer/Footer";
 import Tabs from "./tabs";
 import SessionProvider from "./SessionProvider";
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export interface CommonLayoutProps {
   children?: React.ReactNode;
@@ -13,8 +14,8 @@ export interface CommonLayoutProps {
 const CommonLayout: FC<CommonLayoutProps> = async ({ children }) => {
   const session = await auth();
 
-  if (!session?.user) return null;
-  console.log(session);
+  if (!session?.user) return redirect('/signin');
+  
   return (
     <>
       <SessionProvider>
@@ -30,7 +31,7 @@ const CommonLayout: FC<CommonLayoutProps> = async ({ children }) => {
                   </span>{" "}
                   {session.user.email} · Los Angeles, CA
                   <br />
-                  <p>{session.user.apiToken}</p>
+                  {/* <p>{session.user.apiToken}</p> */}
                 </span>
               </div>
               <hr className="mt-10 border-slate-200 dark:border-slate-700" />

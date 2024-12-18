@@ -328,8 +328,8 @@ export default function AvatarDropdown() {
                         <p
                           className="text-sm font-medium"
                           onClick={() => {
-                            dispatch(initializeSession(null));
                             doLogout()
+                            dispatch(initializeSession(null));
                            } }
                         >
                           {"Log out"}

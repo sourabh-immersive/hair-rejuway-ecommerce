@@ -6,8 +6,10 @@ import SectionPromo1 from "@/components/SectionPromo1";
 import ProductCard from "@/components/ProductCard";
 import { PRODUCTS } from "@/data/data";
 import TabFilters from "@/components/TabFilters";
+import { getProducts } from "@/api/products";
 
-const PageCollection = ({}) => {
+const PageCollection = async ({}) => {
+  const fetchedProducts = await getProducts();
   return (
     <div className={`nc-PageCollection`}>
       <div className="container py-16 lg:pb-28 lg:pt-20 space-y-16 sm:space-y-20 lg:space-y-28">
@@ -15,7 +17,7 @@ const PageCollection = ({}) => {
           {/* HEADING */}
           <div className="max-w-screen-sm">
             <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
-              Man collection
+              Shop
             </h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
               We not only help you design exceptional products, but also make it
@@ -30,27 +32,27 @@ const PageCollection = ({}) => {
 
             {/* LOOP ITEMS */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-              {PRODUCTS.map((item, index) => (
+              {fetchedProducts.map((item, index) => (
                 <ProductCard data={item} key={index} />
               ))}
             </div>
 
             {/* PAGINATION */}
-            <div className="flex flex-col mt-12 lg:mt-16 space-y-5 sm:space-y-0 sm:space-x-3 sm:flex-row sm:justify-between sm:items-center">
+            <div className="flex justify-center mt-5 lg:mt-5">
               <Pagination />
-              <ButtonPrimary loading>Show me more</ButtonPrimary>
+              {/* <ButtonPrimary loading>Show me more</ButtonPrimary> */}
             </div>
           </main>
         </div>
 
         {/* === SECTION 5 === */}
-        <hr className="border-slate-200 dark:border-slate-700" />
+        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
 
-        <SectionSliderCollections />
-        <hr className="border-slate-200 dark:border-slate-700" />
+        {/* <SectionSliderCollections /> */}
+        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
 
         {/* SUBCRIBES */}
-        <SectionPromo1 />
+        {/* <SectionPromo1 /> */}
       </div>
     </div>
   );

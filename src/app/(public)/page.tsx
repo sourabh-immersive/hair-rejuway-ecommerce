@@ -23,15 +23,28 @@ import SectionMagazine5 from "./blog/SectionMagazine5";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import AllCategories from "@/components/AllCategories/AllCategories";
 
 async function PageHome() {
-
+  
   return (
     <div className="nc-PageHome relative overflow-hidden">
       <SectionHero3 />
-      <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">
+      <div className="container relative">
+        <AllCategories />
         <SectionGridFeatureItems />
+        <SectionPromo4 />
+        <SectionSliderProductCard />
       </div>
+      <SectionFeatures />
+      <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
+        <SectionClientSay />
+      </div>
+      <SectionServices />
+      <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">
+        <SectionHairgrowth />
+      </div>
+
       {/* <div className="mt-24 lg:mt-32">
         <DiscoverMoreSlider />
       </div>
@@ -50,9 +63,6 @@ async function PageHome() {
         <div className="container relative space-y-24 my-24 lg:space-y-32 lg:my-32">  
           <SectionSliderProductCard heading="Best Sellers" subHeading="Best selling of the month"/>
         </div>*/}
-      <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
-        <SectionPromo4 />
-      </div>
       {/* <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-20">
         <SectionSliderProductCard
           data={[
@@ -64,16 +74,13 @@ async function PageHome() {
           ]}
         />
       </div> */}
-      <SectionFeatures />
-      <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
-        <SectionClientSay />
-      </div>
-      <SectionServices />
+      
+      
       {/*<SectionPromo2 />
 
         <SectionSliderLargeProduct cardStyle="style2" />
 
-        <SectionSliderCategories />
+        
 
         <SectionPromo3 />
 
@@ -91,9 +98,7 @@ async function PageHome() {
             </div>
           </div>
         </div> */}
-      <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">
-        <SectionHairgrowth />
-      </div>
+      
       {/* </div> */}
     </div>
   );

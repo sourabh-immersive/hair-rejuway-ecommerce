@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Popover, Transition } from "@/app/headlessui";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonThird from "@/shared/Button/ButtonThird";
@@ -10,6 +10,7 @@ import Slider from "rc-slider";
 import Radio from "@/shared/Radio/Radio";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import MySwitch from "@/components/MySwitch";
+import { getProductCategories } from "@/api/products";
 
 // DEMO DATA
 const DATA_categories = [
@@ -75,6 +76,8 @@ const TabFilters = () => {
   const [colorsState, setColorsState] = useState<string[]>([]);
   const [sizesState, setSizesState] = useState<string[]>([]);
   const [sortOrderStates, setSortOrderStates] = useState<string>("");
+  // const [categories, setCategories] = useState(data);
+  const [loading, setLoading] = useState<boolean>(false);
 
   //
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
@@ -98,6 +101,22 @@ const TabFilters = () => {
       ? setSizesState([...sizesState, name])
       : setSizesState(sizesState.filter((i) => i !== name));
   };
+
+  useEffect(() => {
+    const fetchProductCategories = async () => {
+      setLoading(true);
+      try {
+        const fetchedProdCats = await getProductCategories;
+        // setCategories(fetchedProdCats);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductCategories();
+  }, []);
 
   //
 
@@ -651,7 +670,7 @@ const TabFilters = () => {
                 />
               </svg>
 
-              <span className="ml-2 min-w-[90px]">{`${rangePrices[0]}$ - ${rangePrices[1]}$`}</span>
+              <span className="ml-2 min-w-[90px]">{`${rangePrices[0]}₹ - ${rangePrices[1]}₹`}</span>
               {rangePrices[0] === PRICE_RANGE[0] &&
               rangePrices[1] === PRICE_RANGE[1] ? null : (
                 <span onClick={() => setRangePrices(PRICE_RANGE)}>
@@ -1022,7 +1041,7 @@ const TabFilters = () => {
                                 <div className="mt-1 relative rounded-md">
                                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span className="text-neutral-500 sm:text-sm">
-                                      $
+                                      ₹
                                     </span>
                                   </div>
                                   <input
@@ -1045,7 +1064,7 @@ const TabFilters = () => {
                                 <div className="mt-1 relative rounded-md">
                                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <span className="text-neutral-500 sm:text-sm">
-                                      $
+                                      ₹
                                     </span>
                                   </div>
                                   <input
@@ -1132,11 +1151,11 @@ const TabFilters = () => {
     <div className="flex lg:space-x-4">
       {/* FOR DESKTOP */}
       <div className="hidden lg:flex flex-1 space-x-4">
-        {renderTabsPriceRage()}
+        {/* {renderTabsPriceRage()} */}
         {renderTabsCategories()}
-        {renderTabsColor()}
-        {renderTabsSize()}
-        {renderTabIsOnsale()}
+        {/* {renderTabsColor()} */}
+        {/* {renderTabsSize()} */}
+        {/* {renderTabIsOnsale()} */}
         <div className="!ml-auto">{renderTabsSortOrder()}</div>
       </div>
 

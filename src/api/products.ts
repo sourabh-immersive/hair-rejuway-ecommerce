@@ -1,18 +1,13 @@
+'use server'
+
 import apiClient from "./apiClient";
 
-// Fetch Product List
-// export const getProducts = async () => {
-//   try {
-//     const response = await apiClient.post('front/products');
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching products:', error);
-//     throw error;
-//   }
-// };
-export const getProducts = async () => {
+export const getProducts = async (limit?: number) => {
+  console.log('called in server');
   try {
-    const response = await apiClient.post("/front/products"); // Use GET method
+    const requestBody = limit ? { limit } : {};
+    const response = await apiClient.post("/front/products", requestBody);
+
     if (response.data.status) {
       const products = response.data.data;
       if (Array.isArray(products)) {
@@ -30,6 +25,34 @@ export const getProducts = async () => {
     throw error;
   }
 };
+
+// Fetch all product categories
+export const getProductCategories = async () => {
+  try {
+    const response = await apiClient.get(`/front/categories`);
+    if (response.status) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching product categories:`, error);
+    throw error;
+  }
+};
+
+export const getProductsByCatId = async (category: string) => {
+  try {
+    const requestBody = category ? { category } : {};
+    const response = await apiClient.post(`/front/products`, requestBody);
+
+    if (response.status) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching product with category ID ${category}:`);
+    throw error;
+  }
+};
+
 
 // Fetch Single Product by Slug
 export const getProductBySlug = async (slug: string) => {

@@ -79,9 +79,11 @@ const ProductDetailPage = ({
   );
   const dispatch = useAppDispatch();
   const productType =
-    productData?.product_variations.length === 1 ? "simple" : "variable";
+    productData?.product_variations?.length === 1 ? "simple" : "variable";
 
-  const [selectedImage, setSelectedImage] = useState<string | StaticImageData>("");
+  const [selectedImage, setSelectedImage] = useState<string | StaticImageData>(
+    ""
+  );
 
   useEffect(() => {
     if (productData?.feature_image) {
@@ -144,14 +146,24 @@ const ProductDetailPage = ({
           }
           quantitySelected={quantitySelected}
           show={t.visible}
+          title={productData?.title ? productData.title : ""}
           sizeSelected={"f"}
           variantActive={variantActive}
+          price={
+            productType === "simple"
+              ? productData?.product_variations[0].price ?? 0
+              : selectedVariation?.price ?? 0
+          }
+          salePrice={
+            productType === "simple"
+              ? productData?.product_variations[0].sale_price ?? 0
+              : selectedVariation?.sale_price ?? 0
+          }
         />
       ),
       { position: "top-right", id: "nc-product-notify", duration: 3000 }
     );
 
-    // Convert object to array
     const attributesArray = Object.entries(selectedAttributes).map(
       ([key, value]) => ({
         name: key,
@@ -159,44 +171,30 @@ const ProductDetailPage = ({
       })
     );
 
-    if (productType === "simple") {
-      
-      const cartItem = {
-        id: String(productData?.id),
-        name: productData?.title ? productData.title : "Product",
-        thumbnail: productData?.feature_image
-          ? `${productData.feature_image}`
-          : null,
-        price: productData?.product_variations[0].price
-          ? productData.product_variations[0].price
-          : 0,
-        salePrice: productData?.product_variations[0].sale_price
-          ? productData?.product_variations[0].sale_price
-          : 0,
-          attributesData: [],
-        quantity: quantitySelected,
-        productType: productType,
-      };
+    const cartItem = {
+      id: String(productData?.id),
+      name: productData?.title || "Product",
+      thumbnail: productData?.feature_image || null,
+      price:
+        productType === "simple"
+          ? productData?.product_variations?.[0]?.price || 0
+          : selectedVariation?.price ?? 0,
+      salePrice:
+        productType === "simple"
+          ? productData?.product_variations?.[0]?.sale_price !== undefined &&
+            productData?.product_variations?.[0]?.sale_price > 0
+            ? productData?.product_variations?.[0]?.sale_price
+            : productData?.product_variations?.[0]?.price ?? 0
+          : selectedVariation?.sale_price !== undefined &&
+            selectedVariation?.sale_price > 0
+          ? selectedVariation?.sale_price
+          : selectedVariation?.price ?? 0,
+      attributesData: productType === "simple" ? [] : attributesArray,
+      quantity: quantitySelected,
+      productType,
+    };
 
-      console.log('simple', cartItem);
-      dispatch(addItemToCart(cartItem));
-    } else {
-      const cartItem = {
-        id: String(productData?.id),
-        name: productData?.title ? productData.title : "Product",
-        thumbnail: productData?.feature_image
-          ? `${productData.feature_image}`
-          : null,
-        price: selectedVariation?.price ? selectedVariation.price : 0,
-        salePrice: selectedVariation?.sale_price
-          ? selectedVariation.sale_price
-          : 0,
-        attributesData: attributesArray,
-        quantity: quantitySelected,
-        productType: productType,
-      };
-      dispatch(addItemToCart(cartItem));
-    }
+    dispatch(addItemToCart(cartItem));
   };
 
   const renderVariants = () => {
@@ -209,13 +207,63 @@ const ProductDetailPage = ({
 
     return (
       <div>
-        <div className="varDisplay">
+        <div className="newVarDesign">
           <div>
             {productData?.attributes &&
               productData?.attributes.map((attr) => (
-                <div key={attr.name}>
+                <div key={attr.name} className="mb-6">
+                  <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">
+                    {attr.name}:
+                  </h3>
+                  <ul className="flex items-center space-x-3">
+                    {attr.options.map((option) => (
+                      <li key={option}>
+                        <input
+                          type="radio"
+                          id={`${attr.name}-${option}`}
+                          name={attr.name}
+                          value={option}
+                          className="hidden peer"
+                          checked={selectedAttributes[attr.name] === option}
+                          onChange={() =>
+                            handleAttributeChange(attr.name, option)
+                          }
+                          required
+                        />
+                        <label
+                          htmlFor={`${attr.name}-${option}`}
+                          className="inline-flex items-center justify-between p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer 
+                  peer-checked:border-blue-600 peer-checked:text-blue-600 
+                  hover:text-gray-600 hover:bg-gray-100 
+                  dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 
+                  dark:hover:bg-gray-700 dark:hover:text-gray-300 
+                  dark:peer-checked:text-blue-500"
+                        >
+                          <div className="block">
+                            <div className="w-full text-base font-semibold">
+                              {option}
+                            </div>
+                            
+                          </div>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+          </div>
+        </div>
+        <div className="varDisplay">
+          <div>
+            {/* {productData?.attributes &&
+              productData?.attributes.map((attr) => (
+                <div
+                  key={attr.name}
+                  className="flex justify-between items-center"
+                >
                   <label>{attr.name}:</label>
                   <select
+                    className="min-w-60 p-2"
                     value={selectedAttributes[attr.name] || ""}
                     onChange={(e) =>
                       handleAttributeChange(attr.name, e.target.value)
@@ -229,11 +277,11 @@ const ProductDetailPage = ({
                     ))}
                   </select>
                 </div>
-              ))}
+              ))} */}
           </div>
 
           {/* Display Price and Variation Details */}
-          {selectedVariation ? (
+          {/* {selectedVariation ? (
             <div>
               <h2>Selected Variation Details</h2>
               <p>Price: {selectedVariation.price}</p>
@@ -242,8 +290,8 @@ const ProductDetailPage = ({
               <p>Stock: {selectedVariation.product_qty}</p>
             </div>
           ) : (
-            <p>Please select all attributes to see price and details.</p>
-          )}
+            <p className="text-red-600 text-base font-medium">Item is not available.</p>
+          )} */}
         </div>
       </div>
     );
@@ -261,26 +309,59 @@ const ProductDetailPage = ({
     let largestPrice: number | string;
     let price: number | string;
 
-    const getPrice = () => {
-      if (productData?.product_variations.length === 1) {
-        const singlePrice = productData?.product_variations[0].sale_price;
-        price = singlePrice;
-        return price;
-      } else if (
-        productData?.product_variations &&
-        productData?.product_variations.length > 1
-      ) {
-        const salePrices = productData?.product_variations.map(
-          (item) => item.sale_price
-        );
-        lowestPrice = Math.min(...salePrices);
-        largestPrice = Math.max(...salePrices);
+    // const getPrice = () => {
+    //   if (productData?.product_variations.length === 1) {
+    //     const singlePrice = productData?.product_variations[0].sale_price;
+    //     price = singlePrice;
+    //     return price;
+    //   } else if (
+    //     productData?.product_variations &&
+    //     productData?.product_variations.length > 1
+    //   ) {
+    //     const salePrices = productData?.product_variations.map(
+    //       (item) => item.sale_price === 0 ? item.price : item.sale_price
+    //     );
+    //     lowestPrice = Math.min(...salePrices);
+    //     largestPrice = Math.max(...salePrices);
 
-        return productData?.product_variations.length === 1
-          ? price
-          : `${lowestPrice} - ${largestPrice}`;
+    //     return productData?.product_variations.length === 1
+    //       ? price
+    //       : `${lowestPrice} - ${largestPrice}`;
+    //   }
+    // };
+
+    const getPrice = (): string | number | undefined => {
+      if (
+        !productData?.product_variations ||
+        productData?.product_variations.length === 0
+      )
+        return undefined;
+
+      if (productData?.product_variations.length === 1) {
+        const singlePrice =
+          productData?.product_variations[0].sale_price ||
+          productData?.product_variations[0].price;
+        return singlePrice;
       }
+
+      // For multiple variations
+      const salePrices = productData?.product_variations.map((item) =>
+        Number(item.sale_price) > 0
+          ? Number(item.sale_price)
+          : Number(item.price)
+      );
+
+      const lowestPrice = Math.min(...salePrices);
+      const largestPrice = Math.max(...salePrices);
+
+      return `${lowestPrice} - ${largestPrice}`;
     };
+
+    const isDisabled = productType === "variable" && !selectedVariation;
+    const buttonClass = `flex-1 flex-shrink-0 ${
+      isDisabled ? "opacity-80 cursor-not-allowed" : ""
+    }`;
+    const handleClick = !isDisabled ? notifyAddTocart : undefined;
 
     return (
       <div className="space-y-7 2xl:space-y-8">
@@ -291,8 +372,13 @@ const ProductDetailPage = ({
           </h2>
 
           <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
-            {/* <div className="flex text-xl font-semibold">$112.00</div> */}
-            {!selectedVariation?.price && !selectedVariation?.sale_price ? (
+            {productType === "simple" ? (
+              <Prices
+                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
+                price={productData?.product_variations[0].price}
+                salePrice={productData?.product_variations[0].sale_price}
+              />
+            ) : !selectedVariation?.price && !selectedVariation?.sale_price ? (
               <Prices
                 contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
                 priceRange={getPrice()}
@@ -306,6 +392,7 @@ const ProductDetailPage = ({
                 }
               />
             )}
+
             {/* <Prices
               contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
               price={selectedVariation?.price && selectedVariation.price}
@@ -350,8 +437,9 @@ const ProductDetailPage = ({
             />
           </div>
           <ButtonPrimary
-            className="flex-1 flex-shrink-0"
-            onClick={notifyAddTocart}
+            className={buttonClass}
+            onClick={handleClick}
+            disabled={isDisabled}
           >
             <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
             <span className="ml-3">Add to cart</span>
@@ -414,7 +502,7 @@ const ProductDetailPage = ({
 
   return (
     <div className={`nc-ProductDetailPage `}>
-      {/* MAIn */}
+      {/* MAIN */}
       <main className="container mt-5 lg:mt-11">
         <div className="lg:flex">
           {/* CONTENT */}
@@ -440,7 +528,7 @@ const ProductDetailPage = ({
                     <div
                       key={index}
                       className="aspect-w-11 xl:aspect-w-10 2xl:aspect-w-11 aspect-h-11 relative cursor-pointer"
-                      onClick={() => setSelectedImage(item.image)} // Update the selected image
+                      onClick={() => setSelectedImage(item.image)}
                     >
                       <Image
                         sizes="(max-width: 640px) 100vw, 33vw"

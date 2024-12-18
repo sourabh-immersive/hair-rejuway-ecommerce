@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
 
 export interface ProductCardProps {
@@ -41,6 +41,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     title,
     description,
     product_variations,
+    attributes,
     slug,
     sizes,
     variants,
@@ -51,18 +52,6 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     id,
     numberOfReviews,
   } = data;
-
-  // const {
-  //   attribute_id,
-  //   product_qty,
-  //   price,
-  //   sale_price,
-  //   gst_price,
-  //   total_price,
-  //   // packing_id: number;
-  //   // packing_size: string;
-  //   attribute,
-  // } = product_variations;
 
   const dispatch = useAppDispatch();
   const [variantActive, setVariantActive] = useState(0);
@@ -76,23 +65,44 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
 
   const productType = product_variations.length === 1 ? "simple" : "variable";
 
-  const getPrice = () => {
-    if (product_variations.length === 1) {
-      const singlePrice = (product_variations[0].sale_price);
-      price = singlePrice;
-      return price;
-    } else if (product_variations.length > 1) {
-      const salePrices = product_variations.map((item) =>
-        (item.sale_price)
-      );
-      lowestPrice = Math.min(...salePrices);
-      largestPrice = Math.max(...salePrices);
+  // const getPrice = () => {
+  //   if (product_variations.length === 1) {
+  //     const singlePrice = product_variations[0].sale_price;
+  //     price = singlePrice;
+  //     return price;
+  //   } else if (product_variations.length > 1) {
+  //     const salePrices = product_variations.map((item) =>
+  //       item.sale_price === 0 ? item.price : item.sale_price
+  //     );
+  //     console.log('pricesss',salePrices);
+  //     lowestPrice = Math.min(...salePrices);
+  //     largestPrice = Math.max(...salePrices);
 
-      return product_variations.length === 1
-        ? price
-        : `${lowestPrice} - ${largestPrice}`;
+  //     return product_variations.length === 1
+  //       ? price
+  //       : `${lowestPrice} - ${largestPrice}`;
+  //   }
+  // };
+
+  const getPrice = (): string | number | undefined => {
+    if (!product_variations || product_variations.length === 0) return undefined;
+  
+    if (product_variations.length === 1) {
+      const singlePrice = product_variations[0].sale_price || product_variations[0].price;
+      return singlePrice;
     }
+  
+    // For multiple variations
+    const salePrices = product_variations.map((item) =>
+      Number(item.sale_price) > 0 ? Number(item.sale_price) : Number(item.price)
+    );
+  
+    const lowestPrice = Math.min(...salePrices);
+    const largestPrice = Math.max(...salePrices);
+  
+    return `${lowestPrice} - ${largestPrice}`;
   };
+  
 
   const wishlistData = {
     id: String(id),
@@ -135,9 +145,9 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       id: String(id),
       name: title,
       thumbnail: feature_image ? `${feature_image}` : null,
-      price: (product_variations[0].price),
+      price: product_variations[0].price,
       productType: productType,
-      salePrice: (product_variations[0].sale_price),
+      salePrice: product_variations[0].sale_price,
       quantity: 1,
     };
 
@@ -155,7 +165,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
           <Image
             width={80}
             height={96}
-            src={feature_image} 
+            src={feature_image}
             alt={title}
             className="absolute object-cover object-center"
           />
@@ -167,17 +177,12 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
               <div>
                 <h3 className="text-base font-medium ">{title}</h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  <span>
-                    {variants ? variants[variantActive].title : `Natural`}
-                  </span>
-                  <span className="mx-2 border-s border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{attribute_id || "-"}</span>
+                  -
                 </p>
               </div>
               <Prices
-                price={""}
-                salePrice={""}
-                priceRange={getPrice()}
+                price={product_variations[0].price}
+                salePrice={product_variations[0].sale_price}
                 className="mt-0.5"
               />
             </div>
@@ -381,8 +386,8 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
           <Link href={`/products/${slug}`} className="block">
             <NcImage
-              containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={`${feature_image}`}
+              containerClassName="flex aspect-w-11 aspect-h-12 w-full h-12"
+              src={feature_image}
               className="object-cover w-full h-full drop-shadow-xl"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
@@ -395,35 +400,47 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             data={wishlistData}
             className="absolute top-3 end-3 z-10"
           />
-          {product_variations.length === 1
+          {/* {product_variations.length === 1
             ? renderGroupButtons()
-            : renderGroupVariationButtons()}
+            : renderGroupVariationButtons()} */}
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
           {renderVariants()}
           <div>
-            <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
+            <h2 className="nc-ProductCard__title min-h-12 text-base font-semibold transition-colors">
               {title}
             </h2>
             <p className={`text-sm text-slate-500 dark:text-slate-400 mt-1 `}>
               {description}
             </p>
           </div>
-
-          <div className="flex justify-between items-end ">
-            <Prices
-              price={""}
-              salePrice={""}
-              priceRange={getPrice()}
-              className="mt-0.5"
-            />
-            <div className="flex items-center mb-0.5">
+          <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
                 {rating || ""} ({numberOfReviews || 0} reviews)
               </span>
             </div>
+          <div className="flex justify-between items-end ">
+            <Prices
+              price={
+                productType === "simple" ? product_variations[0].price : ""
+              }
+              salePrice={
+                productType === "simple" ? product_variations[0].sale_price : ""
+              }
+              priceRange={getPrice()}
+              className="mt-0.5"
+            />
+            <ButtonPrimary
+              className=""
+              fontSize="text-xs"
+              sizeClass="py-2 px-4"
+              onClick={() => notifyAddTocart({ attribute_id: "XL" })}
+            >
+              <BagIcon className="w-3.5 h-3.5 mb-0.5" />
+              <span className="ms-1">Add to bag</span>
+            </ButtonPrimary>
           </div>
         </div>
       </div>

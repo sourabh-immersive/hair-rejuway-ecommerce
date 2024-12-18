@@ -2,9 +2,44 @@ import React, { FC } from "react";
 import Pagination from "@/shared/Pagination/Pagination";
 import ProductCard from "@/components/ProductCard";
 import TabFilters from "@/components/TabFilters";
-import { getProducts } from "@/api/products";
+import {
+  getProductCategories,
+  getProducts,
+  getProductsByCatId,
+} from "@/api/products";
+import { notFound } from "next/navigation";
+import { Product } from "@/data/data";
 
-const Page = async ({}) => {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const slug = (await params).slug;
+
+  const categoriesResponse = await getProductCategories();
+  const categories = categoriesResponse.data;
+
+  const category = categories.find((c: any) => c.slug === slug);
+
+  if (!category) {
+    return notFound();
+  }
+  const id = category.id;
+
+  const renderProducts = async () => {
+    const products = await getProductsByCatId(id);
+    return (
+      <>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
+          {products.data.map((item: Product, index: any) => (
+            <ProductCard data={item} key={index} />
+          ))}
+        </div>
+      </>
+    );
+  };
+
   const fetchedProducts = await getProducts();
   return (
     <div className={`nc-PageCollection`}>
@@ -13,7 +48,7 @@ const Page = async ({}) => {
           {/* HEADING */}
           <div className="max-w-screen-sm">
             <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
-              All Products
+              {category.name}
             </h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
               We not only help you design exceptional products, but also make it
@@ -24,34 +59,18 @@ const Page = async ({}) => {
           <hr className="border-slate-200 dark:border-slate-700" />
           <main>
             {/* TABS FILTER */}
-            <TabFilters />
+            {/* <TabFilters /> */}
 
             {/* LOOP ITEMS */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-              {fetchedProducts.map((item, index) => (
-                <ProductCard data={item} key={index} />
-              ))}
-            </div>
+            {renderProducts()}
 
             {/* PAGINATION */}
             <div className="flex justify-center mt-5 lg:mt-5">
               <Pagination />
-              {/* <ButtonPrimary loading>Show me more</ButtonPrimary> */}
             </div>
           </main>
         </div>
-
-        {/* === SECTION 5 === */}
-        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
-
-        {/* <SectionSliderCollections /> */}
-        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
-
-        {/* SUBCRIBES */}
-        {/* <SectionPromo1 /> */}
       </div>
     </div>
   );
-};
-
-export default Page;
+}

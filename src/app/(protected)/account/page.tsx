@@ -11,9 +11,6 @@ import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const AccountPage = async () => {
-  const session = await auth()
- 
-  if (!session?.user) return null
 
   // console.log('sdfsdfds',session.user.apiToken)
   return (
