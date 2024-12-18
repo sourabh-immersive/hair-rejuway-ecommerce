@@ -12,10 +12,10 @@ const AllCategories = async () => {
         <h2 className="text-2xl text-center font-semibold mb-8">Shop by Category</h2>
         <div className="grid grid-cols-6 gap-3">
           {categories.data.map((c: any, i: any) => (
-            <Link href={`/categories/${c.slug}`}>
+            <Link href={`/categories/${c.slug}`} key={i}>
             <div className="block p-2">
             <Image className="rounded-full" src={c.image} width={250} height={250} alt={c.name} />
-            <h4 className="text-base font-semibold text-center mt-4" key={i}>{c.name} <span className="hidden">{`(${c.count})`}</span></h4>
+            <h4 className="text-base font-semibold text-center mt-4" >{c.name} <span className="hidden">{`(${c.count})`}</span></h4>
             </div>
             </Link>
           ))}
