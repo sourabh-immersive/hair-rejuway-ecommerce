@@ -51,10 +51,10 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
     if (!sliderRef.current || products.length === 0) return;
 
     const OPTIONS: Partial<Glide.Options> = {
-      type: "carousel", // Enables looping
+      type: "carousel",
       perView: 4,
       gap: 32,
-      rewind: true, // Rewinds the slider when it reaches the end
+      rewind: true,
       breakpoints: {
         1280: { perView: 3 },
         1024: { gap: 20, perView: 3 },

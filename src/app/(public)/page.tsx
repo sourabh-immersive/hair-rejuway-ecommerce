@@ -24,6 +24,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import AllCategories from "@/components/AllCategories/AllCategories";
+import ProductsGrid from "@/components/ProductsGrid/ProductsGrid";
 
 async function PageHome() {
   
@@ -32,7 +33,7 @@ async function PageHome() {
       <SectionHero3 />
       <div className="container relative">
         <AllCategories />
-        <SectionGridFeatureItems />
+        <ProductsGrid />
         <SectionPromo4 />
         <SectionSliderProductCard />
       </div>
