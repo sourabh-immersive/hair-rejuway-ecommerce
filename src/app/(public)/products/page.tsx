@@ -2,10 +2,13 @@ import React, { FC } from "react";
 import Pagination from "@/shared/Pagination/Pagination";
 import ProductCard from "@/components/ProductCard";
 import TabFilters from "@/components/TabFilters";
-import { getProducts } from "@/api/products";
+import { getProductCategories, getProducts } from "@/api/products";
+import ProductFilters from "./productFilters";
 
 const Page = async ({}) => {
   const fetchedProducts = await getProducts();
+  const categories = await getProductCategories();
+    // console.log('categ.....',fetchedProdCats);
   return (
     <div className={`nc-PageCollection`}>
       <div className="container py-16 lg:pb-28 lg:pt-20 space-y-16 sm:space-y-20 lg:space-y-28">
@@ -22,33 +25,8 @@ const Page = async ({}) => {
           </div>
 
           <hr className="border-slate-200 dark:border-slate-700" />
-          <main>
-            {/* TABS FILTER */}
-            <TabFilters />
-
-            {/* LOOP ITEMS */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-              {fetchedProducts.map((item, index) => (
-                <ProductCard data={item} key={index} />
-              ))}
-            </div>
-
-            {/* PAGINATION */}
-            <div className="flex justify-center mt-5 lg:mt-5">
-              <Pagination />
-              {/* <ButtonPrimary loading>Show me more</ButtonPrimary> */}
-            </div>
-          </main>
+          <ProductFilters initialData={fetchedProducts} categories={categories.data} />
         </div>
-
-        {/* === SECTION 5 === */}
-        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
-
-        {/* <SectionSliderCollections /> */}
-        {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
-
-        {/* SUBCRIBES */}
-        {/* <SectionPromo1 /> */}
       </div>
     </div>
   );

@@ -39,9 +39,26 @@ export const getProductCategories = async () => {
   }
 };
 
-export const getProductsByCatId = async (category: string) => {
+// Fetch Slider images for home page
+export const getSliderImages = async (position: string) => {
   try {
-    const requestBody = category ? { category } : {};
+    const response = await apiClient.get(`/front/sliders?product_type=1&position=${position}`);
+    if (response.status) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching product categories:`, error);
+    throw error;
+  }
+};
+
+export const getProductsByCatId = async (category: string[]) => {
+  try {
+    // const requestBody = category.length > 0  ? { category } : {};
+    const categoryString = category.length > 0 ? category.join(", ") : "";
+
+    const requestBody = categoryString ? { category: categoryString } : {};
+    // console.log(requestBody)
     const response = await apiClient.post(`/front/products`, requestBody);
 
     if (response.status) {

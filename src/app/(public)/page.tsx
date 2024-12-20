@@ -25,17 +25,32 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import AllCategories from "@/components/AllCategories/AllCategories";
 import ProductsGrid from "@/components/ProductsGrid/ProductsGrid";
+import PromoBanner from "@/components/PromotionalBanner/PromoBanner";
+import { getSliderImages } from "@/api/products";
+import ImageSlider from "@/components/ImageSlider/ImageSlider";
 
 async function PageHome() {
-  
+  const sliderTopImages = await getSliderImages("top");
+  const sliderCenterImages = await getSliderImages("center");
+  const sliderBottomImages = await getSliderImages("bottom");
+  // console.log(sliderImages.data);
   return (
     <div className="nc-PageHome relative overflow-hidden">
-      <SectionHero3 />
+      {sliderTopImages.data.length !== 0 ? (
+        <ImageSlider images={sliderTopImages.data} />
+      ) : (
+        ""
+      )}
       <div className="container relative">
         <AllCategories />
         <ProductsGrid />
-        <SectionPromo4 />
+        <PromoBanner />
         <SectionSliderProductCard />
+        {sliderCenterImages.data.length !== 0 ? (
+          <ImageSlider images={sliderCenterImages.data} />
+        ) : (
+          ""
+        )}
       </div>
       <SectionFeatures />
       <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
@@ -43,7 +58,11 @@ async function PageHome() {
       </div>
       <SectionServices />
       <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">
-        <SectionHairgrowth />
+        {sliderBottomImages.data.length !== 0 ? (
+          <ImageSlider images={sliderBottomImages.data} />
+        ) : (
+          ""
+        )}
       </div>
 
       {/* <div className="mt-24 lg:mt-32">
@@ -75,8 +94,7 @@ async function PageHome() {
           ]}
         />
       </div> */}
-      
-      
+
       {/*<SectionPromo2 />
 
         <SectionSliderLargeProduct cardStyle="style2" />
@@ -99,7 +117,7 @@ async function PageHome() {
             </div>
           </div>
         </div> */}
-      
+
       {/* </div> */}
     </div>
   );

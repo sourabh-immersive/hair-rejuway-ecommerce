@@ -14,7 +14,7 @@ const ProductsGrid: FC<SectionGridFeatureItemsProps> = async ({
   try {
     const fetchedProducts = await getProducts(4);
     return (
-      <div className="productsGrid my-10">
+      <div className="productsGrid">
         <div className="nc-SectionGridFeatureItems relative py-10">
           <div className="flex justify-between border-b border-gray-200 pb-4 mb-6">
             <h2 className="text-2xl font-semibold">Trending Products</h2>

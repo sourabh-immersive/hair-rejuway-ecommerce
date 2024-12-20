@@ -14,7 +14,7 @@ export interface SectionFeaturesProps {
 const SectionFeatures: FC<SectionFeaturesProps> = ({ className = "" }) => {
   return (
     <div
-      className={`nc-SectionFeatures features-sec bg-gray-100 relative flex flex-col lg:flex-row items-center justify-center p-6 br-10 ${className}`}
+      className={`nc-SectionFeatures features-sec my-10 bg-gray-100 relative flex flex-col lg:flex-row items-center justify-center p-6 br-10 ${className}`}
     >
         <div className="container">
             <div className="relative">
