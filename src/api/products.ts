@@ -2,20 +2,21 @@
 
 import apiClient from "./apiClient";
 
-export const getProducts = async (limit?: number) => {
+export const getProducts = async (paginate?: number) => {
   console.log('called in server');
   try {
-    const requestBody = limit ? { limit } : {};
+    const requestBody = paginate ? { paginate } : {};
     const response = await apiClient.post("/front/products", requestBody);
 
     if (response.data.status) {
       const products = response.data.data;
-      if (Array.isArray(products)) {
-        return products;
-      } else {
-        console.error("Expected products to be an array, but got:", products);
-        throw new Error("Fetched data is not an array");
-      }
+      // if (Array.isArray(products)) {
+      //   return products;
+      // } else {
+      //   console.error("Expected products to be an array, but got:", products);
+      //   throw new Error("Fetched data is not an array");
+      // }
+      return products;
     } else {
       console.error("Error fetching products:", response.data.error);
       throw new Error("Failed to fetch products");
@@ -52,12 +53,16 @@ export const getSliderImages = async (position: string) => {
   }
 };
 
-export const getProductsByCatId = async (category: string[]) => {
+export const getProductsByCatId = async (category: string[], paginate?: number, currentPage?: number) => {
   try {
-    // const requestBody = category.length > 0  ? { category } : {};
     const categoryString = category.length > 0 ? category.join(", ") : "";
 
-    const requestBody = categoryString ? { category: categoryString } : {};
+    const requestBody: { category?: string; paginate?: number; page?: number} = {};
+    if (categoryString) requestBody.category = categoryString;
+    if (paginate) requestBody.paginate = paginate;
+    if (currentPage) requestBody.page = currentPage;
+
+    // const requestBody = categoryString ? { category: categoryString } : {};
     // console.log(requestBody)
     const response = await apiClient.post(`/front/products`, requestBody);
 

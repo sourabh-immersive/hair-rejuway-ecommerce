@@ -16,15 +16,19 @@ interface Category {
 interface SwiperSliderProps {
   initialData: Product[];
   categories: Category[];
+  totalPagesCount: number;
 }
 
 const ProductFilters: React.FC<SwiperSliderProps> = ({
   initialData,
   categories,
+  totalPagesCount,
 }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [filteredProducts, setProducts] = useState<Product[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(totalPagesCount);
 
   const handleCatChange = (slug: string) => {
     setSelectedCategories((prev) =>
@@ -32,26 +36,27 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
         ? prev.filter((category) => category !== slug)
         : [...prev, slug]
     );
+    setCurrentPage(1);
+  };
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const filteredData = await getProductsByCatId(selectedCategories, 8, currentPage);
+    //   console.log("filtereddata new page", filteredData.data.meta);
+      setProducts(filteredData.data.data);
+      setCurrentPage(currentPage);
+      setTotalPages(filteredData.data.meta.last_page);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-      const fetchProducts = async () => {
-        setLoading(true);
-        try {
-          const filteredData = await getProductsByCatId(selectedCategories);
-          console.log('filtereddata',filteredData)
-          setProducts(filteredData.data);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchProducts();
-    }, [selectedCategories]);
-
-  console.log("Selected Categories:", selectedCategories);
+    fetchProducts();
+  }, [selectedCategories, currentPage]);
 
   const renderFilters = () => {
     return (
@@ -84,11 +89,12 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
     );
   };
 
-//   const filteredData = initialData.filter((item) =>
-//     selectedCategories.length > 0
-//       ? selectedCategories.includes(item.categorySlug) 
-//       : true
-//   );
+  const handlePageChange = (page: number) => {
+    // console.log("clicked page", page);
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <div>
@@ -106,8 +112,11 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
 
         {/* PAGINATION */}
         <div className="flex justify-center mt-5 lg:mt-5">
-          <Pagination />
-          {/* <ButtonPrimary loading>Show me more</ButtonPrimary> */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </main>
     </div>

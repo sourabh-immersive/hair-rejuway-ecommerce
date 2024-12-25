@@ -6,9 +6,10 @@ import { getProductCategories, getProducts } from "@/api/products";
 import ProductFilters from "./productFilters";
 
 const Page = async ({}) => {
-  const fetchedProducts = await getProducts();
+  const paginate = 8;
+  const fetchedProducts = await getProducts(paginate);
   const categories = await getProductCategories();
-    // console.log('categ.....',fetchedProdCats);
+  // console.log("prod with paginate..fggg...", fetchedProducts.meta);
   return (
     <div className={`nc-PageCollection`}>
       <div className="container py-16 lg:pb-28 lg:pt-20 space-y-16 sm:space-y-20 lg:space-y-28">
@@ -25,7 +26,11 @@ const Page = async ({}) => {
           </div>
 
           <hr className="border-slate-200 dark:border-slate-700" />
-          <ProductFilters initialData={fetchedProducts} categories={categories.data} />
+          <ProductFilters
+            initialData={fetchedProducts.data}
+            categories={categories.data}
+            totalPagesCount={fetchedProducts.meta.last_page}
+          />
         </div>
       </div>
     </div>
