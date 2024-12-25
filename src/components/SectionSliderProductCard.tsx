@@ -36,7 +36,8 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
       setLoading(true);
       try {
         const fetchedProducts = await getProducts(10);
-        setProducts(fetchedProducts);
+        console.log('comp chcek data',fetchedProducts.data)
+        setProducts(fetchedProducts.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {

@@ -51,6 +51,7 @@ async function PageHome() {
         ) : (
           ""
         )}
+        <SectionSliderProductCard />
       </div>
       <SectionFeatures />
       <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
