@@ -66,7 +66,7 @@ export default async function Page({
 
             {/* PAGINATION */}
             <div className="flex justify-center mt-5 lg:mt-5">
-              <Pagination />
+              {/* <Pagination /> */}
             </div>
           </main>
         </div>
