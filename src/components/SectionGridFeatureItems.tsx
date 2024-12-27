@@ -25,7 +25,7 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
       setLoading(true);
       try {
         const fetchedProducts = await getProducts(4);
-        setProducts(fetchedProducts);
+        setProducts(fetchedProducts.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
