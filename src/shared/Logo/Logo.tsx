@@ -17,6 +17,7 @@ const Logo: React.FC<LogoProps> = ({
     <Link
       href="/"
       className={`ttnc-logo inline-block text-slate-600 ${className}`}
+      prefetch={true}
     >
       {/* THIS USE FOR MY CLIENT */}
       {/* PLEASE UN COMMENT BELLOW CODE AND USE IT */}
