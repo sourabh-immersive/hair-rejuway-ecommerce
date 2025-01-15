@@ -37,17 +37,17 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
   }, []);
 
   // Handler for the 'Show me more' button
-  const handleShowMore = async () => {
-    setShowMoreLoading(true); // Set show more loading state
-    try {
-      const moreProducts = await getProducts(); // Assuming the same endpoint for loading more products
-      setProducts((prev) => [...prev, ...moreProducts]); // Append new products
-    } catch (error) {
-      console.error("Error loading more products:", error);
-    } finally {
-      setShowMoreLoading(false); // Turn off loading after API call
-    }
-  };
+  // const handleShowMore = async () => {
+  //   setShowMoreLoading(true); // Set show more loading state
+  //   try {
+  //     const moreProducts = await getProducts(); // Assuming the same endpoint for loading more products
+  //     setProducts((prev) => [...prev, ...moreProducts]); // Append new products
+  //   } catch (error) {
+  //     console.error("Error loading more products:", error);
+  //   } finally {
+  //     setShowMoreLoading(false); // Turn off loading after API call
+  //   }
+  // };
 
   return (
     <div className="nc-SectionGridFeatureItems relative py-10">
