@@ -30,10 +30,13 @@ import { getProducts, getSliderImages } from "@/api/products";
 import ImageSlider from "@/components/ImageSlider/ImageSlider";
 
 async function PageHome() {
+  const start = performance.now();
   const sliderTopImages = await getSliderImages("top");
   const sliderCenterImages = await getSliderImages("center");
   const sliderBottomImages = await getSliderImages("bottom");
   const fetchedProducts = await getProducts(8);
+  const end = performance.now();
+  console.log(`Fetch Time: ${end - start}ms`);
   // console.log('fetchedProducts data 10', fetchedProducts);
   return (
     <div className="nc-PageHome relative overflow-hidden">
