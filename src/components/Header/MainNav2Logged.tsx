@@ -22,8 +22,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const authStateData = useAppSelector((state) => state.auth);
   
 
-  console.log(status);
-  console.log(session);
+  // console.log(status);
+  // console.log(session);
 
   const renderMagnifyingGlassIcon = () => {
     return (

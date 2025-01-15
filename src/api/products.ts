@@ -12,6 +12,7 @@ export const getProducts = async (paginate?: number) => {
       return {
         status: true,
         data: response.data.data,
+        pagination: response.data.pagination,
         message: "Products fetched successfully!",
       };
     } else {
@@ -77,11 +78,25 @@ export const getProductsByQueryParams = async (
     const response = await apiClient.post(`/front/products`, requestBody);
 
     if (response.status) {
-      return response.data;
+      return {
+        status: true,
+        data: response.data.data,
+        pagination: response.data.pagination,
+        message: "Products fetched successfully!",
+      };
+    } else {
+      console.error("Error fetching products:", response.data.error);
+      return {
+        status: false,
+        message: "Failed to fetch products!",
+      };
     }
   } catch (error) {
-    console.error(`Error fetching product with category ID ${category}:`);
-    throw error;
+    console.error("Error fetching products:", error);
+    return {
+      status: false,
+      error: "Error fetching products!",
+    };
   }
 };
 

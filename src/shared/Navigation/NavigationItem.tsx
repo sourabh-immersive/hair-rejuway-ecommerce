@@ -6,6 +6,7 @@ import CardCategory3 from "@/components/CardCategories/CardCategory3";
 import React, { FC, Fragment, useState } from "react";
 import { Route } from "@/routers/types";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export interface NavItemType {
   id: string;
@@ -23,6 +24,7 @@ export interface NavigationItemProps {
 
 const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
   const [menuCurrentHovers, setMenuCurrentHovers] = useState<string[]>([]);
+  const pathname = usePathname()
 
   const onMouseEnterMenu = (id: string) => {
     setMenuCurrentHovers((state) => [...state, id]);
@@ -210,10 +212,11 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
 
   // ===================== MENU MAIN MENU =====================
   const renderMainItem = (item: NavItemType) => {
+    
     return (
       <div className="h-20 flex-shrink-0 flex items-center">
         <Link
-          className="inline-flex items-center text-sm lg:text-[15px] font-medium text-slate-700 dark:text-slate-300 py-2.5 px-4 xl:px-5 rounded-full hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          className={`inline-flex items-center ${pathname === item.href ? 'bg-slate-200 text-slate-900' : ''} text-sm lg:text-[15px] font-medium text-slate-700 dark:text-slate-300 py-2.5 px-4 xl:px-5 rounded-full hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200`}
           href={{
             pathname: item.href || undefined,
           }}

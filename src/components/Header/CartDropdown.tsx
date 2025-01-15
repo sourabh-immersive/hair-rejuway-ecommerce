@@ -15,7 +15,7 @@ export default function CartDropdown() {
   const cartData = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { items, status, totalItems, totalAmount } = cartData;
-  console.log("stateD", items);
+  // console.log("stateD", items);
 
   const renderProduct = (items: CartItem, index: number, close: () => void) => {
     const { name, price, thumbnail, attributesData, salePrice, productType } = items;

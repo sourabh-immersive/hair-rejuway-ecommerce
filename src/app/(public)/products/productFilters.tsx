@@ -29,7 +29,7 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(totalPagesCount);
-
+  // console.log('filteredProducts ....',filteredProducts)
   const handleCatChange = (slug: string) => {
     setSelectedCategories((prev) =>
       prev.includes(slug)
@@ -45,9 +45,9 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
       try {
         const filteredData = await getProductsByQueryParams(selectedCategories, 8, currentPage);
       //   console.log("filtereddata new page", filteredData.data.meta);
-        setProducts(filteredData.data.data);
+        setProducts(filteredData.data);
         setCurrentPage(currentPage);
-        setTotalPages(filteredData.data.meta.last_page);
+        setTotalPages(filteredData.pagination.last_page);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
