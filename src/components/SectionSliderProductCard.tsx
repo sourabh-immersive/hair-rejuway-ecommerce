@@ -15,7 +15,7 @@ export interface SectionSliderProductCardProps {
   headingFontClassName?: string;
   headingClassName?: string;
   subHeading?: string;
-  data?: Product[];
+  initialData: Product[];
 }
 
 const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
@@ -25,28 +25,11 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   headingClassName,
   heading,
   subHeading = "",
-  data = [],
+  initialData,
 }) => {
   const sliderRef = useRef<HTMLDivElement | null>(null);
-  const [products, setProducts] = useState<Product[]>(data);
+  const [products, setProducts] = useState<Product[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const fetchedProducts = await getProducts(10);
-        console.log('comp chcek data',fetchedProducts.data)
-        setProducts(fetchedProducts.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   useEffect(() => {
     if (!sliderRef.current || products.length === 0) return;
@@ -71,7 +54,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
     return () => {
       slider.destroy();
     };
-  }, [products]); // Reinitialize when products change
+  }, [products]);
 
   return (
     <div className={`nc-SectionSliderProductCard py-10 ${className}`}>

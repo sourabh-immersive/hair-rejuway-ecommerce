@@ -98,6 +98,8 @@ const LoginForm = () => {
             token: sessionData.user.apiToken || "",
           };
           dispatch(initializeSession(user));
+
+          
         } else {
           dispatch(initializeSession(null));
         }

@@ -49,7 +49,7 @@ interface Variation {
 
 const ProductDetail = ({ data }: { data: Product }) => {
   const productData = data;
-  // console.log('zzzzzz',productData);
+
   const [selectedAttributes, setSelectedAttributes] = useState<
     Record<string, string>
   >({});
@@ -69,23 +69,6 @@ const ProductDetail = ({ data }: { data: Product }) => {
       setSelectedImage(productData?.feature_image);
     }
   }, [productData]);
-
-  //   useEffect(() => {
-  //     const fetchProducts = async () => {
-  //       setLoading(true);
-  //       try {
-  //         const ProductDetail = await getProductBySlug(product_slug);
-  //         // console.log(ProductDetail)
-  //         setProductData(ProductDetail.data);
-  //       } catch (error) {
-  //         console.error("Error fetching products:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchProducts();
-  //   }, [product_slug]);
 
   useEffect(() => {
     // Find matching variation when attributes change

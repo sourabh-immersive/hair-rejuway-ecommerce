@@ -185,29 +185,34 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   // },
   {
     id: ncNanoId(),
-    href: "/",
-    name: "Hair Oil",
+    href: "/categories/hair-care",
+    name: "Hair Care",
   },
   {
     id: ncNanoId(),
-    href: "/",
-    name: "Hair Supplement",
+    href: "/categories/hair-fall",
+    name: "Hair Fall",
   },
 
   {
     id: ncNanoId(),
-    href: "/",
-    name: "Hair Combo",
+    href: "/categories/dandruff",
+    name: "Dandruff",
   },
   {
     id: ncNanoId(),
-    href: "/",
-    name: "Hair Serums",
+    href: "/categories/damage",
+    name: "Damage",
   },
   {
     id: ncNanoId(),
-    href: "/",
-    name: "Hair Shampoos",
+    href: "/categories/curl-care",
+    name: "Curl Care",
+  },
+  {
+    id: ncNanoId(),
+    href: "/categories/split-ends",
+    name: "Split Ends",
   },
   // {
   //   id: ncNanoId(),

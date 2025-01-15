@@ -1,6 +1,6 @@
 "use client";
 
-import { getProductCategories, getProductsByCatId } from "@/api/products";
+import { getProductCategories, getProductsByQueryParams } from "@/api/products";
 import ProductCard from "@/components/ProductCard";
 import TabFilters from "@/components/TabFilters";
 import { Product } from "@/data/data";
@@ -39,22 +39,21 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
     setCurrentPage(1);
   };
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const filteredData = await getProductsByCatId(selectedCategories, 8, currentPage);
-    //   console.log("filtereddata new page", filteredData.data.meta);
-      setProducts(filteredData.data.data);
-      setCurrentPage(currentPage);
-      setTotalPages(filteredData.data.meta.last_page);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const filteredData = await getProductsByQueryParams(selectedCategories, 8, currentPage);
+      //   console.log("filtereddata new page", filteredData.data.meta);
+        setProducts(filteredData.data.data);
+        setCurrentPage(currentPage);
+        setTotalPages(filteredData.data.meta.last_page);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProducts();
   }, [selectedCategories, currentPage]);
 

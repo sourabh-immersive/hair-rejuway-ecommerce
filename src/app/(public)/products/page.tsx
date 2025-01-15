@@ -29,7 +29,7 @@ const Page = async ({}) => {
           <ProductFilters
             initialData={fetchedProducts.data}
             categories={categories.data}
-            totalPagesCount={fetchedProducts.meta.last_page}
+            totalPagesCount={fetchedProducts.data.last_page}
           />
         </div>
       </div>

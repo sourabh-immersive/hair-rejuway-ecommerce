@@ -13,6 +13,7 @@ const ProductsGrid: FC<SectionGridFeatureItemsProps> = async ({
 }) => {
   try {
     const fetchedProducts = await getProducts(4);
+    // console.log('fetchedProducts dgfdgdfgf', fetchedProducts)
     return (
       <div className="productsGrid">
         <div className="nc-SectionGridFeatureItems relative py-10">

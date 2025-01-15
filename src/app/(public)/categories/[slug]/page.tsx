@@ -5,36 +5,25 @@ import TabFilters from "@/components/TabFilters";
 import {
   getProductCategories,
   getProducts,
-  getProductsByCatId,
+  getProductsByCatSlug,
+  getProductsByQueryParams,
 } from "@/api/products";
 import { notFound } from "next/navigation";
 import { Product } from "@/data/data";
+import convertSlugToName from "@/utils/convertSlugToName";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const slug = (await params).slug;
-
-  const categoriesResponse = await getProductCategories();
-  const categories = categoriesResponse.data;
-
-  const category = categories.find((c: any) => c.slug === slug);
-
-  if (!category) {
-    return notFound();
-  }
-  const id = category.id;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const { slug } = params;
 
   const renderProducts = async () => {
-    const products = await getProductsByCatId(id);
+    const products = await getProductsByCatSlug(slug);
     return (
       <>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-          {products.data.map((item: Product, index: any) => (
+          {products.data.length ?
+          products.data.map((item: Product, index: any) => (
             <ProductCard data={item} key={index} />
-          ))}
+          )) : (<p>No products found!</p>)}
         </div>
       </>
     );
@@ -48,7 +37,7 @@ export default async function Page({
           {/* HEADING */}
           <div className="max-w-screen-sm">
             <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
-              {category.name}
+              {convertSlugToName(slug)}
             </h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">
               We not only help you design exceptional products, but also make it
