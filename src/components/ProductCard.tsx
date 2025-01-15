@@ -325,7 +325,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   const renderGroupVariationButtons = () => {
     return (
       <div className="absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-        <Link href={`/products/${slug}`} className="">
+        <Link href={`/products/${slug}`} className="" prefetch={true}>
           <ButtonPrimary
             className="shadow-lg"
             fontSize="text-xs"
@@ -381,10 +381,10 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       <div
         className={`nc-ProductCard relative flex flex-col bg-transparent pb-10 ${className}`}
       >
-        <Link href={`/products/${slug}`} className="absolute inset-0"></Link>
+        <Link href={`/products/${slug}`} className="absolute inset-0" prefetch={true}></Link>
 
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
-          <Link href={`/products/${slug}`} className="block">
+          <Link href={`/products/${slug}`} className="block" prefetch={true}>
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-12"
               src={feature_image}
