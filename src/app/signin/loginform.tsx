@@ -17,15 +17,27 @@ import { redirect, useRouter } from "next/navigation";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import { useAppDispatch } from "@/lib/hooks";
-import { AuthUser, initializeSession } from "@/lib/features/authSlice/authSlice";
+import {
+  AuthUser,
+  initializeSession,
+} from "@/lib/features/authSlice/authSlice";
+import { object, string, z } from "zod";
 
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(4, "Password must be at least 8 characters long")
-    .required("Password is required"),
+const signInSchema = z.object({
+  email: z
+    .string({ required_error: "Email is required" })
+    .trim()
+    .min(1, "Email is required")
+    .email("Invalid email address"),
+  password: z
+    .string({ required_error: "Password is required" })
+    .trim()
+    .min(8, "Password must be at least 8 characters long")
+    .max(32, "Password must be at most 32 characters long")
+    .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+      "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
 });
 
 interface LoginValues {
@@ -34,118 +46,103 @@ interface LoginValues {
 }
 
 const loginSocials = [
-  {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
-    value: "facebook"
-  },
-  {
-    name: "Continue with Twitter",
-    href: "#",
-    icon: twitterSvg,
-    value: "twitter"
-  },
+  // {
+  //   name: "Continue with Facebook",
+  //   href: "#",
+  //   icon: facebookSvg,
+  //   value: "facebook"
+  // },
+  // {
+  //   name: "Continue with Twitter",
+  //   href: "#",
+  //   icon: twitterSvg,
+  //   value: "twitter"
+  // },
   {
     name: "Continue with Google",
     href: "#",
     icon: googleSvg,
-    value: "google"
+    value: "google",
   },
 ];
 
 const LoginForm = () => {
-//   const session = useSession();
-//   if (session.status) {
-//     redirect("/");
-//   }
+  //   const session = useSession();
+  //   if (session.status) {
+  //     redirect("/");
+  //   }
   const router = useRouter();
-  const [error, setError] = useState("");
+  const [error, setError] = useState<Record<string, string[]>>({});
+  const [serverError, setServerError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
-  async function onSubmit(event: any) {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError({});
+    setServerError(null);
 
     try {
       const formData = new FormData(event.currentTarget);
 
-      //   const validatedFields = SigninFormSchema.safeParse({
-      //     // name: formData.get('name'),
-      //     email: formData.get("email"),
-      //     password: formData.get("password"),
-      //   });
+      // Extract form data
+      const formValues = {
+        email: formData.get("email")?.toString() || "",
+        password: formData.get("password")?.toString() || "",
+      };
 
-      //   // If any form fields are invalid, return early
-      //   if (!validatedFields.success) {
-      //     return {
-      //       errors: validatedFields.error.flatten().fieldErrors,
-      //     };
-      //   }
+      // Validate form values using Zod
+      const validationResult = signInSchema.safeParse(formValues);
 
-      const response = await doCredentialLogin(formData);
+      if (!validationResult.success) {
+        // Extract and set validation errors
+        const fieldErrors = validationResult.error.flatten().fieldErrors;
+        console.error("Validation errors:", fieldErrors);
+        setError(fieldErrors); // Update error state with validation errors
+        return;
+      }
+
+      // Proceed with API call if validation passes
+      const response = await doCredentialLogin(formValues);
 
       if (!!response.error) {
         console.error(response.error);
-        setError(response.error.message);
+        setServerError(response.error.message); // Display server error
       } else {
         const sessionData = await getSessionData();
-        console.log('after serverfunc call', sessionData)
+        // console.log("Session data:", sessionData);
+
         if (sessionData?.user) {
-          const user: AuthUser = {
+          const user = {
             id: sessionData.user.id || "",
             name: sessionData.user.name || "",
             email: sessionData.user.email || "",
             token: sessionData.user.apiToken || "",
           };
           dispatch(initializeSession(user));
-
-          
         } else {
           dispatch(initializeSession(null));
         }
+
         router.push("/account");
-        // console.log('tokenff', session?.apiToken)
       }
     } catch (e) {
       console.error(e);
-      setError("Check your Credentials");
+      setServerError("Check your credentials"); // Set fallback error message
     }
-  }
+  };
+
+  const googleLoginHandler = async (formData: any) => {
+    const googleLoginData = await doSocialLogin(formData);
+    console.log("googleLoginData", googleLoginData);
+  };
+
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
-      <div className="container mb-24 lg:mb-32">
-        <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+      <div className="container my-10 lg:my-12">
+        <h2 className="mb-4 flex items-center text-2xl leading-[115%] md:text-2xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Login
         </h2>
         <div className="max-w-md mx-auto space-y-6">
-        <form action={doSocialLogin}>
-          <div className="grid gap-3">
-            {loginSocials.map((item, index) => (
-              <button
-                key={index}
-                type="submit" name="action" value={item.value}
-                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-              >
-                <Image
-                  className="flex-shrink-0"
-                  src={item.icon}
-                  alt={item.name}
-                  sizes="40px"
-                />
-                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
-                  {item.name}
-                </h3>
-              </button>
-            ))}
-          </div>
-          </form>
-          {/* OR */}
-          <div className="relative text-center">
-            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
-              OR
-            </span>
-            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
-          </div>
           {/* FORM */}
 
           <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4">
@@ -155,14 +152,53 @@ const LoginForm = () => {
               className="border border-gray-200 rounded-md p-3"
               placeholder="Enter your email"
             />
+            {error?.email && (
+              <p className="error text-red-600">{error.email[0]}</p>
+            )}
             <input
               name="password"
               type="password"
               className="border border-gray-200 rounded-md p-3"
               placeholder="Enter your password"
             />
+            {error?.password && (
+              <p className="error text-red-600">{error.password[0]}</p>
+            )}
             <ButtonPrimary type="submit">Login</ButtonPrimary>
+            {serverError && <p className="error text-red-600">{serverError}</p>}
           </form>
+
+          {/* OR */}
+          <div className="relative text-center">
+            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
+              OR
+            </span>
+            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
+          </div>
+
+          <div className="grid gap-3">
+            <form action={googleLoginHandler}>
+              {loginSocials.map((item, index) => (
+                <button
+                  key={index}
+                  type="submit"
+                  name="action"
+                  value={item.value}
+                  className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                >
+                  <Image
+                    className="flex-shrink-0"
+                    src={item.icon}
+                    alt={item.name}
+                    sizes="40px"
+                  />
+                  <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                    {item.name}
+                  </h3>
+                </button>
+              ))}
+            </form>
+          </div>
 
           {/* ==== */}
           <span className="block text-center text-neutral-700 dark:text-neutral-300">

@@ -9,8 +9,9 @@ import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { auth } from "@/auth";
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/lib/hooks";
+import Link from "next/link";
 
 export interface MainNav2LoggedProps {}
 
@@ -18,9 +19,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const inputRef = createRef<HTMLInputElement>();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
   const authStateData = useAppSelector((state) => state.auth);
-  
 
   // console.log(status);
   // console.log(session);
@@ -105,7 +105,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             </button>
           )}
           {/* { session ? <AvatarDropdown /> : ''} */}
-          { authStateData.status === 'authenticated' ?  <AvatarDropdown /> : '' }
+          {authStateData.status === "authenticated" ? <AvatarDropdown /> : ""}
           {/* <AvatarDropdown /> */}
           <CartDropdown />
         </div>
@@ -118,13 +118,19 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
       <div className="toparea relative z-10 bg-half-black dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
         <div className="container">
           <div className="flex justify-between py-4 text-white text-sm">
-            <p>Order upto 30%-40% | Free Shipping on orders over ₹ 899.00</p>
+            <p>Order upto 30%-40% | Free Shipping on orders over ₹899.00</p>
             <div className="">
               <ul className="list-none flex space-x-4 ">
                 <li>About Us</li>
-                <li>Free Delivery</li>
-                <li>Return Policy</li>
-                <li>Help Center</li>
+                {authStateData.status === "authenticated" ? (
+                  <li>
+                    <Link href={"/account"}>My Account</Link>
+                  </li>
+                ) : (
+                  <li>
+                    <Link href={"/signin"}>Login/Register</Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

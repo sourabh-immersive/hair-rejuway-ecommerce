@@ -7,13 +7,18 @@ import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import { getSessionData } from "./server-actions/actions";
+import { initializeSession } from "@/lib/features/authSlice/authSlice";
 
 interface Props {
   readonly children: React.ReactNode;
 }
 
 export const StoreProvider = ({ children }: Props) => {
-  const storeRef = useRef<{ store: AppStore; persistor: ReturnType<typeof persistStore> } | null>(null);
+  const storeRef = useRef<{
+    store: AppStore;
+    persistor: ReturnType<typeof persistStore>;
+  } | null>(null);
 
   if (!storeRef.current) {
     const store = makeStore();

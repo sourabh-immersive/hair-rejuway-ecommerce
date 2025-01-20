@@ -2,6 +2,9 @@ import axios from "axios";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { initializeSession } from "./lib/features/authSlice/authSlice";
+import { useAppDispatch } from "./lib/hooks";
+import { authenticateGoogleUser } from "./api/auth";
 
 export const {
   handlers: { GET, POST },
@@ -36,8 +39,7 @@ export const {
             { email, password }
           );
 
-          // set session in redux 
-          
+          // set session in redux
 
           if (response.data.status) {
             const { user, token } = response.data.data;
@@ -73,14 +75,33 @@ export const {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      if (account) {
+        token.pId = account.providerAccountId;
+      }
+
       return { ...token, ...user };
     },
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
-        //after login with google save data to api
-        // await saveUserToDatabase(user);
+        // console.log("google account data ", account);
+        // console.log("google profile data ", profile);
+        // console.log("google user data ", user);
+
+        const userD = {
+          login_type: "google",
+          email: user.email,
+          name: user.name,
+          id: account.providerAccountId,
+        };
+
+        const ddd = await authenticateGoogleUser(userD);
+
+        return true;
       } else if (account?.provider === "credentials") {
         console.log("Signed in using credentials");
       }
@@ -90,26 +111,8 @@ export const {
 
     async session({ session, token, user }) {
       session.user = token as any;
+      // console.log("google user account token session ", session);
       return session;
     },
   },
 });
-
-async function saveUserToDatabase(user: any) {
-  const res = await fetch("https://your-api-url.com/api/save-user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-    }),
-  });
-
-  if (!res.ok) {
-    console.error("Failed to save user to database");
-  }
-}

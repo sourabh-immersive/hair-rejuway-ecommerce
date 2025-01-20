@@ -23,7 +23,7 @@ export async function getSessionData() {
 
 export async function doSocialLogin(formData: any) {
   const action = formData.get("action");
-  await signIn(action, { redirectTo: "/" });
+  const googleLoginData = await signIn(action, { redirectTo: "/account" });
 }
 
 export async function doLogout() {
