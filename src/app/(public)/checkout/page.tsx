@@ -12,11 +12,17 @@ import PaymentMethod from "./PaymentMethod";
 import ShippingAddress from "./ShippingAddress";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { CartItem, removeItemFromCart } from "@/lib/features/cart/cartSlice";
 
 const CheckoutPage = () => {
   const [tabActive, setTabActive] = useState<
     "ContactInfo" | "ShippingAddress" | "PaymentMethod"
   >("ShippingAddress");
+  const cartData = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch();
+
+  const { items, status, totalItems, totalAmount } = cartData;
 
   const handleScrollToEl = (id: string) => {
     const element = document.getElementById(id);
@@ -25,18 +31,21 @@ const CheckoutPage = () => {
     }, 80);
   };
 
-  const renderProduct = (item: Product, index: number) => {
-    const { thumbnail, price, title } = item;
+  const renderProduct = (item: CartItem, index: number) => {
+    const { thumbnail, price, name } = item;
 
     return (
-      <div key={index} className="relative flex py-7 first:pt-0 last:pb-0">
-        <div className="relative h-36 w-24 sm:w-28 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+      <div
+        key={index}
+        className="relative flex py-8 sm:py-10 xl:py-12 first:pt-0 last:pb-0"
+      >
+        <div className="relative h-36 w-24 sm:w-32 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
-            src={thumbnail}
             fill
-            alt={title}
+            src={thumbnail ? thumbnail : ""}
+            alt={name}
+            sizes="300px"
             className="h-full w-full object-contain object-center"
-            sizes="150px"
           />
           <Link href="/product-detail" className="absolute inset-0"></Link>
         </div>
@@ -46,89 +55,22 @@ const CheckoutPage = () => {
             <div className="flex justify-between ">
               <div className="flex-[1.5] ">
                 <h3 className="text-base font-semibold">
-                  <Link href="/product-detail">{title}</Link>
+                  <Link href="/product-detail">{name}</Link>
                 </h3>
-                <div className="mt-1.5 sm:mt-2.5 flex text-sm text-slate-600 dark:text-slate-300">
-                  <div className="flex items-center space-x-1.5">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M8.35 1.94995L9.69 3.28992"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M2.07 11.92L17.19 11.26"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 22H16"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
-                    <span>{`Black`}</span>
-                  </div>
-                  <span className="mx-4 border-l border-slate-200 dark:border-slate-700 "></span>
-                  <div className="flex items-center space-x-1.5">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M21 9V3H15"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 15V21H9"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M21 3L13.5 10.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M10.5 13.5L3 21"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
-                    <span>{`2XL`}</span>
-                  </div>
+                <div className="mt-1.5 sm:mt-2.5 text-sm text-slate-600 dark:text-slate-300">
+                  {Array.isArray(item.attributesData) && (
+                    <>
+                      {item.attributesData.map((att, i) => (
+                        <>
+                          <p>
+                            <span>{att.name}</span>
+                            <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
+                            <span>{att.value}</span>
+                          </p>
+                        </>
+                      ))}
+                    </>
+                  )}
                 </div>
 
                 <div className="mt-3 flex justify-between w-full sm:hidden relative">
@@ -152,23 +94,41 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
+              <div className="hidden sm:block text-center relative">
+                {/* <NcInputNumber className="relative z-10" /> */}
+              </div>
+
               <div className="hidden flex-1 sm:flex justify-end">
-                <Prices price={price} className="mt-0.5" />
+                <Prices
+                  price={item.price}
+                  salePrice={item.salePrice}
+                  className="mt-0.5"
+                />
               </div>
             </div>
           </div>
 
           <div className="flex mt-auto pt-4 items-end justify-between text-sm">
-            <div className="hidden sm:block text-center relative">
-              <NcInputNumber className="relative z-10" />
-            </div>
-
-            <a
-              href="##"
-              className="relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
+            <p
+              className="relative cursor-pointer z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
+              onClick={() => {
+                console.log("sdfsdf");
+                item.productType === "simple"
+                  ? dispatch(
+                      removeItemFromCart({
+                        id: item.id,
+                      })
+                    )
+                  : dispatch(
+                      removeItemFromCart({
+                        id: item.id,
+                        attributesData: item.attributesData,
+                      })
+                    );
+              }}
             >
               <span>Remove</span>
-            </a>
+            </p>
           </div>
         </div>
       </div>
@@ -228,12 +188,12 @@ const CheckoutPage = () => {
             Checkout
           </h2>
           <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
-            <Link href={"/"} className="">
-              Homepage
+            <Link href={"/"} className="" prefetch={true}>
+              Home
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <Link href={"/collection-2"} className="">
-              Clothing Categories
+            <Link href={"/categories"} className="" prefetch={true}>
+              Shop By Categories
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <span className="underline">Checkout</span>
@@ -248,7 +208,7 @@ const CheckoutPage = () => {
           <div className="w-full lg:w-[36%] ">
             <h3 className="text-lg font-semibold">Order summary</h3>
             <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
-              {[PRODUCTS[0], PRODUCTS[2], PRODUCTS[3]].map(renderProduct)}
+              {items.map((item, index) => renderProduct(item, index))}
             </div>
 
             <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
