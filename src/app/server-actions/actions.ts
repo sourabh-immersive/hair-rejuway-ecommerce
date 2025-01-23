@@ -38,8 +38,8 @@ export async function AddApiToken(token: any) {
 export async function doCredentialLogin(formData: any) {
   try {
     const response = await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
+      email: formData.email,
+      password: formData.password,
       redirect: false,
     });
 

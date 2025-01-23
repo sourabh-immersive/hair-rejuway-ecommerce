@@ -22,6 +22,7 @@ import {
   initializeSession,
 } from "@/lib/features/authSlice/authSlice";
 import { object, string, z } from "zod";
+import Logo from "@/shared/Logo/Logo";
 
 const signInSchema = z.object({
   email: z
@@ -106,7 +107,7 @@ const LoginForm = () => {
 
       if (!!response.error) {
         console.error(response.error);
-        setServerError(response.error.message); // Display server error
+        setServerError(response.error.message);
       } else {
         const sessionData = await getSessionData();
         // console.log("Session data:", sessionData);
@@ -127,7 +128,7 @@ const LoginForm = () => {
       }
     } catch (e) {
       console.error(e);
-      setServerError("Check your credentials"); // Set fallback error message
+      setServerError("Check your credentials");
     }
   };
 
@@ -139,8 +140,11 @@ const LoginForm = () => {
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
       <div className="container my-10 lg:my-12">
-        <h2 className="mb-4 flex items-center text-2xl leading-[115%] md:text-2xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Login
+        <div className="mx-auto text-center mb-4">
+          <Logo />
+        </div>
+        <h2 className="mb-8 flex items-center text-2xl leading-[115%] md:text-2xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+          Sign in to Your Account
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
@@ -203,7 +207,7 @@ const LoginForm = () => {
           {/* ==== */}
           <span className="block text-center text-neutral-700 dark:text-neutral-300">
             New user? {` `}
-            <Link className="text-green-600" href="/signup">
+            <Link className="text-green-600" href="/register" prefetch={true}>
               Create an account
             </Link>
           </span>

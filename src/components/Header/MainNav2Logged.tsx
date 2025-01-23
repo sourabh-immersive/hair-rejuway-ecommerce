@@ -115,7 +115,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
 
   return (
     <>
-      <div className="toparea relative z-10 bg-half-black dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+      <div className="toparea relative z-10 bg-blue-700 dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
         <div className="container">
           <div className="flex justify-between py-4 text-white text-sm">
             <p>Order upto 30%-40% | Free Shipping on orders over ₹899.00</p>
