@@ -28,6 +28,7 @@ export async function doSocialLogin(formData: any) {
 
 export async function doLogout() {
   //   localStorage.removeItem("authToken");
+  await signOut();
   await signOut({ redirectTo: '/', redirect:true });
 }
 

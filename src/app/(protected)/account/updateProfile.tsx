@@ -12,27 +12,27 @@ import { getProfileDetails, updateProfile } from "@/api/protected";
 import { useAppSelector } from "@/lib/hooks";
 
 export interface ProfileInfo {
-    id: number;
-    name: string,
-    phone: string,
-    email: string,
-    propic: string;
-    address: string;
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  propic: string;
+  address: string;
 }
 
 const UpdateProfile = () => {
   const authState = useAppSelector((state) => state.auth);
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
 
-  useEffect(() => {
-    async function getProfileInfo() {
-      const res = await getProfileDetails(authState.user?.token || "");
-      if (res.status === true) {
-        setProfileInfo(res.data);
-      }
-    }
-    getProfileInfo();
-  }, [authState]);
+//   useEffect(() => {
+//     async function getProfileInfo() {
+//       const res = await getProfileDetails(authState.user?.token || "");
+//       if (res.status === true) {
+//         setProfileInfo(res.data);
+//       }
+//     }
+//     getProfileInfo();
+//   }, [authState]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

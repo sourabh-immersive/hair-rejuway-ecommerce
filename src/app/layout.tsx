@@ -29,7 +29,9 @@ export default function RootLayout({
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <StoreProvider>
           <SessionProvider>
-            <RefreshSession>{children}</RefreshSession>
+            <RefreshSession>
+              {children}
+              </RefreshSession>
           </SessionProvider>
         </StoreProvider>
       </body>

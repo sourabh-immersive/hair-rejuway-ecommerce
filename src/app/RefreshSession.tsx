@@ -15,6 +15,7 @@ export const RefreshSession = ({ children }: Props) => {
   useEffect(() => {
     async function getSessionRefresh() {
       const sessionData = await getSessionData();
+      console.log('data after logout in refresh', sessionData)
       if (sessionData?.user) {
         const userExist = {
           id: sessionData.user.id || "",

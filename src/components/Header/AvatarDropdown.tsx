@@ -287,11 +287,14 @@ export default function AvatarDropdown() {
                     </Link>
 
                     {/* ------------------ 2 --------------------- */}
-                    <Link
-                      href={"/"}
-                      prefetch={true}
-                      className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
+                    {/* <button onClick={}>Sign Out</button> */}
+                    <div
+                      className="flex cursor-pointer items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       // onClick={() => close()}
+                      onClick={async () => {
+                        await doLogout()
+                        dispatch(initializeSession(null));
+                       }}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
                         <svg
@@ -327,15 +330,11 @@ export default function AvatarDropdown() {
                       <div className="ml-4">
                         <p
                           className="text-sm font-medium"
-                          onClick={() => {
-                            doLogout()
-                            dispatch(initializeSession(null));
-                           } }
                         >
                           {"Log out"}
                         </p>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </Popover.Panel>
