@@ -43,7 +43,7 @@ export const {
 
           if (response.data.status) {
             const { user, token } = response.data.data;
-            console.log("token rtest", token);
+            console.log("token rtest user", user);
             // return { ...user, token, }
             return {
               id: user.id,
@@ -82,6 +82,7 @@ export const {
     async jwt({ token, user, account }) {
       if (account) {
         token.pId = account.providerAccountId;
+        token.name = user.name;
       }
 
       return { ...token, ...user };

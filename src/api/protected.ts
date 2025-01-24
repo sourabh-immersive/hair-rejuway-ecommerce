@@ -10,7 +10,7 @@ export const getProfileDetails = async (token: string) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('response getProfileDetails', response)
+    // console.log("response getProfileDetails", response);
     return response.data;
   } catch (error) {
     console.error("Error updating profile:", error);
@@ -18,19 +18,53 @@ export const getProfileDetails = async (token: string) => {
   }
 };
 
-export const updateUserPassword = async (token: string, data: PasswordChange) => {
-    try {
-      const response = await apiClient.post(`/user/password/update`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      //   throw error;
-    }
-  };
+export const updateUserPassword = async (
+  token: string,
+  data: PasswordChange
+) => {
+  try {
+    const response = await apiClient.post(`/user/password/update`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    //   throw error;
+  }
+};
+
+export const addUpdateWishlist = async (token: string, id: string) => {
+  try {
+    const response = await apiClient.post(`/user/wishlist/add`, {
+        'product_id': id
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('addUpdateWishlist', response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    //   throw error;
+  }
+};
+
+export const getWishlist = async (token: string) => {
+  try {
+    const response = await apiClient.get(`/user/wishlists`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    //   throw error;
+  }
+};
 
 export const updateProfile = async (token: string, formData: FormData) => {
   try {

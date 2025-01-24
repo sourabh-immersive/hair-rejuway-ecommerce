@@ -28,12 +28,13 @@ const UpdateProfile = () => {
   useEffect(() => {
     async function getProfileInfo() {
       const res = await getProfileDetails(authState.user?.token || "");
+    //   console.log('res getProfileInfo', res)
       if (res.status === true) {
         setProfileInfo(res.data);
       }
     }
     getProfileInfo();
-  }, [authState]);
+  }, []);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -42,7 +43,7 @@ const UpdateProfile = () => {
 
     const token = authState.user?.token || "";
     const response = await updateProfile(token, formDataFromEvent);
-    console.log("response update profile", response);
+    // console.log("response update profile", response);
 
     if (response.status === true) {
       setSuccess(true);
