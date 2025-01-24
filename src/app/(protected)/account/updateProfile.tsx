@@ -23,16 +23,17 @@ export interface ProfileInfo {
 const UpdateProfile = () => {
   const authState = useAppSelector((state) => state.auth);
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>();
+  const [success, setSuccess] = useState<boolean>(false);
 
-//   useEffect(() => {
-//     async function getProfileInfo() {
-//       const res = await getProfileDetails(authState.user?.token || "");
-//       if (res.status === true) {
-//         setProfileInfo(res.data);
-//       }
-//     }
-//     getProfileInfo();
-//   }, [authState]);
+  useEffect(() => {
+    async function getProfileInfo() {
+      const res = await getProfileDetails(authState.user?.token || "");
+      if (res.status === true) {
+        setProfileInfo(res.data);
+      }
+    }
+    getProfileInfo();
+  }, [authState]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,7 +42,13 @@ const UpdateProfile = () => {
 
     const token = authState.user?.token || "";
     const response = await updateProfile(token, formDataFromEvent);
-    // console.log("response update profile", response);
+    console.log("response update profile", response);
+
+    if (response.status === true) {
+      setSuccess(true);
+    } else {
+      setSuccess(false);
+    }
   };
 
   return (
@@ -164,6 +171,8 @@ const UpdateProfile = () => {
           <div className="pt-2">
             <ButtonPrimary type={"submit"}>Update Account</ButtonPrimary>
           </div>
+
+          {success && <p className="text-green-700 font-medium">Profile Updated!</p>}
         </div>
       </div>
     </form>

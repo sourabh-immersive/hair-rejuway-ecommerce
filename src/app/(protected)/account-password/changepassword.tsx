@@ -25,17 +25,18 @@ const ChangePassword = () => {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
-    async function getProfileInfo() {
+    async function getPasswordUpdate() {
       const res = await updateUserPassword(
         authState.user?.token || "",
         passwordData
       );
       if (res?.status === true) {
+        setSuccess('Password updated!')
         // setProfileInfo(res.data);
       }
     }
     if (passwordData) {
-      getProfileInfo();
+      getPasswordUpdate();
     }
   }, [authState, passwordData]);
 

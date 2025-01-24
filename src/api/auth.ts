@@ -68,10 +68,13 @@ export const logout = async () => {
 
 export async function authenticateGoogleUser(userD: any) {
   // console.log('google login api post',userD)
-  const res = await apiClient.post("/user/social-login", userD);
-  // console.log('res9999', res)
-  // if (!res.ok) {
-  //   console.error("Failed to save user to database");
-  // }
-  return true;
+  const response = await apiClient.post("/user/social-login", userD);
+  // console.log('res9999 new2', response.data)
+  if (response.status) {
+    return {
+      status: true,
+      token: response.data.data.token
+    }
+  }
+  // return true;
 }

@@ -19,7 +19,7 @@ const PaymentMethod: FC<Props> = ({
   onOpenActive,
 }) => {
   const [mothodActive, setMethodActive] = useState<
-    "Credit-Card" | "Internet-banking" | "Wallet"
+    "Credit-Card" | "Internet-banking" | "Wallet" | "cod"
   >("Credit-Card");
 
   const renderDebitCredit = () => {
@@ -324,6 +324,80 @@ const PaymentMethod: FC<Props> = ({
     );
   };
 
+  const renderCOD = () => {
+    const active = mothodActive === "cod";
+    return (
+      <div className="flex items-start space-x-4 sm:space-x-6">
+        <Radio
+          className="pt-3.5"
+          name="payment-method"
+          id="cod"
+          defaultChecked={active}
+          onChange={(e) => setMethodActive(e as any)}
+        />
+        <div className="flex-1">
+          <label
+            htmlFor="Wallet"
+            className="flex items-center space-x-4 sm:space-x-6 "
+          >
+            <div
+              className={`p-2.5 rounded-xl border-2 ${
+                active
+                  ? "border-slate-600 dark:border-slate-300"
+                  : "border-gray-200 dark:border-slate-600"
+              }`}
+            >
+              <svg
+                className="w-6 h-6 sm:w-7 sm:h-7"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M18.04 13.55C17.62 13.96 17.38 14.55 17.44 15.18C17.53 16.26 18.52 17.05 19.6 17.05H21.5V18.24C21.5 20.31 19.81 22 17.74 22H6.26C4.19 22 2.5 20.31 2.5 18.24V11.51C2.5 9.44001 4.19 7.75 6.26 7.75H17.74C19.81 7.75 21.5 9.44001 21.5 11.51V12.95H19.48C18.92 12.95 18.41 13.17 18.04 13.55Z"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M2.5 12.4101V7.8401C2.5 6.6501 3.23 5.59006 4.34 5.17006L12.28 2.17006C13.52 1.70006 14.85 2.62009 14.85 3.95009V7.75008"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M22.5588 13.9702V16.0302C22.5588 16.5802 22.1188 17.0302 21.5588 17.0502H19.5988C18.5188 17.0502 17.5288 16.2602 17.4388 15.1802C17.3788 14.5502 17.6188 13.9602 18.0388 13.5502C18.4088 13.1702 18.9188 12.9502 19.4788 12.9502H21.5588C22.1188 12.9702 22.5588 13.4202 22.5588 13.9702Z"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M7 12H14"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <p className="font-medium">Cash on delivery</p>
+          </label>
+          <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
+            <div className="text-sm prose dark:prose-invert">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque
+                dolore quod quas fugit perspiciatis architecto, temporibus quos
+                ducimus libero explicabo?
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderPaymentMethod = () => {
     return (
       <div className="border border-slate-200 dark:border-slate-700 rounded-xl ">
@@ -418,6 +492,9 @@ const PaymentMethod: FC<Props> = ({
 
           {/* ==================== */}
           <div>{renderWallet()}</div>
+
+          {/* ==================== */}
+          <div>{renderCOD()}</div>
 
           <div className="flex pt-6">
             <ButtonPrimary

@@ -99,14 +99,20 @@ export const {
           id: account.providerAccountId,
         };
 
-        const ddd = await authenticateGoogleUser(userD);
+        const authResponse = await authenticateGoogleUser(userD);
+        // console.log('authResponse', authResponse)
+        if (user && authResponse?.status) {
+          user.apiToken = authResponse.token;
 
-        return true;
+          return true;
+        }
+
       } else if (account?.provider === "credentials") {
-        console.log("Signed in using credentials");
+        // console.log("Signed in using credentials");
+        return true;
       }
 
-      return true; // Allow the sign-in
+      return false;
     },
 
     async session({ session, token, user }) {

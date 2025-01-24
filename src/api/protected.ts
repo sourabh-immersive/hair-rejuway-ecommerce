@@ -10,6 +10,7 @@ export const getProfileDetails = async (token: string) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log('response getProfileDetails', response)
     return response.data;
   } catch (error) {
     console.error("Error updating profile:", error);
