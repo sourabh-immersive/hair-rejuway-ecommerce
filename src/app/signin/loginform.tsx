@@ -124,7 +124,7 @@ const LoginForm = () => {
           dispatch(initializeSession(null));
         }
 
-        router.push("/account");
+        router.push("/");
       }
     } catch (e) {
       console.error(e);
@@ -134,7 +134,7 @@ const LoginForm = () => {
 
   const googleLoginHandler = async (formData: any) => {
     const googleLoginData = await doSocialLogin(formData);
-    console.log("googleLoginData", googleLoginData);
+    // console.log("googleLoginData", googleLoginData);
   };
 
   return (

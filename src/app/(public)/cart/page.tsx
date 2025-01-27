@@ -154,10 +154,6 @@ const CartPage = () => {
               Home
             </Link>
             <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <Link href={"/collection"} className="">
-              Categories
-            </Link>
-            <span className="text-xs mx-1 sm:mx-1.5">/</span>
             <span className="underline">Shopping Cart</span>
           </div>
         </div>

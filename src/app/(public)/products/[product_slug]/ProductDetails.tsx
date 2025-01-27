@@ -44,7 +44,11 @@ interface Variation {
   sale_price: number;
   gst_price: number;
   total_price: number;
-  attribute: { attribute_title: string; attribute_value: string }[];
+  attribute: {
+    attribute_id?: string;
+    attribute_title: string;
+    attribute_value: string;
+  }[];
 }
 
 const ProductDetail = ({ data }: { data: Product }) => {
@@ -63,6 +67,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
   const [selectedImage, setSelectedImage] = useState<string | StaticImageData>(
     ""
   );
+
+  console.log("selectedVariation", selectedVariation);
 
   useEffect(() => {
     if (productData?.feature_image) {
@@ -126,12 +132,48 @@ const ProductDetail = ({ data }: { data: Product }) => {
       { position: "top-right", id: "nc-product-notify", duration: 3000 }
     );
 
-    const attributesArray = Object.entries(selectedAttributes).map(
-      ([key, value]) => ({
-        name: key,
-        value: value,
-      })
-    );
+    // const attributesArray = Object.entries(selectedAttributes).map(
+    //   ([key, value]) => ({
+    //     name: key,
+    //     value: value,
+    //   })
+    // );
+
+    // console.log('attributesArray', attributesArray)
+
+    // const cartItem = {
+    //   id: String(productData?.id),
+    //   name: productData?.title || "Product",
+    //   thumbnail: productData?.feature_image || null,
+    //   price:
+    //     productType === "simple"
+    //       ? productData?.product_variations?.[0]?.price || 0
+    //       : selectedVariation?.price ?? 0,
+    //   salePrice:
+    //     productType === "simple"
+    //       ? productData?.product_variations?.[0]?.sale_price !== undefined &&
+    //         productData?.product_variations?.[0]?.sale_price > 0
+    //         ? productData?.product_variations?.[0]?.sale_price
+    //         : productData?.product_variations?.[0]?.price ?? 0
+    //       : selectedVariation?.sale_price !== undefined &&
+    //         selectedVariation?.sale_price > 0
+    //       ? selectedVariation?.sale_price
+    //       : selectedVariation?.price ?? 0,
+    //   attributesData: productType === "simple" ? [] : attributesArray,
+    //   quantity: quantitySelected,
+    //   productType,
+    // };
+
+    // dispatch(addItemToCart(cartItem));
+
+    const attributesArray =
+      selectedVariation?.attribute?.map((attr) => ({
+        id: attr.attribute_id, // Include attribute_id
+        name: attr.attribute_title,
+        value: attr.attribute_value,
+      })) || [];
+
+    console.log("attributesArray", attributesArray);
 
     const cartItem = {
       id: String(productData?.id),
@@ -175,7 +217,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
               productData?.attributes.map((attr) => (
                 <div key={attr.name} className="mb-6">
                   <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">
-                    {attr.name}:
+                    {attr.name}:{attr.id}
                   </h3>
                   <ul className="flex items-center space-x-3">
                     {attr.options.map((option) => (
@@ -407,55 +449,45 @@ const ProductDetail = ({ data }: { data: Product }) => {
           </ButtonPrimary>
         </div>
 
-        {/*  */}
-        <hr className=" 2xl:!my-10 border-slate-200 dark:border-slate-700"></hr>
-        {/*  */}
-
-        {/* {accData && <AccordionInfo data={accData} />} */}
-
-        {/* ---------- Specializations ----------  */}
-        {productData?.specializations && (
-          <>
-            {productData?.specializations.length !== 0 ? (
-              <>
-                <h3 className="text-xl font-semibold">Specializations</h3>
-                {productData.specializations.map((s, i) => (
-                  <p key={i}>
-                    <b>
-                      {i + 1}. {s.title}
-                    </b>
-                    <br />
-                    {s.value}
-                  </p>
-                ))}
-              </>
-            ) : (
-              ""
-            )}
-          </>
-        )}
-
         {/* ---------- Ingredient ----------  */}
         {productData?.ingredient && (
           <>
             {productData.ingredient.length !== 0 ? (
               <>
-                <h3 className="text-xl font-semibold">Ingredient</h3>
-                {productData.ingredient.map((s, i) => (
-                  <p key={i}>
-                    <b>
-                      {i + 1}. {s.title}
-                    </b>
-                    <br />
-                    {s.image}
-                  </p>
-                ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
+                  {productData.ingredient.map((s, i) => (
+                    <>
+                      <div
+                        key={i}
+                        className={`flex flex-col p-5 rounded-2xl dark:bg-opacity-90`}
+                      >
+                        <Image
+                          src={s.image}
+                          width={60}
+                          height={60}
+                          alt={s.title}
+                        />
+                        <div className="mt-2.5">
+                          <p className="font-semibold text-slate-900">
+                            {s.title}
+                          </p>
+                        </div>
+                      </div>
+                    </>
+                  ))}
+                </div>
               </>
             ) : (
               ""
             )}
           </>
         )}
+
+        {/*  */}
+        <hr className=" 2xl:!my-10 border-slate-200 dark:border-slate-700"></hr>
+        {/*  */}
+
+        {/* {accData && <AccordionInfo data={accData} />} */}
 
         {/* ---------- 6 ----------  */}
         <div className="hidden xl:block">
@@ -525,6 +557,33 @@ const ProductDetail = ({ data }: { data: Product }) => {
                   );
                 })}
             </div>
+
+            {/*  */}
+            <hr className=" 2xl:!my-10 my-8 border-slate-200 dark:border-slate-700"></hr>
+            {/*  */}
+
+            {/* ---------- Specializations ----------  */}
+            {productData?.specializations && (
+              <>
+                {productData?.specializations.length !== 0 ? (
+                  <>
+                    <h3 className="text-xl font-semibold mb-6">Specializations</h3>
+                    {productData.specializations.map((s, i) => (
+                      <div key={i}>
+                        <p className="text-base font-medium">
+                          {i + 1}. {s.title}
+                        </p>
+                        <p className="text-base font-normal">
+                        {s.value}
+                        </p>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  ""
+                )}
+              </>
+            )}
           </div>
 
           {/* SIDEBAR */}

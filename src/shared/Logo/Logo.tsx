@@ -9,8 +9,8 @@ export interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({
-  img = '/hair-rejuway.png',
-  imgLight = '/hair-rejuway.png',
+  img = '/hair-rejuway-logo.png',
+  imgLight = '/hair-rejuway-logo.png',
   className = "flex-shrink-0",
 }) => {
   return (

@@ -28,6 +28,7 @@ import ProductsGrid from "@/components/ProductsGrid/ProductsGrid";
 import PromoBanner from "@/components/PromotionalBanner/PromoBanner";
 import { getProducts, getSliderImages } from "@/api/products";
 import ImageSlider from "@/components/ImageSlider/ImageSlider";
+import Link from "next/link";
 
 async function PageHome() {
   // const start = performance.now();
@@ -48,13 +49,19 @@ async function PageHome() {
         <AllCategories />
         <ProductsGrid />
         <PromoBanner />
-        <SectionSliderProductCard initialData={fetchedProducts.status ? fetchedProducts.data : []} />
+        <SectionSliderProductCard heading={'Skin Care Products'}
+          initialData={fetchedProducts.status ? fetchedProducts.data : []}
+        />
         {sliderCenterImages.data.length !== 0 ? (
-          <ImageSlider images={sliderCenterImages.data} />
+          <Link href={"/products"} prefetch={true}>
+            <ImageSlider images={sliderCenterImages.data} />
+          </Link>
         ) : (
           ""
         )}
-        <SectionSliderProductCard initialData={fetchedProducts.status ? fetchedProducts.data : []} />
+        <SectionSliderProductCard heading={'Popular Hair Products'}
+          initialData={fetchedProducts.status ? fetchedProducts.data : []}
+        />
       </div>
       <SectionFeatures />
       <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">

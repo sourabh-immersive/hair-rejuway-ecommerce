@@ -31,12 +31,12 @@ const SectionClientSay: FC<SectionClientSayProps> = ({ className = "" }) => {
   useEffect(() => {
     const OPTIONS: Partial<Glide.Options> = {
       type: 'carousel',
-      perView: 5, // Number of fully visible slides
-      focusAt: 'center', // Center the active slide
-      peek: 100, // Show 100px of adjacent slides on both sides
-      gap: 10, // Space between slides
-      autoplay: 3000, // Autoplay every 3 seconds
-      animationDuration: 800, // Animation speed in milliseconds
+      perView: 4,
+      focusAt: 'center',
+      peek: 100,
+      gap: 10,
+      autoplay: 3000,
+      animationDuration: 800,
       breakpoints: {
         1024: { perView: 2, peek: 50 },
         768: { perView: 1, peek: 50 },

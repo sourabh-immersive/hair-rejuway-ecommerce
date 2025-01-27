@@ -49,6 +49,7 @@ interface productDetails {
 }
 
 interface AttributeOptions {
+  id?: string;
   name: string;
   options: string[];
 }

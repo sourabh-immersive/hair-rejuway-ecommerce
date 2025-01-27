@@ -69,7 +69,7 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
             <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-5">
               <div>
                 <div className="text-md text-blue-500 mb-2">Hot Sale</div>
-                <h2 className="text-2xl font-semibold">Latest Products</h2>
+                <h2 className="text-2xl font-semibold">{heading ? heading : 'Latest Products'}</h2>
               </div>
               {/* Arrows */}
               <div

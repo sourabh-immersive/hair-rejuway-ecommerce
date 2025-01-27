@@ -34,8 +34,8 @@ export default function AvatarDropdown() {
   useEffect(() => {
     async function getUserINfo() {
       const profileData = await getProfileDetails(authState.user?.token || "");
-      console.log("profileData", profileData);
-      if (profileData.status === true) {
+      // console.log("profileData", profileData);
+      if (profileData?.status === true) {
         setUserInfo(
           profileData?.data
             ? profileData.data
