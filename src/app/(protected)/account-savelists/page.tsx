@@ -1,5 +1,6 @@
 "use client";
 
+import { getProductsByIds } from "@/api/products";
 import { getWishlist } from "@/api/protected";
 import Prices from "@/components/Prices";
 import ProductCard from "@/components/ProductCard";
@@ -17,29 +18,45 @@ const AccountSavelists = () => {
   const authState = useAppSelector((state) => state.auth);
   const [products, setProducts] = useState<Product[]>();
 
-  if (authState.status === "authenticated") {
-    useEffect(() => {
-      const getWishlistItems = async () => {
-        try {
-          if (authState.user?.token) {
-            const response = await getWishlist(authState.user.token);
-
+  const comSepIds = items.map((item) => (item.id)).join(',')
+      console.log('comSepIds', comSepIds)
+    if (authState.status === "authenticated") {
+      useEffect(() => {
+        const getWishlistItems = async () => {
+          try {
+            if (authState.user?.token) {
+              const response = await getWishlist(authState.user.token);
+              console.log('getWishlist from server', response.data)
+  
+              if (response.status === true) {
+                setProducts(response.data);
+              }
+            } else {
+            }
+          } catch (error) {
+            console.error("Error getting wishlist:", error);
+          } finally {
+          }
+        };
+        getWishlistItems();
+      }, [authState]);
+    } else {
+      useEffect(() => {
+        const getProductsByIdsd = async () => {
+          try {
+            const response = await getProductsByIds(comSepIds)
+  
             if (response.status === true) {
               setProducts(response.data);
             }
-          } else {
+          } catch (error) {
+            console.error("Error getting wishlist:", error);
+          } finally {
           }
-        } catch (error) {
-          console.error("Error getting wishlist:", error);
-        } finally {
-        }
-      };
-      getWishlistItems();
-    }, []);
-  } else {
-    // Need to call api and get products
-  }
-
+        };
+        getProductsByIdsd();
+      }, [wishData]);
+    }
   const renderSection1 = () => {
     return (
       <div className="space-y-10 sm:space-y-12">
