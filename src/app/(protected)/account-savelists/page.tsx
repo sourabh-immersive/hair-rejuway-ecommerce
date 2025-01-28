@@ -17,24 +17,28 @@ const AccountSavelists = () => {
   const authState = useAppSelector((state) => state.auth);
   const [products, setProducts] = useState<Product[]>();
 
-  useEffect(() => {
-    const getWishlistItems = async () => {
-      try {
-        if (authState.user?.token) {
-          const response = await getWishlist(authState.user.token);
+  if (authState.status === "authenticated") {
+    useEffect(() => {
+      const getWishlistItems = async () => {
+        try {
+          if (authState.user?.token) {
+            const response = await getWishlist(authState.user.token);
 
-          if (response.status === true) {
-            setProducts(response.data);
+            if (response.status === true) {
+              setProducts(response.data);
+            }
+          } else {
           }
-        } else {
+        } catch (error) {
+          console.error("Error getting wishlist:", error);
+        } finally {
         }
-      } catch (error) {
-        console.error("Error getting wishlist:", error);
-      } finally {
-      }
-    };
-    getWishlistItems();
-  }, []);
+      };
+      getWishlistItems();
+    }, []);
+  } else {
+    // Need to call api and get products
+  }
 
   const renderSection1 = () => {
     return (

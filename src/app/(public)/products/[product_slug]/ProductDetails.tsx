@@ -454,12 +454,12 @@ const ProductDetail = ({ data }: { data: Product }) => {
           <>
             {productData.ingredient.length !== 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
+                <div className="grid grid-cols-2 sm:grid-cols-4 overflow-x-auto gap-3 relative">
                   {productData.ingredient.map((s, i) => (
                     <>
                       <div
                         key={i}
-                        className={`flex flex-col p-5 rounded-2xl dark:bg-opacity-90`}
+                        className={`flex flex-col items-center p-5 pb-0 rounded-2xl dark:bg-opacity-90`}
                       >
                         <Image
                           src={s.image}
@@ -468,7 +468,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
                           alt={s.title}
                         />
                         <div className="mt-2.5">
-                          <p className="font-semibold text-slate-900">
+                          <p className="text-xs text-center font-semibold text-slate-900">
                             {s.title}
                           </p>
                         </div>
@@ -512,13 +512,28 @@ const ProductDetail = ({ data }: { data: Product }) => {
     );
   };
 
+  const renderInfoSection = () => {
+    // if (!productData?.details || typeof productData.details !== "string") {
+    //   return null; // Render nothing if details is undefined, null, or not a string
+    // }
+    return (
+      <div className="">
+        <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
+          {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
+          <AccordionInfo />
+        </div>
+      </div>
+    );
+  };
+  
+
   return (
     <div className={`nc-ProductDetailPage `}>
       {/* MAIN */}
       <main className="container mt-5 lg:mt-11">
         <div className="lg:flex">
           {/* CONTENT */}
-          <div className="w-full lg:w-[55%] ">
+          <div className="w-full lg:w-[50%] ">
             {/* HEADING */}
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
@@ -587,7 +602,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
           </div>
 
           {/* SIDEBAR */}
-          <div className="w-full lg:w-[45%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+          <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
             {renderSectionContent()}
           </div>
         </div>
@@ -605,6 +620,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
           {/* {renderReviews()} */}
 
           <hr className="border-slate-200 dark:border-slate-700" />
+
+          {renderInfoSection()}
 
           {/* OTHER SECTION */}
           <SectionGridFeatureItems />

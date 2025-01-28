@@ -103,17 +103,20 @@ export const getProductsByQueryParams = async (
 export const getProductsByCatSlug = async (
   slug: string,
   paginate?: number,
-  currentPage?: number
+  currentPage?: number,
+  product_id?: string
 ) => {
   try {
     const requestBody: {
       category_slug?: string;
       paginate?: number;
       page?: number;
+      product_id?: string;
     } = {};
     if (slug) requestBody.category_slug = slug;
     if (paginate) requestBody.paginate = paginate;
     if (currentPage) requestBody.page = currentPage;
+    if (product_id) requestBody.product_id = product_id;
 
     // const requestBody = categoryString ? { category: categoryString } : {};
     // console.log(requestBody)
@@ -134,6 +137,42 @@ export const getProductsByCatSlug = async (
     }
   } catch (error) {
     console.error(`Error fetching product with category slug ${slug}:`);
+    return {
+      status: false,
+      error: "Error fetching products!",
+    };
+  }
+};
+
+// Get products by ids
+export const getProductsByIds = async (
+  product_id?: string
+) => {
+  try {
+    const requestBody: {
+      product_id?: string;
+    } = {};
+    if (product_id) requestBody.product_id = product_id;
+
+    // const requestBody = categoryString ? { category: categoryString } : {};
+    // console.log(requestBody)
+    const response = await apiClient.post(`/front/products`, requestBody);
+
+    if (response.status) {
+      return {
+        status: true,
+        data: response.data.data,
+        message: "Products fetched successfully!",
+      };
+    } else {
+      console.error("Error fetching products:", response.data.error);
+      return {
+        status: false,
+        message: "Failed to fetch products!",
+      };
+    }
+  } catch (error) {
+    console.error(`Error fetching product with category slug`);
     return {
       status: false,
       error: "Error fetching products!",

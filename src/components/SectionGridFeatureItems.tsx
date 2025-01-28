@@ -69,7 +69,7 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
         <div
           className={`grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
         >
-          {products.map((item, index) => (
+          {products && products.map((item, index) => (
             <ProductCard data={item} key={index} />
           ))}
         </div>

@@ -23,10 +23,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
     return (
       <>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-          {products.data.length ?
-          products.data.map((item: Product, index: any) => (
-            <ProductCard data={item} key={index} />
-          )) : (<p>No products found!</p>)}
+          {products.data &&
+          Array.isArray(products.data) &&
+          products.data.length ? (
+            products.data.map((item: Product, index: any) => (
+              <ProductCard data={item} key={index} />
+            ))
+          ) : (
+            <p>No products found!</p>
+          )}
         </div>
       </>
     );
