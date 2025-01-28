@@ -18,45 +18,47 @@ const AccountSavelists = () => {
   const authState = useAppSelector((state) => state.auth);
   const [products, setProducts] = useState<Product[]>();
 
-  const comSepIds = items.map((item) => (item.id)).join(',')
-      console.log('comSepIds', comSepIds)
+  const comSepIds = items.map((item) => item.id).join(",");
+  console.log("comSepIds", comSepIds);
+
+  useEffect(() => {
+    const getWishlistItems = async () => {
+      try {
+        if (authState.user?.token) {
+          const response = await getWishlist(authState.user.token);
+          console.log("getWishlist from server", response.data);
+
+          if (response.status === true) {
+            setProducts(response.data);
+          }
+        } else {
+        }
+      } catch (error) {
+        console.error("Error getting wishlist:", error);
+      } finally {
+      }
+    };
+
+    const getProductsByIdsd = async () => {
+      try {
+        const response = await getProductsByIds(comSepIds);
+
+        if (response.status === true) {
+          setProducts(response.data);
+        }
+      } catch (error) {
+        console.error("Error getting wishlist:", error);
+      } finally {
+      }
+    };
+
     if (authState.status === "authenticated") {
-      useEffect(() => {
-        const getWishlistItems = async () => {
-          try {
-            if (authState.user?.token) {
-              const response = await getWishlist(authState.user.token);
-              console.log('getWishlist from server', response.data)
-  
-              if (response.status === true) {
-                setProducts(response.data);
-              }
-            } else {
-            }
-          } catch (error) {
-            console.error("Error getting wishlist:", error);
-          } finally {
-          }
-        };
-        getWishlistItems();
-      }, [authState]);
+      getWishlistItems();
     } else {
-      useEffect(() => {
-        const getProductsByIdsd = async () => {
-          try {
-            const response = await getProductsByIds(comSepIds)
-  
-            if (response.status === true) {
-              setProducts(response.data);
-            }
-          } catch (error) {
-            console.error("Error getting wishlist:", error);
-          } finally {
-          }
-        };
-        getProductsByIdsd();
-      }, [wishData]);
+      getProductsByIdsd();
     }
+  }, [authState, wishData]);
+
   const renderSection1 = () => {
     return (
       <div className="space-y-10 sm:space-y-12">

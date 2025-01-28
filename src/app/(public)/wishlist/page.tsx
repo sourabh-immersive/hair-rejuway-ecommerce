@@ -15,45 +15,45 @@ const Page = () => {
   const authState = useAppSelector((state) => state.auth);
   const [products, setProducts] = useState<Product[]>();
 
-  const comSepIds = items.map((item) => (item.id)).join(',')
-    console.log('comSepIds', comSepIds)
-  if (authState.status === "authenticated") {
-    useEffect(() => {
-      const getWishlistItems = async () => {
-        try {
-          if (authState.user?.token) {
-            const response = await getWishlist(authState.user.token);
-            console.log('getWishlist from server', response.data)
-
-            if (response.status === true) {
-              setProducts(response.data);
-            }
-          } else {
-          }
-        } catch (error) {
-          console.error("Error getting wishlist:", error);
-        } finally {
-        }
-      };
-      getWishlistItems();
-    }, [authState]);
-  } else {
-    useEffect(() => {
-      const getProductsByIdsd = async () => {
-        try {
-          const response = await getProductsByIds(comSepIds)
+  const comSepIds = items.map((item) => item.id).join(",");
+  console.log("comSepIds", comSepIds);
+  useEffect(() => {
+    const getWishlistItems = async () => {
+      try {
+        if (authState.user?.token) {
+          const response = await getWishlist(authState.user.token);
+          console.log("getWishlist from server", response.data);
 
           if (response.status === true) {
             setProducts(response.data);
           }
-        } catch (error) {
-          console.error("Error getting wishlist:", error);
-        } finally {
+        } else {
         }
-      };
+      } catch (error) {
+        console.error("Error getting wishlist:", error);
+      } finally {
+      }
+    };
+
+    const getProductsByIdsd = async () => {
+      try {
+        const response = await getProductsByIds(comSepIds);
+
+        if (response.status === true) {
+          setProducts(response.data);
+        }
+      } catch (error) {
+        console.error("Error getting wishlist:", error);
+      } finally {
+      }
+    };
+
+    if (authState.status === "authenticated") {
+      getWishlistItems();
+    } else {
       getProductsByIdsd();
-    }, [wishData]);
-  }
+    }
+  }, [authState, wishData]);
 
   const renderSection1 = () => {
     return (
