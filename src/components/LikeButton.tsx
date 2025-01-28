@@ -19,7 +19,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   liked = false,
   data,
 }) => {
-  const [isLiked, setIsLiked] = useState(liked || false);
+  const [isLiked, setIsLiked] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const dispatch = useAppDispatch();
   const authState = useAppSelector((state) => state.auth);
