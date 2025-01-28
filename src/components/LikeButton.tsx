@@ -41,7 +41,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           dispatch(addItemToWishlist(item));
           setIsLiked(true);
         }
-      } 
+      } else {
+        dispatch(addItemToWishlist(item));
+        setIsLiked(true);
+      }
     } catch (error) {
       console.error("Error adding item to wishlist:", error);
     } finally {
