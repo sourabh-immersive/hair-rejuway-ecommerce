@@ -269,13 +269,13 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({
         <AccordionInfo
           data={[
             {
-              name: "Description",
-              content:
+              title: "Description",
+              description:
                 "Fashion is a form of self-expression and autonomy at a particular period and place and in a specific context, of clothing, footwear, lifestyle, accessories, makeup, hairstyle, and body posture.",
             },
             {
-              name: "Features",
-              content: `<ul class="list-disc list-inside leading-7">
+              title: "Features",
+              description: `<ul class="list-disc list-inside leading-7">
             <li>Material: 43% Sorona Yarn + 57% Stretch Polyester</li>
             <li>
              Casual pants waist with elastic elastic inside
