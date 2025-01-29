@@ -59,6 +59,21 @@ export const getSliderImages = async (position: string) => {
   }
 };
 
+// Fetch Pages content by slug
+export const getPageBySlug = async (slug: string) => {
+  try {
+    const response = await apiClient.get(
+      `/front/pages?slug=${slug}`
+    );
+    if (response.status) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching page:`, error);
+    // throw error;
+  }
+};
+
 export const getProductsByQueryParams = async (
   category: string[],
   paginate?: number,

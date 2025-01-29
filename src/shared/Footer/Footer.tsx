@@ -2,6 +2,7 @@ import Logo from "@/shared/Logo/Logo";
 import SocialsList1 from "@/shared/SocialsList1/SocialsList1";
 import { CustomLink } from "@/data/types";
 import React from "react";
+import Link from "next/link";
 
 export interface WidgetFooterMenu {
   id: string;
@@ -12,42 +13,41 @@ export interface WidgetFooterMenu {
 const widgetMenus: WidgetFooterMenu[] = [
   {
     id: "5",
-    title: "Getting started",
+    title: "Hair Rejuway Journey",
     menus: [
-      { href: "/", label: "Release Notes" },
-      { href: "/", label: "Upgrade Guide" },
-      { href: "/", label: "Browser Support" },
-      { href: "/", label: "Dark Mode" },
+      { href: "/about-us", label: "About Us" },
+      { href: "/reviews", label: "Reviews" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/products", label: "Shop Online" },
     ],
   },
   {
     id: "1",
     title: "Explore",
     menus: [
-      { href: "/", label: "Prototyping" },
-      { href: "/", label: "Design systems" },
-      { href: "/", label: "Pricing" },
-      { href: "/", label: "Security" },
+      { href: "/categories/hair-care", label: "Hair Care" },
+      { href: "/categories/hair-fall", label: "Hair Fall" },
+      { href: "/categories/dandruff", label: "Dandruff" },
+      { href: "/categories/curl-care", label: "Curl Care" },
     ],
   },
   {
     id: "2",
-    title: "Resources",
+    title: "Quick Links",
     menus: [
-      { href: "/", label: "Best practices" },
-      { href: "/", label: "Support" },
-      { href: "/", label: "Developers" },
-      { href: "/", label: "Learn design" },
+      { href: "/products", label: "Products" },
+      { href: "/about-us", label: "About" },
+      { href: "/", label: "Home" },
     ],
   },
   {
     id: "4",
-    title: "Community",
+    title: "Legal",
     menus: [
-      { href: "/", label: "Discussion Forums" },
-      { href: "/", label: "Code of Conduct" },
-      { href: "/", label: "Contributing" },
-      { href: "/", label: "API Reference" },
+      { href: "/money-back-policy", label: "Money Back Policy" },
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/terms-of-service", label: "Terms of Service" },
+      { href: "/return-policy", label: "Return Policy" },
     ],
   },
 ];
@@ -56,21 +56,21 @@ const Footer: React.FC = () => {
   const renderWidgetMenuItem = (menu: WidgetFooterMenu, index: number) => {
     return (
       <div key={index} className="text-sm">
-        <h2 className="font-semibold text-neutral-700 dark:text-neutral-200">
+        <h2 className="font-semibold text-base dark:text-neutral-200">
           {menu.title}
         </h2>
         <ul className="mt-5 space-y-4">
           {menu.menus.map((item, index) => (
             <li key={index}>
-              <a
+              <Link
                 key={index}
-                className="text-neutral-6000 dark:text-neutral-300 hover:text-black dark:hover:text-white"
+                className="text-neutral-6000 text-base font-normal dark:text-neutral-300 hover:text-black dark:hover:text-white"
                 href={item.href}
                 target="_blank"
-                rel="noopener noreferrer"
+                prefetch={true}
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

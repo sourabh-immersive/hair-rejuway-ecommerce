@@ -121,7 +121,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             <p>Order upto 30%-40% | Free Shipping on orders over ₹899.00</p>
             <div className="">
               <ul className="list-none flex space-x-4 ">
-                <li>About Us</li>
+                <li><Link href={'/about-us'} prefetch={true}>About Us</Link></li>
                 <li><Link href={'/wishlist'} prefetch={true}>Wishlist</Link></li>
                 {authStateData.status === "authenticated" ? (
                   <li>
