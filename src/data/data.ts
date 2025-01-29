@@ -72,6 +72,42 @@ export interface Product {
     title: string;
     image: string;
   }[];
+  benefits?: {
+    title: string;
+    description: string;
+    image: string;
+    faqs: {
+      title: string;
+      description: string;
+    }[];
+  }
+  how_to_use?: {
+    title: string;
+    description: string;
+    image: string;
+    faqs: {
+      title: string;
+      description: string;
+    }[];
+  }
+  ingredients?: {
+    title: string;
+    description: string;
+    image: string;
+    faqs: {
+      title: string;
+      description: string;
+    }[];
+  }
+  FAQ_list?: {
+    title: string;
+    description: string;
+    image: string;
+    faqs: {
+      title: string;
+      description: string;
+    }[];
+  }
   product_variations: productDetails[];
   images?: {id: string, image: string}[];
   thumbnail: StaticImageData | string;

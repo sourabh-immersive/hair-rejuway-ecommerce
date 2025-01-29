@@ -51,29 +51,32 @@ const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
 
   return (
     <div className="nc-SectionGridFeatureItems relative py-10">
-      {/* <HeaderFilterSection /> */}
-      {/* <Heading>{`What's trending now`}</Heading> */}
-      <div className="flex justify-between border-b border-gray-200 pb-4 mb-6">
-        <h2 className="text-2xl font-semibold">Trending Bestsellers</h2>
-        <ButtonSecondary
-          className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
-          fontSize="text-sm"
-          sizeClass="py-2 px-4"
-        >
-          See All
-        </ButtonSecondary>
-      </div>
-      {loading ? (
-        <div className="text-center">Loading products...</div>
-      ) : (
-        <div
-          className={`grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
-        >
-          {products && products.map((item, index) => (
-            <ProductCard data={item} key={index} />
-          ))}
+      <div className="container">
+        {/* <HeaderFilterSection /> */}
+        {/* <Heading>{`What's trending now`}</Heading> */}
+        <div className="flex justify-between border-b border-gray-200 pb-4 mb-6">
+          <h2 className="text-2xl font-semibold">Trending Bestsellers</h2>
+          <ButtonSecondary
+            className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
+            fontSize="text-sm"
+            sizeClass="py-2 px-4"
+          >
+            See All
+          </ButtonSecondary>
         </div>
-      )}
+        {loading ? (
+          <div className="text-center">Loading products...</div>
+        ) : (
+          <div
+            className={`grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
+          >
+            {products &&
+              products.map((item, index) => (
+                <ProductCard data={item} key={index} />
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

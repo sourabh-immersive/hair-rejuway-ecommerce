@@ -499,12 +499,12 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
   const renderDetailSection = () => {
     if (!productData?.details || typeof productData.details !== "string") {
-      return null; // Render nothing if details is undefined, null, or not a string
+      return null;
     }
     return (
-      <div className="">
+      <div className="container py-12">
         <h2 className="text-2xl font-semibold">Product Details</h2>
-        <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
+        <div className="dark:prose-invert mt-7">
           {/* Use dangerouslySetInnerHTML to render raw HTML */}
           <div dangerouslySetInnerHTML={{ __html: productData.details }} />
         </div>
@@ -525,7 +525,81 @@ const ProductDetail = ({ data }: { data: Product }) => {
       </div>
     );
   };
-  
+
+  const renderBenefitsSection = () => {
+    if (!productData?.benefits) {
+      return null;
+    }
+    const { title, description, image, faqs } = productData?.benefits;
+    return (
+      <div className="container">
+        <div className="py-12">
+          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+          <p className="text-base font-normal mb-10">{description}</p>
+          <div className="lg:flex">
+            <div className="w-full lg:w-[50%] ">
+              <Image src={image} alt={title} height={400} width={600} />
+            </div>
+            <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <AccordionInfo data={faqs} />
+            </div>
+          </div>
+          {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
+          {/* <AccordionInfo /> */}
+        </div>
+      </div>
+    );
+  };
+
+  const renderHowToUseSection = () => {
+    if (!productData?.how_to_use) {
+      return null;
+    }
+    const { title, description, image, faqs } = productData?.how_to_use;
+    return (
+      <div className="bg-[#f4f8fb]">
+        <div className="py-12 container">
+          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+          <p className="text-base font-normal mb-10">{description}</p>
+          <div className="lg:flex">
+            <div className="w-full lg:w-[50%] ">
+              <AccordionInfo data={faqs} />
+            </div>
+            <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <Image src={image} alt={title} height={400} width={600} />
+            </div>
+          </div>
+          {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
+          {/* <AccordionInfo /> */}
+        </div>
+      </div>
+    );
+  };
+
+  const renderIngredientsSection = () => {
+    if (!productData?.ingredients) {
+      return null;
+    }
+    const { title, description, image, faqs } = productData?.ingredients;
+    return (
+      <div className="">
+        <div className="py-12 container">
+          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+          <p className="text-base font-normal mb-10">{description}</p>
+          <div className="lg:flex">
+            <div className="w-full lg:w-[50%] ">
+              <Image src={image} alt={title} height={400} width={600} />
+            </div>
+            <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <AccordionInfo data={faqs} />
+            </div>
+          </div>
+          {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
+          {/* <AccordionInfo /> */}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={`nc-ProductDetailPage `}>
@@ -582,15 +656,15 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <>
                 {productData?.specializations.length !== 0 ? (
                   <>
-                    <h3 className="text-xl font-semibold mb-6">Specializations</h3>
+                    <h3 className="text-xl font-semibold mb-6">
+                      Specializations
+                    </h3>
                     {productData.specializations.map((s, i) => (
                       <div key={i}>
                         <p className="text-base font-medium">
                           {i + 1}. {s.title}
                         </p>
-                        <p className="text-base font-normal">
-                        {s.value}
-                        </p>
+                        <p className="text-base font-normal">{s.value}</p>
                       </div>
                     ))}
                   </>
@@ -606,38 +680,24 @@ const ProductDetail = ({ data }: { data: Product }) => {
             {renderSectionContent()}
           </div>
         </div>
-
-        {/* DETAIL AND REVIEW */}
-        <div className="mt-12 sm:mt-16 space-y-10 sm:space-y-16">
-          <div className="block xl:hidden">
-            <Policy />
-          </div>
-
-          {renderDetailSection()}
-
-          {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
-
-          {/* {renderReviews()} */}
-
-          <hr className="border-slate-200 dark:border-slate-700" />
-
-          {renderInfoSection()}
-
-          {/* OTHER SECTION */}
-          <SectionGridFeatureItems />
-          {/* <SectionSliderProductCard
-            heading="Related Products"
-            subHeading=""
-            headingFontClassName="text-2xl font-semibold"
-            headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"
-          /> */}
-
-          {/* SECTION */}
-          {/* <div className="pb-20 xl:pb-28 lg:pt-14">
-            <SectionPromo2 />
-          </div> */}
-        </div>
       </main>
+
+      {/* DETAIL AND REVIEW */}
+
+      {renderDetailSection()}
+
+      {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
+
+      {/* {renderReviews()} */}
+
+      {renderBenefitsSection()}
+
+      {renderHowToUseSection()}
+
+      {renderIngredientsSection()}
+
+      {/* RELATED PRODUCTS SECTION */}
+      <SectionGridFeatureItems />
 
       {/* MODAL VIEW ALL REVIEW */}
       <ModalViewAllReviews
