@@ -66,7 +66,6 @@ const Footer: React.FC = () => {
                 key={index}
                 className="text-neutral-6000 text-base font-normal dark:text-neutral-300 hover:text-black dark:hover:text-white"
                 href={item.href}
-                target="_blank"
                 prefetch={true}
               >
                 {item.label}
