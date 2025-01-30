@@ -33,6 +33,7 @@ import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
 import { useAppDispatch } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
+import ReviewsSlider from "@/components/Reviews/reviews";
 
 export interface ProductDetailsItemsProps {
   data?: Product;
@@ -746,8 +747,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
         />
       </div>
 
-      <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
-        <SectionClientSay />
+      <div className="container">
+        <ReviewsSlider />
       </div>
 
       {/* RELATED PRODUCTS SECTION */}
