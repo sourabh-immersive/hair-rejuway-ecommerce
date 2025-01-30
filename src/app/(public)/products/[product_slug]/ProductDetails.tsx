@@ -32,6 +32,7 @@ import { usePathname } from "next/navigation";
 import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
 import { useAppDispatch } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
+import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 
 export interface ProductDetailsItemsProps {
   data?: Product;
@@ -373,22 +374,59 @@ const ProductDetail = ({ data }: { data: Product }) => {
           <h2 className="text-2xl sm:text-3xl font-semibold">
             {productData?.title}
           </h2>
+          <p className="text-xl font-medium py-4">
+            {productData?.short_description}
+          </p>
+
+          {/* ---------- Ingredient ----------  */}
+          {productData?.ingredient && (
+            <>
+              {productData.ingredient.length !== 0 ? (
+                <>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 overflow-x-auto gap-3 relative">
+                    {productData.ingredient.map((s, i) => (
+                      <>
+                        <div
+                          key={i}
+                          className={`flex flex-col items-center p-5 pb-0 rounded-2xl dark:bg-opacity-90`}
+                        >
+                          <Image
+                            src={s.image}
+                            width={60}
+                            height={60}
+                            alt={s.title}
+                          />
+                          <div className="mt-2.5">
+                            <p className="text-xs text-center font-semibold text-slate-900">
+                              {s.title}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+            </>
+          )}
 
           <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
             {productType === "simple" ? (
               <Prices
-                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
+                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-3xl font-semibold"
                 price={productData?.product_variations[0].price}
                 salePrice={productData?.product_variations[0].sale_price}
               />
             ) : !selectedVariation?.price && !selectedVariation?.sale_price ? (
               <Prices
-                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
+                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-3xl font-semibold"
                 priceRange={getPrice()}
               />
             ) : (
               <Prices
-                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
+                contentClass="py-1 px-2 md:py-1.5 md:px-3 text-3xl font-semibold"
                 price={selectedVariation?.price && selectedVariation.price}
                 salePrice={
                   selectedVariation?.sale_price && selectedVariation.sale_price
@@ -421,7 +459,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <span className="hidden sm:block mx-2.5">·</span>
               <div className="hidden sm:flex items-center text-sm">
                 <SparklesIcon className="w-3.5 h-3.5" />
-                <span className="ml-1 leading-none">{"New"}</span>
+                <span className="ml-1 leading-none font-medium">{productData?.category}</span>
               </div>
             </div>
           </div>
@@ -448,40 +486,6 @@ const ProductDetail = ({ data }: { data: Product }) => {
             <span className="ml-3">Add to cart</span>
           </ButtonPrimary>
         </div>
-
-        {/* ---------- Ingredient ----------  */}
-        {productData?.ingredient && (
-          <>
-            {productData.ingredient.length !== 0 ? (
-              <>
-                <div className="grid grid-cols-2 sm:grid-cols-4 overflow-x-auto gap-3 relative">
-                  {productData.ingredient.map((s, i) => (
-                    <>
-                      <div
-                        key={i}
-                        className={`flex flex-col items-center p-5 pb-0 rounded-2xl dark:bg-opacity-90`}
-                      >
-                        <Image
-                          src={s.image}
-                          width={60}
-                          height={60}
-                          alt={s.title}
-                        />
-                        <div className="mt-2.5">
-                          <p className="text-xs text-center font-semibold text-slate-900">
-                            {s.title}
-                          </p>
-                        </div>
-                      </div>
-                    </>
-                  ))}
-                </div>
-              </>
-            ) : (
-              ""
-            )}
-          </>
-        )}
 
         {/*  */}
         <hr className=" 2xl:!my-10 border-slate-200 dark:border-slate-700"></hr>
@@ -534,13 +538,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
     return (
       <div className="container">
         <div className="py-12">
-          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
-          <p className="text-base font-normal mb-10">{description}</p>
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
               <Image src={image} alt={title} height={400} width={600} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+              <p className="text-base font-normal mb-10">{description}</p>
               <AccordionInfo data={faqs} />
             </div>
           </div>
@@ -559,10 +563,10 @@ const ProductDetail = ({ data }: { data: Product }) => {
     return (
       <div className="bg-[#f4f8fb]">
         <div className="py-12 container">
-          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
-          <p className="text-base font-normal mb-10">{description}</p>
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
+              <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+              <p className="text-base font-normal mb-10">{description}</p>
               <AccordionInfo data={faqs} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
@@ -584,13 +588,40 @@ const ProductDetail = ({ data }: { data: Product }) => {
     return (
       <div className="">
         <div className="py-12 container">
-          <h3 className="text-2xl font-semibold mb-5">{title}</h3>
-          <p className="text-base font-normal mb-10">{description}</p>
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
               <Image src={image} alt={title} height={400} width={600} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+              <p className="text-base font-normal mb-10">{description}</p>
+              <AccordionInfo data={faqs} />
+            </div>
+          </div>
+          {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
+          {/* <AccordionInfo /> */}
+        </div>
+      </div>
+    );
+  };
+
+  const renderFAQSection = () => {
+    if (!productData?.FAQ_list) {
+      return null;
+    }
+    const { title, description, image, faqs } = productData?.FAQ_list;
+    return (
+      <div className="bg-[#f4f8fb]">
+        <div className="py-12 container">
+          <div className="lg:flex">
+            <div className="w-full lg:w-[50%] ">
+              <Image src={image} alt={title} height={400} width={600} />
+            </div>
+            <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
+              <h3 className="text-2xl font-semibold mb-5">{title}</h3>
+              <p className="text-base font-normal mb-10">
+                {description ? description : ""}
+              </p>
               <AccordionInfo data={faqs} />
             </div>
           </div>
@@ -685,6 +716,14 @@ const ProductDetail = ({ data }: { data: Product }) => {
       {/* DETAIL AND REVIEW */}
 
       {renderDetailSection()}
+      <div className="container">
+        <Image
+          src={"/banners/s2.webp"}
+          alt={"banner"}
+          width={1920}
+          height={600}
+        />
+      </div>
 
       {/* <hr className="border-slate-200 dark:border-slate-700" /> */}
 
@@ -695,6 +734,21 @@ const ProductDetail = ({ data }: { data: Product }) => {
       {renderHowToUseSection()}
 
       {renderIngredientsSection()}
+
+      {renderFAQSection()}
+
+      <div className="container">
+        <Image
+          src={"/banners/s1.webp"}
+          alt={"banner"}
+          width={1920}
+          height={600}
+        />
+      </div>
+
+      <div className="relative space-y-20 my-20 lg:space-y-20 lg:my-10">
+        <SectionClientSay />
+      </div>
 
       {/* RELATED PRODUCTS SECTION */}
       <SectionGridFeatureItems />

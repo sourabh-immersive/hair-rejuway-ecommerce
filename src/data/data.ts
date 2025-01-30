@@ -60,6 +60,7 @@ export interface Product {
   price: number;
   slug: string;
   details: string;
+  short_description?: string;
   attributes?: AttributeOptions[];
   first_image?: string;
   feature_image: StaticImageData | string;

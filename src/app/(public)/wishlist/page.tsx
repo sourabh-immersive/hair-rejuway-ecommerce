@@ -49,7 +49,11 @@ const Page = () => {
     };
 
     if (authState.status === "authenticated") {
-      getWishlistItems();
+        // Need to implement wishlist sync
+    //   getWishlistItems();
+
+        //getting redux ids and then fetching products
+      getProductsByIdsd();
     } else {
       getProductsByIdsd();
     }
