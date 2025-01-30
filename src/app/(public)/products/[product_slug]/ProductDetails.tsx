@@ -718,7 +718,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
       {renderDetailSection()}
       <div className="container">
         <Image
-          src={"/banners/s2.webp"}
+          src={"https://hairrejuway.manageprojects.in/assets/images/products/ingredients.webp"}
           alt={"banner"}
           width={1920}
           height={600}
@@ -739,7 +739,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
       <div className="container">
         <Image
-          src={"/banners/s1.webp"}
+          src={"https://hairrejuway.manageprojects.in/assets/images/products/combo-img.webp"}
           alt={"banner"}
           width={1920}
           height={600}
