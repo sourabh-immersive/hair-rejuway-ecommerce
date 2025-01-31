@@ -73,7 +73,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     >
       {isProcessing ? (
         // <Spinner />
-        <p>loadig...</p>
+        <p></p>
       ) : (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
           <path
