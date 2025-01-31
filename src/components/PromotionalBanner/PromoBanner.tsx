@@ -15,7 +15,6 @@ const PromoBanner: FC<PromoBannerProps> = async ({ className = "", image }) => {
   const sliderCenterImages2 = await getAdsImages("center");
   const img = !image ? "/banners/banner1.jpeg" : image;
 
-  console.log('sliderCenterImages2.data[0].file_name', sliderCenterImages2.data)
   return (
     <div
       className={`relative flex flex-col mb-8 lg:flex-row items-center${className}`}
