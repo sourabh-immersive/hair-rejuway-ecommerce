@@ -4,7 +4,7 @@ export default function Loading() {
     <div className="container">
       <div
         role="status"
-        className="w-full p-6 border border-gray-200 rounded-sm shadow-sm animate-pulse dark:border-gray-700"
+        className="w-full rounded-sm shadow-sm animate-pulse dark:border-gray-700"
       >
         {/* First Section: Large Image Placeholder */}
         <div className="flex items-center justify-center w-full h-[350px] bg-gray-300 rounded-sm dark:bg-gray-700">
