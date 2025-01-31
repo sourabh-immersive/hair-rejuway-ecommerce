@@ -59,6 +59,21 @@ export const getSliderImages = async (position: string) => {
   }
 };
 
+// Fetch ads banner
+export const getAdsImages = async (position: string) => {
+  try {
+    const response = await apiClient.get(
+      `/front/banners?type=1&position=${position}`
+    );
+    if (response.status) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching product categories:`, error);
+    throw error;
+  }
+};
+
 // Fetch Pages content by slug
 export const getPageBySlug = async (slug: string) => {
   try {
@@ -69,7 +84,7 @@ export const getPageBySlug = async (slug: string) => {
       return response.data;
     }
   } catch (error) {
-    console.error(`Error fetching page:`, error);
+    console.error(`Error fetching product categories:`, error);
     // throw error;
   }
 };

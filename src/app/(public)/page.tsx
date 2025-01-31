@@ -39,6 +39,7 @@ async function PageHome() {
   const fetchedProducts = await getProducts(8);
   // const end = performance.now();
   // console.log('fetchedProducts data 10', fetchedProducts);
+  // console.log('sliderTopImages', sliderTopImages)
   return (
     <div className="nc-PageHome relative overflow-hidden">
       {sliderTopImages.data.length !== 0 ? (
