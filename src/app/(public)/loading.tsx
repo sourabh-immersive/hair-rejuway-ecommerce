@@ -1,7 +1,7 @@
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
   return (
-    <div className="container">
+    <div className="container mt-11">
       <div
         role="status"
         className="w-full rounded-sm shadow-sm animate-pulse dark:border-gray-700"
