@@ -10,6 +10,7 @@ import CommonClient from "./CommonClient";
 import { StoreProvider } from "./StoreProvider";
 import { SessionProvider } from "next-auth/react";
 import { RefreshSession } from "./RefreshSession";
+import PageTransition from "./PageTransition";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,7 +18,7 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 // 'auto' | 'force-dynamic' | 'error' | 'force-static'
 
 export default function RootLayout({
@@ -30,13 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" dir="" className={poppins.className}>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-        <StoreProvider>
-          <SessionProvider>
-            <RefreshSession>
-              {children}
-              </RefreshSession>
-          </SessionProvider>
-        </StoreProvider>
+        {/* <PageTransition> */}
+          <StoreProvider>
+            <SessionProvider>
+              <RefreshSession>{children}</RefreshSession>
+            </SessionProvider>
+          </StoreProvider>
+        {/* </PageTransition> */}
       </body>
     </html>
   );
