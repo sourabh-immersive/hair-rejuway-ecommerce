@@ -7,8 +7,7 @@ import ProductFilters from "./productFilters";
 import Link from "next/link";
 
 const Page = async ({}) => {
-  const paginate = 8;
-  const fetchedProducts = await getProducts(paginate);
+  const fetchedProducts = await getProducts({ paginate: 12 });
   const categories = await getProductCategories();
   // console.log("prod with paginate..fggg...", fetchedProducts.meta);
   return (
@@ -37,7 +36,7 @@ const Page = async ({}) => {
           <ProductFilters
             initialData={fetchedProducts.data}
             categories={categories.data}
-            totalPagesCount={fetchedProducts.pagination.last_page}
+            totalPagesCount={fetchedProducts.pagination?.last_page}
           />
         </div>
       </div>

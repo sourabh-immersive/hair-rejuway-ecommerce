@@ -205,6 +205,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
   const renderVariants = () => {
     if (
+      productData?.product_variations && 
       productData?.product_variations.length === 1 ||
       productData?.product_variations.length === 0
     ) {
@@ -541,7 +542,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
         <div className="py-12">
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
-              <Image src={image} alt={title} height={400} width={600} />
+              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
               <h3 className="text-2xl font-semibold mb-5">{title}</h3>
@@ -571,7 +572,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <AccordionInfo data={faqs} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
-              <Image src={image} alt={title} height={400} width={600} />
+              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
             </div>
           </div>
           {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
@@ -591,7 +592,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
         <div className="py-12 container">
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
-              <Image src={image} alt={title} height={400} width={600} />
+              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
               <h3 className="text-2xl font-semibold mb-5">{title}</h3>
@@ -615,15 +616,15 @@ const ProductDetail = ({ data }: { data: Product }) => {
       <div className="bg-[#f4f8fb]">
         <div className="py-12 container">
           <div className="lg:flex">
-            <div className="w-full lg:w-[50%] ">
-              <Image src={image} alt={title} height={400} width={600} />
-            </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
               <h3 className="text-2xl font-semibold mb-5">{title}</h3>
               <p className="text-base font-normal mb-10">
                 {description ? description : ""}
               </p>
               <AccordionInfo data={faqs} />
+            </div>
+            <div className="w-full lg:w-[50%] ">
+              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
             </div>
           </div>
           {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
@@ -740,6 +741,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
       <div className="container">
         <Image
+          className="rounded-2xl"
           src={"https://hairrejuway.manageprojects.in/assets/images/products/combo-img.webp"}
           alt={"banner"}
           width={1920}

@@ -104,7 +104,7 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
 
         {/* LOOP ITEMS */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-          {filteredProducts.map((item: Product, index: number) => (
+          {filteredProducts && filteredProducts.map((item: Product, index: number) => (
             <ProductCard data={item} key={index} />
           ))}
         </div>

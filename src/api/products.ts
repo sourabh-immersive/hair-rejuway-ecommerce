@@ -2,12 +2,12 @@
 
 import apiClient from "./apiClient";
 
-export const getProducts = async (paginate?: number) => {
-  // console.log("called in server");
+export const getProducts = async (params?: { paginate?: number; type?: string; product_type?: string }) => {
   try {
-    const requestBody = paginate ? { paginate } : {};
+    const requestBody = params ? { ...params } : {};
+
     const response = await apiClient.post("/front/products", requestBody);
-    // console.log("getproducts response", response);
+
     if (response.status) {
       return {
         status: true,
@@ -30,6 +30,7 @@ export const getProducts = async (paginate?: number) => {
     };
   }
 };
+
 
 // Fetch all product categories
 export const getProductCategories = async () => {
@@ -77,9 +78,7 @@ export const getAdsImages = async (position: string) => {
 // Fetch Pages content by slug
 export const getPageBySlug = async (slug: string) => {
   try {
-    const response = await apiClient.get(
-      `/front/pages?slug=${slug}`
-    );
+    const response = await apiClient.get(`/front/pages?slug=${slug}`);
     if (response.status) {
       return response.data;
     }
@@ -175,9 +174,7 @@ export const getProductsByCatSlug = async (
 };
 
 // Get products by ids
-export const getProductsByIds = async (
-  product_id?: string
-) => {
+export const getProductsByIds = async (product_id?: string) => {
   try {
     const requestBody: {
       product_id?: string;

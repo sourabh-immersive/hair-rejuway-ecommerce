@@ -15,43 +15,35 @@ async function PageHome() {
   // const sliderTopImages = await getSliderImages("top");
   // const sliderCenterImages = await getSliderImages("center");
   // const sliderBottomImages = await getSliderImages("bottom");
-  // const fetchedProducts = await getProducts(8);
+  
 
-  const [sliderTopImages, sliderCenterImages, sliderBottomImages, fetchedProducts] = await Promise.all([
-    getSliderImages("top"),
-    getSliderImages("center"),
-    getSliderImages("bottom"),
-    getProducts(8),
-  ]);
+  // const [sliderTopImages, sliderCenterImages, sliderBottomImages, fetchedProducts] = await Promise.all([
+  //   getSliderImages("top"),
+  //   getSliderImages("center"),
+  //   getSliderImages("bottom"),
+  //   getProducts(8),
+  // ]);
 
   // const end = performance.now();
   // console.log('fetchedProducts data 10', fetchedProducts);
   // console.log('sliderTopImages', sliderTopImages)
   return (
     <div className="nc-PageHome relative overflow-hidden">
-      {sliderTopImages.data.length !== 0 ? (
-        <ImageSlider images={sliderTopImages.data} />
-      ) : (
-        ""
-      )}
+        <ImageSlider position={'top'} />
       <div className="container relative">
         <AllCategories />
         <ProductsGrid />
         <PromoBanner />
         <SectionSliderProductCard
           heading={"Skin Care Products"}
-          initialData={fetchedProducts.status ? fetchedProducts.data : []}
+          category={"Skin"}
         />
-        {sliderCenterImages.data.length !== 0 ? (
           <Link href={"/products"} prefetch={true}>
-            <ImageSlider images={sliderCenterImages.data} />
+            <ImageSlider position={'center'} />
           </Link>
-        ) : (
-          ""
-        )}
         <SectionSliderProductCard
           heading={"Popular Hair Products"}
-          initialData={fetchedProducts.status ? fetchedProducts.data : []}
+          category={"Hair"}
         />
       </div>
       <SectionFeatures />
@@ -61,11 +53,7 @@ async function PageHome() {
 
       <SectionServices />
       <div className="container relative space-y-20 my-20 lg:space-y-20 lg:my-10">
-        {sliderBottomImages.data.length !== 0 ? (
-          <ImageSlider images={sliderBottomImages.data} />
-        ) : (
-          ""
-        )}
+          <ImageSlider position={'bottom'} />
       </div>
     </div>
   );

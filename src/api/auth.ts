@@ -1,11 +1,9 @@
 import apiClient from "./apiClient";
 
-// Login API Call
 export const login = async (email: string, password: string) => {
   try {
     const response = await apiClient.post("/auth/login", { email, password });
     const { token } = response.data;
-    // Save token to localStorage (or cookie depending on your auth method)
     localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
@@ -14,7 +12,32 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-// Register User to site
+export const forgotSendOtp = async (params: { phone: string; }) => {
+  try {
+    const response = await apiClient.post("/user/forgot", params);
+    return response.data;
+  } catch (error) {
+    console.error("Forgot Error:", error);
+    // throw error;
+  }
+};
+
+export const forgotChangePassword = async (params: { user_id: string; reset_token: string; new_password: string; confirm_password: string; }) => {
+  try {
+    const formData = new FormData();
+    formData.append("user_id", params.user_id);
+    formData.append("reset_token", params.reset_token);
+    formData.append("new_password", params.new_password);
+    formData.append("confirm_password", params.confirm_password);
+    
+    const response = await apiClient.post("/user/forgot/submit", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Forgot Change Password Error:", error);
+    // throw error;
+  }
+};
+
 export interface RegistrationData {
   fullname: string;
   email: string;
@@ -26,8 +49,6 @@ export interface RegistrationData {
 export async function UserRegistration(data: RegistrationData) {
   try {
     const response = await apiClient.post("/user/registration", data);
-    console.log("register user response:", response.data);
-
     return response.data;
   } catch (err: any) {
     console.error(
@@ -45,8 +66,6 @@ export async function UserRegistration(data: RegistrationData) {
 export async function UserRegistrationVerifyOtp(data: RegistrationData) {
   try {
     const response = await apiClient.post("/user/otp-verify", data);
-    console.log("register user response when verify:", response.data);
-
     return response.data;
   } catch (err: any) {
     console.error(
@@ -60,16 +79,12 @@ export async function UserRegistrationVerifyOtp(data: RegistrationData) {
   }
 }
 
-// Logout API Call
 export const logout = async () => {
   localStorage.removeItem("token");
-  // Optionally call a logout API on the server
 };
 
 export async function authenticateGoogleUser(userD: any) {
-  // console.log('google login api post',userD)
   const response = await apiClient.post("/user/social-login", userD);
-  // console.log('res9999 new2', response.data)
   if (response.status) {
     return {
       status: true,

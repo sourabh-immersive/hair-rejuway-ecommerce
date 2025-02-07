@@ -211,6 +211,14 @@ const LoginForm = () => {
               Create an account
             </Link>
           </span>
+
+          {/* ==== */}
+          <span className="block text-center text-neutral-700 dark:text-neutral-300">
+            Lost password? {` `}
+            <Link className="text-green-600" href="/forgot" prefetch={true}>
+              Forgot password
+            </Link>
+          </span>
         </div>
       </div>
     </div>
