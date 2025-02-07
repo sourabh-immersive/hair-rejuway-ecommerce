@@ -5,6 +5,7 @@ import { getWishlist } from "@/api/protected";
 import ProductCard from "@/components/ProductCard";
 import { Product, PRODUCTS } from "@/data/data";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -14,11 +15,13 @@ const Page = () => {
   const { items } = wishData;
   const authState = useAppSelector((state) => state.auth);
   const [products, setProducts] = useState<Product[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const comSepIds = items.map((item) => item.id).join(",");
   console.log("comSepIds", comSepIds);
   useEffect(() => {
     const getWishlistItems = async () => {
+      setLoading(true);
       try {
         if (authState.user?.token) {
           const response = await getWishlist(authState.user.token);
@@ -29,35 +32,57 @@ const Page = () => {
           }
         } else {
         }
+        setLoading(false);
       } catch (error) {
         console.error("Error getting wishlist:", error);
+        setLoading(false);
       } finally {
+        setLoading(false);
       }
     };
 
     const getProductsByIdsd = async () => {
+      setLoading(true);
       try {
         const response = await getProductsByIds(comSepIds);
 
         if (response.status === true) {
           setProducts(response.data);
         }
+        setLoading(false);
       } catch (error) {
         console.error("Error getting wishlist:", error);
+        setLoading(false);
       } finally {
+        setLoading(false);
       }
     };
 
     if (authState.status === "authenticated") {
-        // Need to implement wishlist sync
-    //   getWishlistItems();
+      // Need to implement wishlist sync
+      //   getWishlistItems();
 
-        //getting redux ids and then fetching products
+      //getting redux ids and then fetching products
       getProductsByIdsd();
     } else {
       getProductsByIdsd();
     }
   }, [authState, wishData]);
+
+  const Loader = () => (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="loader"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50"
+      >
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </motion.div>
+    </AnimatePresence>
+  );
 
   const renderSection1 = () => {
     return (
@@ -76,7 +101,8 @@ const Page = () => {
               <span className="underline">Wishlist</span>
             </div>
 
-            <div className="divide-y divide-slate-100 dark:divide-slate-700">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700 relative">
+            {loading && <Loader />}
               {products && products.length === 0 ? (
                 <div className="empty-state text-center p-4">
                   {/* Render UI when the array is empty */}

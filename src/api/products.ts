@@ -91,16 +91,18 @@ export const getPageBySlug = async (slug: string) => {
 export const getProductsByQueryParams = async (
   category: string[],
   paginate?: number,
-  currentPage?: number
+  currentPage?: number,
+  type?: string
 ) => {
   try {
     const categoryString = category.length > 0 ? category.join(", ") : "";
 
-    const requestBody: { category?: string; paginate?: number; page?: number } =
+    const requestBody: { category?: string; paginate?: number; page?: number; type?: string } =
       {};
     if (categoryString) requestBody.category = categoryString;
     if (paginate) requestBody.paginate = paginate;
     if (currentPage) requestBody.page = currentPage;
+    if (type) requestBody.type = type;
 
     // const requestBody = categoryString ? { category: categoryString } : {};
     // console.log(requestBody)

@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import TabFilters from "@/components/TabFilters";
 import { Product } from "@/data/data";
 import Pagination from "@/shared/Pagination/Pagination";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 interface Category {
@@ -29,6 +30,8 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(totalPagesCount);
+  const [type, setType] = useState<"single" | "kit" | "">("");
+
   // console.log('filteredProducts ....',filteredProducts)
   const handleCatChange = (slug: string) => {
     setSelectedCategories((prev) =>
@@ -43,19 +46,68 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const filteredData = await getProductsByQueryParams(selectedCategories, 8, currentPage);
-      //   console.log("filtereddata new page", filteredData.data.meta);
+        const filteredData = await getProductsByQueryParams(
+          selectedCategories,
+          8,
+          currentPage,
+          type === "single" ? "normal" : type === "" ? "" : "kit"
+        );
+        //   console.log("filtereddata new page", filteredData.data.meta);
         setProducts(filteredData.data);
         setCurrentPage(currentPage);
         setTotalPages(filteredData.pagination.last_page);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
     };
     fetchProducts();
-  }, [selectedCategories, currentPage]);
+  }, [selectedCategories, currentPage, type]);
+
+  const Loader = () => (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="loader"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50"
+      >
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </motion.div>
+    </AnimatePresence>
+  );
+
+  const renderType = () => {
+    return (
+      <div className="inline-flex border rounded-lg overflow-hidden min-w-fit">
+        <button
+          className={`px-4 py-2 text-base font-medium ${
+            type === "single"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+          onClick={() => setType("single")}
+        >
+          Single
+        </button>
+        <button
+          className={`px-4 py-2 text-base font-medium ${
+            type === "kit"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+          onClick={() => setType("kit")}
+        >
+          Kit
+        </button>
+      </div>
+    );
+  };
 
   const renderFilters = () => {
     return (
@@ -100,13 +152,18 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
       <main>
         {/* TABS FILTER */}
         {/* <TabFilters /> */}
-        {renderFilters()}
+        <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-5">
+          {renderFilters()}
+          {renderType()}
+        </div>
 
         {/* LOOP ITEMS */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
-          {filteredProducts && filteredProducts.map((item: Product, index: number) => (
-            <ProductCard data={item} key={index} />
-          ))}
+        <div className="grid sm:grid-cols-2 relative lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
+          {loading && <Loader />}
+          {filteredProducts &&
+            filteredProducts.map((item: Product, index: number) => (
+              <ProductCard data={item} key={index} />
+            ))}
         </div>
 
         {/* PAGINATION */}
