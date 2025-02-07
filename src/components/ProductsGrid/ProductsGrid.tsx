@@ -13,7 +13,7 @@ const ProductsGrid: FC<SectionGridFeatureItemsProps> = async ({
   data = [],
 }) => {
   try {
-    const fetchedProducts = await getProducts(8);
+    const fetchedProducts = await getProducts({ paginate: 8 });
     // console.log('fetchedProducts dgfdgdfgf', fetchedProducts)
     return (
       <div className="productsGrid">
