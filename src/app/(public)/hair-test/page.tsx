@@ -76,8 +76,9 @@ const StepForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0); // Main step
   const [currentFieldIndex, setCurrentFieldIndex] = useState(0); // Inner steps
   const [formValues, setFormValues] = useState<Record<string, any>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  console.log('formValues', formValues)
+  console.log("formValues", formValues);
 
   // Male-specific data
   const MaleData: Step[] = [
@@ -624,12 +625,40 @@ const StepForm: React.FC = () => {
     }
   };
 
+  // Validate the current field
+  const validateCurrentField = () => {
+    const currentFields = steps[currentStep].fields[currentFieldIndex].fields;
+    let isValid = true;
+    const newErrors: Record<string, string> = {};
+
+    currentFields.forEach((field) => {
+      if (!formValues[field.name] || formValues[field.name].length === 0) {
+        isValid = false;
+        newErrors[field.name] = `${field.label} is required`;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  //   const handleNext = () => {
+  //     if (currentFieldIndex < steps[currentStep].fields.length - 1) {
+  //       setCurrentFieldIndex(currentFieldIndex + 1);
+  //     } else if (currentStep < totalSteps - 1) {
+  //       setCurrentStep(currentStep + 1);
+  //       setCurrentFieldIndex(0);
+  //     }
+  //   };
+
   const handleNext = () => {
-    if (currentFieldIndex < steps[currentStep].fields.length - 1) {
-      setCurrentFieldIndex(currentFieldIndex + 1);
-    } else if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
-      setCurrentFieldIndex(0);
+    if (validateCurrentField()) {
+      if (currentFieldIndex < steps[currentStep].fields.length - 1) {
+        setCurrentFieldIndex(currentFieldIndex + 1);
+      } else if (currentStep < totalSteps - 1) {
+        setCurrentStep(currentStep + 1);
+        setCurrentFieldIndex(0);
+      }
     }
   };
 
@@ -687,7 +716,9 @@ const StepForm: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 pt-0 border border-gray-200 rounded-xl my-10">
-      <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">Start Hair Test</h2>
+      <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">
+        Start Hair Test
+      </h2>
 
       {/* Progress Bar */}
       <div className="relative pt-1 mb-6">
@@ -731,8 +762,11 @@ const StepForm: React.FC = () => {
               <div key={index}>
                 {(!field.visibleIf || field.visibleIf(formValues)) && (
                   <>
-                    <h3 className="text-2xl font-semibold mb-4">{field.label}</h3>
+                    <h3 className="text-2xl font-semibold mb-4">
+                      {field.label}
+                    </h3>
                     {field.type === "text" && (
+                        <>
                       <input
                         type="text"
                         name={field.name}
@@ -740,8 +774,15 @@ const StepForm: React.FC = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       />
+                      {errors[field.name] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors[field.name]}
+                          </p>
+                        )}
+                        </>
                     )}
                     {field.type === "email" && (
+                        <>
                       <input
                         type="email"
                         name={field.name}
@@ -749,16 +790,30 @@ const StepForm: React.FC = () => {
                         onChange={handleInputChange}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       />
+                      {errors[field.name] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors[field.name]}
+                          </p>
+                        )}
+                        </>
                     )}
                     {field.type === "textarea" && (
+                        <>
                       <textarea
                         name={field.name}
                         value={formValues[field.name] || ""}
                         onChange={handleInputChange}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       />
+                      {errors[field.name] && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors[field.name]}
+                        </p>
+                      )}
+                        </>
                     )}
                     {field.type === "select" && (
+                        <>
                       <select
                         name={field.name}
                         value={formValues[field.name] || ""}
@@ -772,10 +827,18 @@ const StepForm: React.FC = () => {
                           </option>
                         ))}
                       </select>
+                      {errors[field.name] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors[field.name]}
+                          </p>
+                        )}
+                        </>
                     )}
                     {field.type === "radio" && (
+                        <>
                       <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
                         {field.options?.map((option, i) => (
+
                           <div key={i} className="flex items-center">
                             <input
                               type="radio"
@@ -786,6 +849,7 @@ const StepForm: React.FC = () => {
                               onChange={handleInputChange}
                               className="hidden peer"
                             />
+                            
                             {/* <label className="ml-2 text-sm text-gray-700">
                             {option}
                             </label> */}
@@ -795,7 +859,7 @@ const StepForm: React.FC = () => {
                             >
                               <div className="block">
                                 <div className="w-full text-lg font-semibold">
-                                {option}
+                                  {option}
                                 </div>
                                 {/* <div className="w-full">
                                   Good for large websites
@@ -817,40 +881,61 @@ const StepForm: React.FC = () => {
                                 />
                               </svg> */}
                             </label>
+                            
                           </div>
+                          
                         ))}
                       </div>
+                      {errors[field.name] && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors[field.name]}
+                        </p>
+                      )}
+                      </>
                     )}
                     {field.type === "checkbox" && (
-                        <>
-                        <p className="italic text-sm mb-4">Select at least one option</p>
-                      <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
-                        
-                        {field.options?.map((option, i) => (
-                          <div key={i} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id={field.name + i}
-                              name={field.name}
-                              checked={
-                                formValues[field.name]?.includes(option) ||
-                                false
-                              }
-                              onChange={(e) => handleCheckboxChange(e, option)}
-                              className="hidden peer"
-                            />
-                            {/* <label className="ml-2 text-sm text-gray-700">
+                      <>
+                        <p className="italic text-sm mb-4">
+                          Select at least one option
+                        </p>
+                        <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                          {field.options?.map((option, i) => (
+                            <div key={i} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id={field.name + i}
+                                name={field.name}
+                                checked={
+                                  formValues[field.name]?.includes(option) ||
+                                  false
+                                }
+                                onChange={(e) =>
+                                  handleCheckboxChange(e, option)
+                                }
+                                className="hidden peer"
+                              />
+                              {/* <label className="ml-2 text-sm text-gray-700">
                               {option}
                             </label> */}
-                            <label htmlFor={field.name + i} className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
-            <div className="block">
-                <div className="w-full text-lg font-semibold">{option}</div>
-                {/* <div className="w-full text-sm">A JavaScript library for building user interfaces.</div> */}
-            </div>
-        </label>
-                          </div>
-                        ))}
-                      </div>
+                              <label
+                                htmlFor={field.name + i}
+                                className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                              >
+                                <div className="block">
+                                  <div className="w-full text-lg font-semibold">
+                                    {option}
+                                  </div>
+                                  {/* <div className="w-full text-sm">A JavaScript library for building user interfaces.</div> */}
+                                </div>
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        {errors[field.name] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors[field.name]}
+                          </p>
+                        )}
                       </>
                     )}
                   </>
