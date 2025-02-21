@@ -1,0 +1,884 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+interface Field {
+  name: string;
+  label: string;
+  type: "text" | "radio" | "checkbox" | "textarea" | "select" | "tel" | "email";
+  options?: string[]; // For radio, checkbox, and select fields
+  visibleIf?: (formValues: any) => boolean; // Conditional visibility function
+}
+
+interface SubStep {
+  title: string;
+  fields: Field[];
+}
+
+interface Step {
+  name: string;
+  fields: SubStep[];
+}
+
+//Male Data Sub PArts
+
+const MaleImage2: SubStep[] = [
+  {
+    title: "Hair Health 2",
+    fields: [
+      {
+        name: "noticingHairLoss",
+        label: "Where are you noticing Hair Loss?",
+        type: "radio",
+        options: ["Front", "Top", "Both Side"],
+      },
+    ],
+  },
+];
+
+// Female Data Sub Parts
+
+const FemaleDamagedHairQuality: SubStep[] = [
+  {
+    title: "Hair Health 6",
+    fields: [
+      {
+        name: "howWouldYouDescribeYourHairDamage",
+        label: "How would you describe your hair damage?",
+        type: "checkbox",
+        options: [
+          "Dull hair",
+          "Split ends",
+          "Frizzy hair",
+          "Tangles easily with knots",
+          "None",
+        ],
+      },
+    ],
+  },
+];
+
+const FemalePostPragnancy: SubStep[] = [
+  {
+    title: "Lifestyle 3",
+    fields: [
+      {
+        name: "areYouCurrentlyBreastFeeding",
+        label: "Are you currently breast feeding?",
+        type: "radio",
+        options: ["Yes", "No"],
+      },
+    ],
+  },
+];
+
+const StepForm: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0); // Main step
+  const [currentFieldIndex, setCurrentFieldIndex] = useState(0); // Inner steps
+  const [formValues, setFormValues] = useState<Record<string, any>>({});
+
+  console.log('formValues', formValues)
+
+  // Male-specific data
+  const MaleData: Step[] = [
+    {
+      name: "Hair Health",
+      fields: [
+        {
+          title: "Hair Health 1",
+          fields: [
+            {
+              name: "hairLossDescribeImage",
+              label: "Which image best describes your hair loss?",
+              type: "radio",
+              options: ["Image 11", "Image 22", "Image 33"],
+              visibleIf: (formValues) => formValues.gender === "Male",
+            },
+          ],
+        },
+        ...(formValues.hairLossDescribeImage === "Image 22" ? MaleImage2 : []),
+        {
+          title: "Hair Health 3",
+          fields: [
+            {
+              name: "familiyHistoryOfHairLossMother",
+              label: "Do You Have a Family History of Hair Loss (Mother)?",
+              type: "radio",
+              options: ["Mother", "Father", "Both", "None"],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 4",
+          fields: [
+            {
+              name: "experiencedAnyOfBelow",
+              label:
+                "Have you experienced any of the below in the last 1 year?",
+              type: "radio",
+              options: [
+                "None",
+                "Severe Illness",
+                "Heavy Weight Loss / Heavy Weight Gain",
+                "Surgery / heavy medication",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 5",
+          fields: [
+            {
+              name: "doYouHaveDandruff",
+              label: "Do you have dandruff?",
+              type: "radio",
+              options: [
+                "No",
+                "Yes, mild that comes and goes",
+                "Yes, heavy dandruff that sticks to the scalp",
+                "I 'have Psoriasis (A skin condition that causes red, dry patches on your scalp)",
+                "I 'have Seborrheic Dermatitis (A condition making your scalp itchy, red with a burning feeling.)",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Your Lifestyle",
+      fields: [
+        {
+          title: "Lifestyle 1",
+          fields: [
+            {
+              name: "howStressedAreYou",
+              label: "How stressed are you?",
+              type: "radio",
+              options: [
+                "None",
+                "Low",
+                "Moderate(work, family etc)",
+                "High (Loss of close one, separation, home, illness)",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 2",
+          fields: [
+            {
+              name: "currentlyDealingWithHealthConditions",
+              label:
+                "Are you currently dealing with any of these health conditions?",
+              type: "checkbox",
+              options: [
+                "None",
+                "Anemia (Low Iron/Haemoglobin)",
+                "Low Thyroid (Hypothyroidism)",
+                "Asthma",
+                "Sinus Problems",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 3",
+          fields: [
+            {
+              name: "doYouFeelConstipated",
+              label: "Do you feel constipated?",
+              type: "radio",
+              options: [
+                "No/Rarely",
+                "Yes",
+                "Unsatisfactory bowel movements",
+                "Suffering from IBS (irritable bowel syndrome) /dysentery",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 4",
+          fields: [
+            {
+              name: "howAreYourEnergyLevels",
+              label: "How are your energy levels?",
+              type: "radio",
+              options: [
+                "Always high",
+                "Low when | wake up, but gradually increases",
+                "Very low in afternoon",
+                "Low by evening/night",
+                "Always low",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 5",
+          fields: [
+            {
+              name: "takingVitaminsForHair",
+              label:
+                "Are you currently taking any supplements or vitamins for hair?",
+              type: "radio",
+              options: ["Yes", "No", "Sure"],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Scalp Check",
+      fields: [
+        {
+          title: "f1",
+          fields: [{ name: "address3", label: "Address3", type: "text" }],
+        },
+      ],
+    },
+  ];
+
+  // Female-specific data
+  const FemaleData: Step[] = [
+    {
+      name: "Hair Health",
+      fields: [
+        {
+          title: "Hair Health 1",
+          fields: [
+            {
+              name: "hairLookLikeNaturally",
+              label: "What Does Your Hair Look Like Naturally?",
+              type: "radio",
+              options: ["Straight", "Wavy", "Curly", "Coily"],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 2",
+          fields: [
+            {
+              name: "mostImportantGoalCurrently",
+              label: "What is your most important goal currently?",
+              type: "radio",
+              options: [
+                "Control Hairfall",
+                "Regrow Hair",
+                "Improve Hair Quality",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 3",
+          fields: [
+            {
+              name: "youreFacingHairFallMoreThanUsual",
+              label:
+                "Do you feel like you're facing Hair Fall more than usual?",
+              type: "radio",
+              options: [
+                "Yes, extreme hair fall",
+                "Mild hair fall",
+                "No Hair fall",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 4",
+          fields: [
+            {
+              name: "whereYouStandFemailHairScale",
+              label: "Where do you stand on the femail hair scale?",
+              type: "radio",
+              options: ["Image 1", "Image 2", "Image 3", "Image 4", "Image 5"],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 5",
+          fields: [
+            {
+              name: "describeYourHairQuality",
+              label: "Describe your hair quality",
+              type: "radio",
+              options: ["Good Hair Quality", "Damaged Hair"],
+            },
+          ],
+        },
+        // 6 show when damage hair quality
+        ...(formValues.describeYourHairQuality === "Damaged Hair"
+          ? FemaleDamagedHairQuality
+          : []),
+        {
+          title: "Hair Health 7",
+          fields: [
+            {
+              name: "whatDoesASingleStrandYourHairFeelLlike",
+              label: "What does a single strand of your hair feel like?",
+              type: "radio",
+              options: ["Thin", "Medium", "Thick"],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 8",
+          fields: [
+            {
+              name: "isHairLossAGeneticIssueInYourFamily",
+              label: "Is hair loss a genetic issue in your family?",
+              type: "radio",
+              options: [
+                "Yes, Mother or mother's side of family",
+                "Yes, Father or father's side of family",
+                "Both",
+                "none",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 9",
+          fields: [
+            {
+              name: "howLongAfterHairWashDoesYourHairStartToFeelOily",
+              label:
+                "How long after hair wash does your hair start to feel oily?",
+              type: "radio",
+              options: ["Within 24 hours", "2-3 days", "More than 4 days"],
+            },
+          ],
+        },
+        {
+          title: "Hair Health 10",
+          fields: [
+            {
+              name: "describeYourDandruff",
+              label: "Describe your dandruff?",
+              type: "radio",
+              options: [
+                "No",
+                "Yes, mild that comes and goes",
+                "Yes, heavy dandruff that sticks to the scalp",
+                "I 'have Psoriasis (A skin condition that causes red, dry patches on your scalp)",
+                "I 'have Seborrheic Dermatitis (A condition making your scalp itchy, red with a burning feeling.)",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Your Lifestyle",
+      fields: [
+        {
+          title: "Lifestyle 1",
+          fields: [
+            {
+              name: "areYouGoingThroughAnyOfTheseStages",
+              label: "Are you going through any of these stages?",
+              type: "radio",
+              options: [
+                "None",
+                "Planning to get pregnant",
+                "Pregnancy",
+                "Post-pregnancy (Baby is less than 2 years old)",
+                "Menopause You don't get monthly periods anymore.",
+              ],
+            },
+          ],
+        },
+        // conditional based field lifestyle 3
+        ...(formValues.areYouGoingThroughAnyOfTheseStages ===
+        "Post-pregnancy (Baby is less than 2 years old)"
+          ? FemalePostPragnancy
+          : []),
+        {
+          title: "Lifestyle 2",
+          fields: [
+            {
+              name: "haveYouExperiencedAnyOfTheBelowInLast1Year",
+              label: "Have you experienced any of the below in last 1 year?",
+              type: "checkbox",
+              options: [
+                "None",
+                "Severe Illness (Dengue, Malaria, Typhoid or Covid)",
+                "Heavy weight loss or heavy weight gain",
+                "Surgery or on heavy medication",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 4",
+          fields: [
+            {
+              name: "areYouGoingThroughAnyOfTheBelow",
+              label: "Are you going through any of the below?",
+              type: "checkbox",
+              options: [
+                "None",
+                "Anemia (Low Haemoglobin)",
+                "Low Thyroid (Hypothyroidism)",
+                "PCOS (When a woman's ovaries have tiny bumps and she might have trouble with her periods and hormanes.)",
+                "Other Hormonal Issues",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 5",
+          fields: [
+            {
+              name: "areYouCurrentlyTakingAnySupplementsorVitaminsForHair",
+              label:
+                "Are you currently taking any supplements or vitamins for hair?",
+              type: "radio",
+              options: ["Yes", "No"],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 6",
+          fields: [
+            {
+              name: "howWellDoYouSleep",
+              label: "How well do you sleep?",
+              type: "radio",
+              options: [
+                "Peacefully for 6-8 hours",
+                "Disturbed sleep, | wake up atleast once a night",
+                "Have difficulty falling asleep",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 7",
+          fields: [
+            {
+              name: "doYouCurrentlyExperienceAnyOfTheFollowingHealthConditions",
+              label:
+                "Do you currently experience any of the following health conditions?",
+              type: "radio",
+              options: ["None", "Sinus Issue", "Asthma"],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 8",
+          fields: [
+            {
+              name: "howStressedAreYou",
+              label: "How stressed are you?",
+              type: "radio",
+              options: ["Not at all", "Low", "Moderate", "High"],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 9",
+          fields: [
+            {
+              name: "doYouFeelConstipated",
+              label: "Do you feel constipated?",
+              type: "radio",
+              options: ["No", "Yes", "I have IBS"],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 10",
+          fields: [
+            {
+              name: "doYouHaveAcidityBloatingGasOrIndigestion",
+              label: "Do you have Acidity, Bloating, Gas or Indigestion?",
+              type: "radio",
+              options: ["No", "Yes"],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 11",
+          fields: [
+            {
+              name: "describeYourEnergyLevels",
+              label: "Describe your energy levels?",
+              type: "radio",
+              options: [
+                "Always high",
+                "Low when | wake up, but gradually increases",
+                "Very low in afternoon",
+                "Low by evening/night",
+                "Always low",
+              ],
+            },
+          ],
+        },
+        {
+          title: "Lifestyle 12",
+          fields: [
+            {
+              name: "areYouSufferingThroughAnyOfTheseMedicalConditions",
+              label:
+                "Are you suffering through any of these medical conditions?",
+              type: "checkbox",
+              options: [
+                "None",
+                "High Blood Pressure",
+                "Low Blood Pressure",
+                "Liver Cirrhosis or deranged LFT (Liver Function Test)",
+                "Blood disorders (epilepsy. history of stroke)",
+                "Cardiovascular disorders (history of heart attack, arrhythmia, pace maker, stroke)",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Scalp Check",
+      fields: [
+        {
+          title: "f22",
+          fields: [{ name: "address3", label: "Address3", type: "text" }],
+        },
+      ],
+    },
+  ];
+
+  const steps: Step[] = [
+    {
+      name: "About You",
+      fields: [
+        {
+          title: "Name",
+          fields: [{ name: "name", label: "Your Name", type: "text" }],
+        },
+        {
+          title: "Phone Number",
+          fields: [{ name: "phone", label: "Phone Number", type: "text" }],
+        },
+        {
+          title: "Email",
+          fields: [{ name: "email", label: "Your Email", type: "email" }],
+        },
+        {
+          title: "Gender",
+          fields: [
+            {
+              name: "gender",
+              label: "Gender",
+              type: "radio",
+              options: ["Male", "Female"],
+            },
+          ],
+        },
+      ],
+    },
+    ...(formValues.gender === "Male" ? MaleData : FemaleData),
+  ];
+
+  const totalSteps = steps.length;
+
+  // Check if the current field has no fields and automatically move to the next step
+  //   useEffect(() => {
+  //     const currentFields = steps[currentStep].fields[currentFieldIndex].fields;
+  //     if (currentFields.length === 0) {
+  //     //   handleNext();
+
+  //     if (currentFieldIndex < steps[currentStep].fields.length - 1) {
+  //         setCurrentFieldIndex(currentFieldIndex + 1);
+  //       } else if (currentStep < totalSteps - 1) {
+  //         setCurrentStep(currentStep + 1);
+  //         setCurrentFieldIndex(0);
+  //       }
+
+  //     }
+  //   }, [currentStep, currentFieldIndex, steps]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    option: string
+  ) => {
+    const { name } = e.target;
+    const selectedOptions = formValues[name] || [];
+    if (e.target.checked) {
+      setFormValues({ ...formValues, [name]: [...selectedOptions, option] });
+    } else {
+      setFormValues({
+        ...formValues,
+        [name]: selectedOptions.filter((item: string) => item !== option),
+      });
+    }
+  };
+
+  const handleNext = () => {
+    if (currentFieldIndex < steps[currentStep].fields.length - 1) {
+      setCurrentFieldIndex(currentFieldIndex + 1);
+    } else if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+      setCurrentFieldIndex(0);
+    }
+  };
+
+  const handlePrevious = () => {
+    // Get the current field before updating the state
+    const currentFields = steps[currentStep].fields[currentFieldIndex].fields;
+
+    if (currentFieldIndex > 0) {
+      setCurrentFieldIndex(currentFieldIndex - 1);
+    } else if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      setCurrentFieldIndex(steps[currentStep - 1].fields.length - 1);
+    }
+
+    // Remove the value of the current field from formValues
+    currentFields.forEach((field) => {
+      if (formValues[field.name]) {
+        setFormValues((prev) => {
+          const updatedFormValues = { ...prev };
+          delete updatedFormValues[field.name]; // Remove the value of the field from formValues
+          return updatedFormValues;
+        });
+      }
+    });
+  };
+
+  //   const progress =
+  //     ((currentStep + currentFieldIndex / steps[currentStep].fields.length) /
+  //       totalSteps) *
+  //     100;
+
+  // const totalSteps = steps.length;
+
+  // Calculate the total number of fields across all steps
+  const totalFields = steps.reduce((acc, step) => {
+    return (
+      acc + step.fields.reduce((acc, subStep) => acc + subStep.fields.length, 0)
+    );
+  }, 0);
+
+  // Calculate the current field position
+  let currentFieldPosition = 0;
+  for (let i = 0; i < currentStep; i++) {
+    currentFieldPosition += steps[i].fields.reduce(
+      (acc, subStep) => acc + subStep.fields.length,
+      0
+    );
+  }
+  currentFieldPosition += steps[currentStep].fields
+    .slice(0, currentFieldIndex + 1)
+    .reduce((acc, subStep) => acc + subStep.fields.length, 0);
+
+  // Calculate the progress percentage
+  const progress = (currentFieldPosition / totalFields) * 100;
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 pt-0 border border-gray-200 rounded-xl my-10">
+      <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">Start Hair Test</h2>
+
+      {/* Progress Bar */}
+      <div className="relative pt-1 mb-6">
+        <div className="flex mb-2 items-center justify-between">
+          <div className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-teal-600 bg-teal-200">
+            Progress: {Math.round(progress)}%
+          </div>
+        </div>
+        <div className="w-full bg-gray-300 rounded-full h-2.5">
+          <div
+            className="bg-green-600 h-2.5 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Step Names */}
+      <div className="mb-4 text-center grid w-full gap-4 md:grid-cols-4 border-b border-gray-300 pb-4">
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            className={`inline-block mx-2 px-3 py-1 rounded-md text-base font-semibold ${
+              index <= currentStep ? "text-green-600" : "text-gray-400"
+            }`}
+          >
+            {step.name}
+          </div>
+        ))}
+      </div>
+
+      {/* Main Form Steps with Inner Fields */}
+      <div className="space-y-6 p-6">
+        {/* <h3 className="text-lg font-semibold">{steps[currentStep].name}</h3> */}
+        <div>
+          {/* <label className="block text-gray-700 mb-2">
+            {steps[currentStep].fields[currentFieldIndex].title}
+          </label> */}
+
+          {steps[currentStep].fields[currentFieldIndex].fields.map(
+            (field, index) => (
+              <div key={index}>
+                {(!field.visibleIf || field.visibleIf(formValues)) && (
+                  <>
+                    <h3 className="text-2xl font-semibold mb-4">{field.label}</h3>
+                    {field.type === "text" && (
+                      <input
+                        type="text"
+                        name={field.name}
+                        value={formValues[field.name] || ""}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    )}
+                    {field.type === "email" && (
+                      <input
+                        type="email"
+                        name={field.name}
+                        value={formValues[field.name] || ""}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    )}
+                    {field.type === "textarea" && (
+                      <textarea
+                        name={field.name}
+                        value={formValues[field.name] || ""}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    )}
+                    {field.type === "select" && (
+                      <select
+                        name={field.name}
+                        value={formValues[field.name] || ""}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="">Select an option</option>
+                        {field.options?.map((option: any, i: any) => (
+                          <option key={i} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {field.type === "radio" && (
+                      <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                        {field.options?.map((option, i) => (
+                          <div key={i} className="flex items-center">
+                            <input
+                              type="radio"
+                              name={field.name}
+                              id={field.name + i}
+                              value={option}
+                              checked={formValues[field.name] === option}
+                              onChange={handleInputChange}
+                              className="hidden peer"
+                            />
+                            {/* <label className="ml-2 text-sm text-gray-700">
+                            {option}
+                            </label> */}
+                            <label
+                              htmlFor={field.name + i}
+                              className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                            >
+                              <div className="block">
+                                <div className="w-full text-lg font-semibold">
+                                {option}
+                                </div>
+                                {/* <div className="w-full">
+                                  Good for large websites
+                                </div> */}
+                              </div>
+                              {/* <svg
+                                className="w-5 h-5 ms-3 rtl:rotate-180"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 14 10"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                                />
+                              </svg> */}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {field.type === "checkbox" && (
+                        <>
+                        <p className="italic text-sm mb-4">Select at least one option</p>
+                      <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                        
+                        {field.options?.map((option, i) => (
+                          <div key={i} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={field.name + i}
+                              name={field.name}
+                              checked={
+                                formValues[field.name]?.includes(option) ||
+                                false
+                              }
+                              onChange={(e) => handleCheckboxChange(e, option)}
+                              className="hidden peer"
+                            />
+                            {/* <label className="ml-2 text-sm text-gray-700">
+                              {option}
+                            </label> */}
+                            <label htmlFor={field.name + i} className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+            <div className="block">
+                <div className="w-full text-lg font-semibold">{option}</div>
+                {/* <div className="w-full text-sm">A JavaScript library for building user interfaces.</div> */}
+            </div>
+        </label>
+                          </div>
+                        ))}
+                      </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={handlePrevious}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
+          disabled={currentStep === 0 && currentFieldIndex === 0}
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-green-600 text-white rounded"
+        >
+          {currentStep === totalSteps - 1 ? "Submit" : "Next"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default StepForm;
