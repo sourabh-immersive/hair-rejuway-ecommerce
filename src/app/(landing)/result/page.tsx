@@ -245,8 +245,8 @@ const Result = () => {
               New hair growth now possible with 100% safety
             </h2>
             <p className="md:ml-28">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
+              Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry. Lorem Ipsum has been the industrys standard dummy text
               ever since the 1500s, when an unknown printer took a galley of
               type and scrambled
             </p>
@@ -336,7 +336,7 @@ const Result = () => {
                 <div className="flex-1">
                   <h1 className="text-3xl font-semibold">Dr. Ketki Mehta</h1>
                   <p className="mt-2 text-base">
-                    Trichology's 15+ years of experience
+                    Trichology{"'"}s 15+ years of experience
                   </p>
                   <p className="text-base">Treated over 80k+ patients</p>
                 </div>
