@@ -1,11 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Field {
   name: string;
   label: string;
-  type: "text" | "radio" | "checkbox" | "textarea" | "select" | "tel" | "email";
+  type:
+    | "text"
+    | "radio"
+    | "checkbox"
+    | "textarea"
+    | "select"
+    | "tel"
+    | "email"
+    | "file";
   options?: string[]; // For radio, checkbox, and select fields
   visibleIf?: (formValues: any) => boolean; // Conditional visibility function
 }
@@ -77,6 +87,25 @@ const StepForm: React.FC = () => {
   const [currentFieldIndex, setCurrentFieldIndex] = useState(0); // Inner steps
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [preview, setPreview] = useState("");
+
+  const router = useRouter()
+
+  // Handle file input change
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Update the preview
+      setPreview(URL.createObjectURL(file));
+      // Call the parent handler to update form values
+      handleInputChange(e);
+    }
+  };
+
+  const handleSubmit = () => {
+    console.log("Submitting the form...");
+    router.push('/result')
+  };
 
   console.log("formValues", formValues);
 
@@ -233,8 +262,14 @@ const StepForm: React.FC = () => {
       name: "Scalp Check",
       fields: [
         {
-          title: "f1",
-          fields: [{ name: "address3", label: "Address3", type: "text" }],
+          title: "Scalp check 1",
+          fields: [
+            {
+              name: "scalpImage",
+              label: "Upload your scalp photo",
+              type: "file",
+            },
+          ],
         },
       ],
     },
@@ -543,8 +578,14 @@ const StepForm: React.FC = () => {
       name: "Scalp Check",
       fields: [
         {
-          title: "f22",
-          fields: [{ name: "address3", label: "Address3", type: "text" }],
+          title: "Scalp check 1",
+          fields: [
+            {
+              name: "scalpImage",
+              label: "Upload your scalp photo",
+              type: "file",
+            },
+          ],
         },
       ],
     },
@@ -715,157 +756,157 @@ const StepForm: React.FC = () => {
   const progress = (currentFieldPosition / totalFields) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 pt-0 border border-gray-200 rounded-xl my-10">
-      <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">
-        Start Hair Test
-      </h2>
+    <div className="hairTestRow bg-[url(/bg.jpg)] bg-cover bg-bottom bg-no-repeat">
+      <div className="max-w-4xl mx-auto p-6 pt-0 pb-44 border border-r-0 border-l-0 border-b-0 border-gray-200 rounded-xl py-10">
+        <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">
+          Start Hair Test
+        </h2>
 
-      {/* Progress Bar */}
-      <div className="relative pt-1 mb-6">
-        <div className="flex mb-2 items-center justify-between">
-          <div className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-teal-600 bg-teal-200">
-            Progress: {Math.round(progress)}%
+        {/* Progress Bar */}
+        <div className="relative pt-1 mb-6">
+          <div className="flex mb-2 items-center justify-between">
+            <div className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-teal-600 bg-teal-200">
+              Progress: {Math.round(progress)}%
+            </div>
+          </div>
+          <div className="w-full bg-gray-300 rounded-full h-2.5">
+            <div
+              className="bg-green-600 h-2.5 rounded-full"
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
         </div>
-        <div className="w-full bg-gray-300 rounded-full h-2.5">
-          <div
-            className="bg-green-600 h-2.5 rounded-full"
-            style={{ width: `${progress}%` }}
-          ></div>
+
+        {/* Step Names */}
+        <div className="mb-4 text-center grid w-full gap-4 md:grid-cols-4 border-b border-gray-300 pb-4">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className={`inline-block mx-2 px-3 py-1 rounded-md text-base font-semibold ${
+                index <= currentStep ? "text-green-600" : "text-gray-400"
+              }`}
+            >
+              {step.name}
+            </div>
+          ))}
         </div>
-      </div>
 
-      {/* Step Names */}
-      <div className="mb-4 text-center grid w-full gap-4 md:grid-cols-4 border-b border-gray-300 pb-4">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className={`inline-block mx-2 px-3 py-1 rounded-md text-base font-semibold ${
-              index <= currentStep ? "text-green-600" : "text-gray-400"
-            }`}
-          >
-            {step.name}
-          </div>
-        ))}
-      </div>
-
-      {/* Main Form Steps with Inner Fields */}
-      <div className="space-y-6 p-6">
-        {/* <h3 className="text-lg font-semibold">{steps[currentStep].name}</h3> */}
-        <div>
-          {/* <label className="block text-gray-700 mb-2">
+        {/* Main Form Steps with Inner Fields */}
+        <div className="space-y-6 p-6">
+          {/* <h3 className="text-lg font-semibold">{steps[currentStep].name}</h3> */}
+          <div>
+            {/* <label className="block text-gray-700 mb-2">
             {steps[currentStep].fields[currentFieldIndex].title}
           </label> */}
 
-          {steps[currentStep].fields[currentFieldIndex].fields.map(
-            (field, index) => (
-              <div key={index}>
-                {(!field.visibleIf || field.visibleIf(formValues)) && (
-                  <>
-                    <h3 className="text-2xl font-semibold mb-4">
-                      {field.label}
-                    </h3>
-                    {field.type === "text" && (
+            {steps[currentStep].fields[currentFieldIndex].fields.map(
+              (field, index) => (
+                <div key={index}>
+                  {(!field.visibleIf || field.visibleIf(formValues)) && (
+                    <>
+                      <h3 className="text-2xl font-semibold mb-4">
+                        {field.label}
+                      </h3>
+                      {field.type === "text" && (
                         <>
-                      <input
-                        type="text"
-                        name={field.name}
-                        value={formValues[field.name] || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                      {errors[field.name] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors[field.name]}
-                          </p>
-                        )}
+                          <input
+                            type="text"
+                            name={field.name}
+                            value={formValues[field.name] || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
                         </>
-                    )}
-                    {field.type === "email" && (
-                        <>
-                      <input
-                        type="email"
-                        name={field.name}
-                        value={formValues[field.name] || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                      {errors[field.name] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors[field.name]}
-                          </p>
-                        )}
-                        </>
-                    )}
-                    {field.type === "textarea" && (
-                        <>
-                      <textarea
-                        name={field.name}
-                        value={formValues[field.name] || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                      {errors[field.name] && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors[field.name]}
-                        </p>
                       )}
-                        </>
-                    )}
-                    {field.type === "select" && (
+                      {field.type === "email" && (
                         <>
-                      <select
-                        name={field.name}
-                        value={formValues[field.name] || ""}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="">Select an option</option>
-                        {field.options?.map((option: any, i: any) => (
-                          <option key={i} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                      {errors[field.name] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors[field.name]}
-                          </p>
-                        )}
+                          <input
+                            type="email"
+                            name={field.name}
+                            value={formValues[field.name] || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
                         </>
-                    )}
-                    {field.type === "radio" && (
+                      )}
+                      {field.type === "textarea" && (
                         <>
-                      <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
-                        {field.options?.map((option, i) => (
+                          <textarea
+                            name={field.name}
+                            value={formValues[field.name] || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
+                        </>
+                      )}
+                      {field.type === "select" && (
+                        <>
+                          <select
+                            name={field.name}
+                            value={formValues[field.name] || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            <option value="">Select an option</option>
+                            {field.options?.map((option: any, i: any) => (
+                              <option key={i} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
+                        </>
+                      )}
+                      {field.type === "radio" && (
+                        <>
+                          <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                            {field.options?.map((option, i) => (
+                              <div key={i} className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={field.name}
+                                  id={field.name + i}
+                                  value={option}
+                                  checked={formValues[field.name] === option}
+                                  onChange={handleInputChange}
+                                  className="hidden peer"
+                                />
 
-                          <div key={i} className="flex items-center">
-                            <input
-                              type="radio"
-                              name={field.name}
-                              id={field.name + i}
-                              value={option}
-                              checked={formValues[field.name] === option}
-                              onChange={handleInputChange}
-                              className="hidden peer"
-                            />
-                            
-                            {/* <label className="ml-2 text-sm text-gray-700">
+                                {/* <label className="ml-2 text-sm text-gray-700">
                             {option}
                             </label> */}
-                            <label
-                              htmlFor={field.name + i}
-                              className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                            >
-                              <div className="block">
-                                <div className="w-full text-lg font-semibold">
-                                  {option}
-                                </div>
-                                {/* <div className="w-full">
+                                <label
+                                  htmlFor={field.name + i}
+                                  className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                >
+                                  <div className="block">
+                                    <div className="w-full text-lg font-semibold">
+                                      {option}
+                                    </div>
+                                    {/* <div className="w-full">
                                   Good for large websites
                                 </div> */}
-                              </div>
-                              {/* <svg
+                                  </div>
+                                  {/* <svg
                                 className="w-5 h-5 ms-3 rtl:rotate-180"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -880,87 +921,156 @@ const StepForm: React.FC = () => {
                                   d="M1 5h12m0 0L9 1m4 4L9 9"
                                 />
                               </svg> */}
-                            </label>
-                            
+                                </label>
+                              </div>
+                            ))}
                           </div>
-                          
-                        ))}
-                      </div>
-                      {errors[field.name] && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors[field.name]}
-                        </p>
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
+                        </>
                       )}
-                      </>
-                    )}
-                    {field.type === "checkbox" && (
-                      <>
-                        <p className="italic text-sm mb-4">
-                          Select at least one option
-                        </p>
-                        <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
-                          {field.options?.map((option, i) => (
-                            <div key={i} className="flex items-center">
-                              <input
-                                type="checkbox"
-                                id={field.name + i}
-                                name={field.name}
-                                checked={
-                                  formValues[field.name]?.includes(option) ||
-                                  false
-                                }
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, option)
-                                }
-                                className="hidden peer"
-                              />
-                              {/* <label className="ml-2 text-sm text-gray-700">
+                      {field.type === "checkbox" && (
+                        <>
+                          <p className="italic text-sm mb-4">
+                            Select at least one option
+                          </p>
+                          <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                            {field.options?.map((option, i) => (
+                              <div key={i} className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  id={field.name + i}
+                                  name={field.name}
+                                  checked={
+                                    formValues[field.name]?.includes(option) ||
+                                    false
+                                  }
+                                  onChange={(e) =>
+                                    handleCheckboxChange(e, option)
+                                  }
+                                  className="hidden peer"
+                                />
+                                {/* <label className="ml-2 text-sm text-gray-700">
                               {option}
                             </label> */}
-                              <label
-                                htmlFor={field.name + i}
-                                className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                              >
-                                <div className="block">
-                                  <div className="w-full text-lg font-semibold">
-                                    {option}
+                                <label
+                                  htmlFor={field.name + i}
+                                  className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                >
+                                  <div className="block">
+                                    <div className="w-full text-lg font-semibold">
+                                      {option}
+                                    </div>
+                                    {/* <div className="w-full text-sm">A JavaScript library for building user interfaces.</div> */}
                                   </div>
-                                  {/* <div className="w-full text-sm">A JavaScript library for building user interfaces.</div> */}
-                                </div>
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                        {errors[field.name] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {errors[field.name]}
-                          </p>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            )
-          )}
-        </div>
-      </div>
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
+                        </>
+                      )}
+                      {field.type === "file" && (
+                        <>
+                          <div className="flex items-center justify-center w-full">
+                            <label
+                              htmlFor="dropzone-file"
+                              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                            >
+                              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg
+                                  className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 20 16"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                  />
+                                </svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                  <span className="font-semibold">
+                                    Click to upload
+                                  </span>{" "}
+                                  or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                </p>
+                              </div>
+                              <input
+                                id="dropzone-file"
+                                type="file"
+                                name={field.name}
+                                value={formValues[field.name] || ""}
+                                // onChange={handleInputChange}
+                                onChange={handleFileChange}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={handlePrevious}
-          className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
-          disabled={currentStep === 0 && currentFieldIndex === 0}
-        >
-          Previous
-        </button>
-        <button
-          onClick={handleNext}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
-          {currentStep === totalSteps - 1 ? "Submit" : "Next"}
-        </button>
+                          {/* Render image preview */}
+                          {preview && (
+                            <div className="mt-4">
+                              <Image
+                                src={preview}
+                                alt="Selected preview"
+                                className="w-full h-auto"
+                                width={400}
+                                height={400}
+                              />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handlePrevious}
+            className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
+            disabled={currentStep === 0 && currentFieldIndex === 0}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => {
+              if (currentStep === totalSteps - 1) {
+                handleSubmit();
+              } else {
+                handleNext();
+              }
+            }}
+            className="px-4 py-2 bg-green-600 text-white rounded"
+          >
+            {currentStep === totalSteps - 1 ? "Submit" : "Next"}
+          </button>
+        </div>
       </div>
     </div>
   );
