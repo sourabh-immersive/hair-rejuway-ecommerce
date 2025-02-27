@@ -16,8 +16,13 @@ interface Field {
     | "tel"
     | "email"
     | "file";
-  options?: string[]; // For radio, checkbox, and select fields
-  visibleIf?: (formValues: any) => boolean; // Conditional visibility function
+  options?: string[];
+  imageOptions?: {
+    src: string;
+    for: string;
+  }[];
+  isImageOptions?: boolean;
+  visibleIf?: (formValues: any) => boolean;
 }
 
 interface SubStep {
@@ -41,6 +46,12 @@ const MaleImage2: SubStep[] = [
         label: "Where are you noticing Hair Loss?",
         type: "radio",
         options: ["Front", "Top", "Both Side"],
+        isImageOptions: true,
+        imageOptions: [
+          { src: "/stage1.png", for: "front" },
+          { src: "/stage2.png", for: "top" },
+          { src: "/stage3.png", for: "both sides" },
+        ],
       },
     ],
   },
@@ -89,7 +100,7 @@ const StepForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [preview, setPreview] = useState("");
 
-  const router = useRouter()
+  const router = useRouter();
 
   // Handle file input change
   const handleFileChange = (e: any) => {
@@ -104,7 +115,7 @@ const StepForm: React.FC = () => {
 
   const handleSubmit = () => {
     console.log("Submitting the form...");
-    router.push('/result')
+    router.push("/result");
   };
 
   console.log("formValues", formValues);
@@ -118,15 +129,28 @@ const StepForm: React.FC = () => {
           title: "Hair Health 1",
           fields: [
             {
-              name: "hairLossDescribeImage",
+              name: "maleHairLossDescribeImage",
               label: "Which image best describes your hair loss?",
               type: "radio",
-              options: ["Image 11", "Image 22", "Image 33"],
+              options: ["stage1", "stage2", "stage3"],
+              isImageOptions: true,
+              imageOptions: [
+                { src: "/stage1.png", for: "stage1" },
+                { src: "/stage2.png", for: "stage2" },
+                { src: "/stage3.png", for: "stage3" },
+                { src: "/stage4.png", for: "stage4" },
+                { src: "/stage5.png", for: "stage5" },
+                { src: "/stage6.png", for: "stage6" },
+              ],
               visibleIf: (formValues) => formValues.gender === "Male",
             },
           ],
         },
-        ...(formValues.hairLossDescribeImage === "Image 22" ? MaleImage2 : []),
+        ...(formValues.maleHairLossDescribeImage === "stage2" ||
+        formValues.maleHairLossDescribeImage === "stage3" ||
+        formValues.maleHairLossDescribeImage === "stage5"
+          ? MaleImage2
+          : []),
         {
           title: "Hair Health 3",
           fields: [
@@ -878,35 +902,39 @@ const StepForm: React.FC = () => {
                       )}
                       {field.type === "radio" && (
                         <>
-                          <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
-                            {field.options?.map((option, i) => (
-                              <div key={i} className="flex items-center">
-                                <input
-                                  type="radio"
-                                  name={field.name}
-                                  id={field.name + i}
-                                  value={option}
-                                  checked={formValues[field.name] === option}
-                                  onChange={handleInputChange}
-                                  className="hidden peer"
-                                />
-
-                                {/* <label className="ml-2 text-sm text-gray-700">
-                            {option}
-                            </label> */}
-                                <label
-                                  htmlFor={field.name + i}
-                                  className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                                >
-                                  <div className="block">
-                                    <div className="w-full text-lg font-semibold">
-                                      {option}
-                                    </div>
-                                    {/* <div className="w-full">
+                          {field.isImageOptions ? (
+                            <div className="mt-2 grid w-full gap-6 grid-cols-2 md:grid-cols-4">
+                              {field.imageOptions?.map((option, i) => (
+                                <div key={i} className="flex items-center">
+                                  <input
+                                    type="radio"
+                                    name={field.name}
+                                    id={field.name + i}
+                                    value={option.for}
+                                    checked={
+                                      formValues[field.name] === option.for
+                                    }
+                                    onChange={handleInputChange}
+                                    className="hidden peer"
+                                  />
+                                  <label
+                                    htmlFor={field.name + i}
+                                    className="inline-flex items-center justify-between w-full text-gray-500 bg-white  border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                  >
+                                    <div className="block">
+                                      <div className="w-full text-lg font-semibold">
+                                        <Image
+                                          src={option.src}
+                                          width={200}
+                                          height={200}
+                                          alt={field.name}
+                                        />
+                                      </div>
+                                      {/* <div className="w-full">
                                   Good for large websites
                                 </div> */}
-                                  </div>
-                                  {/* <svg
+                                    </div>
+                                    {/* <svg
                                 className="w-5 h-5 ms-3 rtl:rotate-180"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -921,10 +949,37 @@ const StepForm: React.FC = () => {
                                   d="M1 5h12m0 0L9 1m4 4L9 9"
                                 />
                               </svg> */}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="mt-2 grid w-full gap-6 md:grid-cols-2">
+                              {field.options?.map((option, i) => (
+                                <div key={i} className="flex items-center">
+                                  <input
+                                    type="radio"
+                                    name={field.name}
+                                    id={field.name + i}
+                                    value={option}
+                                    checked={formValues[field.name] === option}
+                                    onChange={handleInputChange}
+                                    className="hidden peer"
+                                  />
+                                  <label
+                                    htmlFor={field.name + i}
+                                    className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                  >
+                                    <div className="block">
+                                      <div className="w-full text-lg font-semibold">
+                                        {option}
+                                      </div>
+                                    </div>
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           {errors[field.name] && (
                             <p className="text-red-500 text-sm mt-1">
                               {errors[field.name]}
