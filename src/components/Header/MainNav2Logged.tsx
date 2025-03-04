@@ -82,7 +82,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
 
   const renderContent = () => {
     return (
-      <div className="h-20 flex justify-between">
+      <div className="h-16 md:h-20 flex justify-between">
         <div className="flex items-center lg:hidden flex-1">
           <MenuBar />
         </div>
@@ -115,11 +115,11 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
 
   return (
     <>
-      <div className="toparea relative z-10 bg-blue-700 dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+      <div className="toparea hidden md:block relative z-10 bg-blue-700 dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
         <div className="container">
-          <div className="flex justify-between py-4 text-white text-sm">
-            <p>Order upto 30%-40% | Free Shipping on orders over ₹899.00</p>
-            <div className="">
+          <div className="flex justify-between flex-col md:flex-row py-4 text-white text-sm">
+            <p className="text-center mb-4 md:text-left md:mb-0">Order upto 30%-40% | Free Shipping on orders over ₹899.00</p>
+            <div className="m-auto md:m-0">
               <ul className="list-none flex space-x-4 ">
                 <li><Link href={'/about-us'} prefetch={true}>About Us</Link></li>
                 <li><Link href={'/wishlist'} prefetch={true}>Wishlist</Link></li>

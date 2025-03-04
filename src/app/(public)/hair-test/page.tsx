@@ -15,7 +15,9 @@ interface Field {
     | "select"
     | "tel"
     | "email"
-    | "file";
+    | "file"
+    | "number";
+
   options?: string[];
   imageOptions?: {
     src: string;
@@ -156,9 +158,14 @@ const StepForm: React.FC = () => {
           fields: [
             {
               name: "familiyHistoryOfHairLossMother",
-              label: "Do You Have a Family History of Hair Loss (Mother)?",
+              label: "Do you have a family history of hair loss?",
               type: "radio",
-              options: ["Mother", "Father", "Both", "None"],
+              options: [
+                "Mother or anyone from mother's side of the family",
+                "Father or anyone from father's side of the family",
+                "Both",
+                "None",
+              ],
             },
           ],
         },
@@ -171,10 +178,10 @@ const StepForm: React.FC = () => {
                 "Have you experienced any of the below in the last 1 year?",
               type: "radio",
               options: [
-                "None",
-                "Severe Illness",
-                "Heavy Weight Loss / Heavy Weight Gain",
+                "Severe Illness (Dengue, Malaria, Typhoid or Covid)",
+                "Heavy weight loss / heavy weight gain",
                 "Surgery / heavy medication",
+                "None",
               ],
             },
           ],
@@ -189,9 +196,9 @@ const StepForm: React.FC = () => {
               options: [
                 "No",
                 "Yes, mild that comes and goes",
+                "I have Psoriasis (A skin condition that causes red, dry patches on your scalp)",
+                "I have Seborrheic Dermatitis (A condition making your scalp itchy, red with a burning feeling.)",
                 "Yes, heavy dandruff that sticks to the scalp",
-                "I 'have Psoriasis (A skin condition that causes red, dry patches on your scalp)",
-                "I 'have Seborrheic Dermatitis (A condition making your scalp itchy, red with a burning feeling.)",
               ],
             },
           ],
@@ -260,7 +267,7 @@ const StepForm: React.FC = () => {
               type: "radio",
               options: [
                 "Always high",
-                "Low when | wake up, but gradually increases",
+                "Low in the morning but gradually increases",
                 "Very low in afternoon",
                 "Low by evening/night",
                 "Always low",
@@ -354,6 +361,14 @@ const StepForm: React.FC = () => {
               label: "Where do you stand on the femail hair scale?",
               type: "radio",
               options: ["Image 1", "Image 2", "Image 3", "Image 4", "Image 5"],
+              isImageOptions: true,
+              imageOptions: [
+                { src: "/stage1.png", for: "stage1" },
+                { src: "/stage2.png", for: "stage2" },
+                { src: "/stage3.png", for: "stage3" },
+                { src: "/stage4.png", for: "stage4" },
+                { src: "/stage5.png", for: "stage5" },
+              ],
             },
           ],
         },
@@ -632,6 +647,10 @@ const StepForm: React.FC = () => {
           fields: [{ name: "email", label: "Your Email", type: "email" }],
         },
         {
+          title: "How old are you?",
+          fields: [{ name: "age", label: "How old are you?", type: "number" }],
+        },
+        {
           title: "Gender",
           fields: [
             {
@@ -781,7 +800,7 @@ const StepForm: React.FC = () => {
 
   return (
     <div className="hairTestRow bg-[url(/bg.jpg)] bg-cover bg-bottom bg-no-repeat">
-      <div className="max-w-4xl mx-auto p-6 pt-0 pb-44 border border-r-0 border-l-0 border-b-0 border-gray-200 rounded-xl py-10">
+      <div className="max-w-4xl mx-auto p-4 md:p-6 pt-0 pb-44 border border-r-0 border-l-0 border-b-0 border-gray-200 rounded-xl py-10">
         <h2 className="text-xl font-semibold text-center rounded-b-lg mb-6 flex justify-center bg-blue-600 text-white py-3 px-5 w-fit m-auto">
           Start Hair Test
         </h2>
@@ -816,7 +835,7 @@ const StepForm: React.FC = () => {
         </div>
 
         {/* Main Form Steps with Inner Fields */}
-        <div className="space-y-6 p-6">
+        <div className="space-y-6 md:p-6">
           {/* <h3 className="text-lg font-semibold">{steps[currentStep].name}</h3> */}
           <div>
             {/* <label className="block text-gray-700 mb-2">
@@ -828,13 +847,29 @@ const StepForm: React.FC = () => {
                 <div key={index}>
                   {(!field.visibleIf || field.visibleIf(formValues)) && (
                     <>
-                      <h3 className="text-2xl font-semibold mb-4">
+                      <h3 className="text-xl font-semibold mb-4">
                         {field.label}
                       </h3>
                       {field.type === "text" && (
                         <>
                           <input
                             type="text"
+                            name={field.name}
+                            value={formValues[field.name] || ""}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          />
+                          {errors[field.name] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors[field.name]}
+                            </p>
+                          )}
+                        </>
+                      )}
+                      {field.type === "number" && (
+                        <>
+                          <input
+                            type="number"
                             name={field.name}
                             value={formValues[field.name] || ""}
                             onChange={handleInputChange}
@@ -1034,7 +1069,19 @@ const StepForm: React.FC = () => {
                       )}
                       {field.type === "file" && (
                         <>
-                          <div className="flex items-center justify-center w-full">
+                          <div className="flex items-center space-x-7 justify-center w-full">
+                            {/* Render image preview */}
+                            {preview && (
+                              <div className="mt-4 max-w-80">
+                                <Image
+                                  src={preview}
+                                  alt="Selected preview"
+                                  className="w-full h-auto"
+                                  width={400}
+                                  height={400}
+                                />
+                              </div>
+                            )}
                             <label
                               htmlFor="dropzone-file"
                               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -1081,19 +1128,6 @@ const StepForm: React.FC = () => {
                               {errors[field.name]}
                             </p>
                           )}
-
-                          {/* Render image preview */}
-                          {preview && (
-                            <div className="mt-4">
-                              <Image
-                                src={preview}
-                                alt="Selected preview"
-                                className="w-full h-auto"
-                                width={400}
-                                height={400}
-                              />
-                            </div>
-                          )}
                         </>
                       )}
                     </>
@@ -1108,7 +1142,7 @@ const StepForm: React.FC = () => {
         <div className="flex justify-between mt-6">
           <button
             onClick={handlePrevious}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50"
+            className="px-4 py-2 bg-gray-300 text-gray-700 hover:bg-gray-200 rounded disabled:opacity-50"
             disabled={currentStep === 0 && currentFieldIndex === 0}
           >
             Previous
@@ -1121,7 +1155,7 @@ const StepForm: React.FC = () => {
                 handleNext();
               }
             }}
-            className="px-4 py-2 bg-green-600 text-white rounded"
+            className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded"
           >
             {currentStep === totalSteps - 1 ? "Submit" : "Next"}
           </button>
