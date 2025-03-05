@@ -70,23 +70,33 @@ const reviews = [
 const ReviewsSlider = () => {
   return (
     <div className="section bg-gray-100">
-      <div className="container">
-        <div className="w-full px-4 py-10 pb-5">
-          <h2 className="text-3xl font-semibold text-center mb-8">
-            Testimonials of patient.
+      <div className="container mx-auto px-4">
+        <div className="w-full py-10 pb-5">
+          <h2 className="text-2xl font-semibold text-center mb-8">
+            Testimonials of patients
           </h2>
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={20}
-            slidesPerView={4}
-            // navigation
+            slidesPerView={1} // Default for mobile
+            breakpoints={{
+              640: {
+                slidesPerView: 2, // 2 slides on tablets (sm breakpoint)
+              },
+              1024: {
+                slidesPerView: 3, // 3 slides on laptops (lg breakpoint)
+              },
+              1280: {
+                slidesPerView: 4, // 4 slides on desktops (xl breakpoint)
+              },
+            }}
             pagination={{ clickable: true }}
             loop
             className="mb-12"
           >
             {reviews.map((review, index) => (
               <SwiperSlide key={index}>
-                <div className="bg-white p-6 shadow-md rounded-lg flex flex-col max-w-md mx-auto min-h-[512px]">
+                <div className="bg-white p-6 shadow-md rounded-lg flex flex-col max-w-md mx-auto min-h-[512px] mb-12">
                   <Image
                     src={review.image}
                     alt={review.name}
@@ -105,19 +115,10 @@ const ReviewsSlider = () => {
                     </div>
                   </div>
 
-                  {/* <hr className="border-slate-200 dark:border-slate-700 my-4" /> */}
                   <div className="flex flex-col justify-between">
                     <p className="text-gray-700 text-center text-sm mt-2 min-h-32">
                       {review.review}
                     </p>
-                    {/* <div className="mt-4 text-sm text-gray-600">
-                      <p className="mb-4">
-                        <strong>Kit Purchased:</strong> {review.kit}
-                      </p>
-                      <p>
-                        <strong>Used for:</strong> {review.usedFor}
-                      </p>
-                    </div> */}
                   </div>
                 </div>
               </SwiperSlide>
