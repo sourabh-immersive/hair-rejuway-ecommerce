@@ -283,7 +283,7 @@ const StepForm: React.FC = () => {
               label:
                 "Are you currently taking any supplements or vitamins for hair?",
               type: "radio",
-              options: ["Yes", "No", "Sure"],
+              options: ["Yes", "No"],
             },
           ],
         },
@@ -358,7 +358,7 @@ const StepForm: React.FC = () => {
           fields: [
             {
               name: "whereYouStandFemailHairScale",
-              label: "Where do you stand on the femail hair scale?",
+              label: "Where do you stand on the female hair scale?",
               type: "radio",
               options: ["Image 1", "Image 2", "Image 3", "Image 4", "Image 5"],
               isImageOptions: true,
@@ -497,7 +497,7 @@ const StepForm: React.FC = () => {
                 "None",
                 "Anemia (Low Haemoglobin)",
                 "Low Thyroid (Hypothyroidism)",
-                "PCOS (When a woman's ovaries have tiny bumps and she might have trouble with her periods and hormanes.)",
+                "PCOS (When a woman's ovaries have tiny bumps and she might have trouble with her periods and hormones.)",
                 "Other Hormonal Issues",
               ],
             },
@@ -1120,6 +1120,7 @@ const StepForm: React.FC = () => {
                                 // onChange={handleInputChange}
                                 onChange={handleFileChange}
                                 className="hidden"
+                                accept="image/*"
                               />
                             </label>
                           </div>
