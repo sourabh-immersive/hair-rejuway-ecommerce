@@ -9,16 +9,43 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { CartItem, removeItemFromCart } from "@/lib/features/cart/cartSlice";
+import { CartItem } from "@/lib/features/cart/cartSlice";
+import {
+  clearCartAsync,
+  clearCartLocally,
+  removeFromCartAsync,
+  removeItem,
+  removeItemLocally,
+  syncCartWithServer,
+} from "@/lib/features/cart/cartBSlice";
 
 export default function CartDropdown() {
-  const cartData = useAppSelector((state) => state.cart);
+  const cartData = useAppSelector((state) => state.cartB);
+  const userStatus = useAppSelector((state) => state.auth.status);
   const dispatch = useAppDispatch();
-  const { items, status, totalItems, totalAmount } = cartData;
-  // console.log("stateD", items);
+
+  const items =
+    userStatus === "authenticated" ? cartData.items : cartData.localItems;
+  const totalItems =
+    userStatus === "authenticated"
+      ? cartData.totalItems
+      : cartData.localTotalItems;
+  const totalPrice =
+    userStatus === "authenticated"
+      ? cartData.totalPrice
+      : cartData.localTotalPrice;
+
+  // console.log("stateDfgg cartData", cartData);
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     dispatch(syncCartWithServer());
+  //   }
+  // }, [isAuthenticated, dispatch]);
 
   const renderProduct = (items: CartItem, index: number, close: () => void) => {
-    const { name, price, thumbnail, attributesData, salePrice, productType } = items;
+    const { name, price, thumbnail, attributesData, salePrice, productType } =
+      items;
 
     return (
       <div key={index} className="flex py-5 last:pb-0 00000000">
@@ -91,7 +118,7 @@ export default function CartDropdown() {
                  group w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 relative`}
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-              <span className="mt-[1px]">{items.length}</span>
+              <span className="mt-[1px]">{totalItems}</span>
             </div>
             <svg
               className="w-6 h-6"
@@ -148,7 +175,18 @@ export default function CartDropdown() {
               <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
                 <div className="relative bg-white dark:bg-neutral-800">
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
-                    <h3 className="text-xl font-semibold">Shopping cart</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-semibold">Shopping cart</h3>
+                      <button
+                        className="text-sm font-normal"
+                        onClick={() => {
+                          console.log("clear cart ");
+                          dispatch(clearCartAsync());
+                        }}
+                      >
+                        Clear Cart!
+                      </button>
+                    </div>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700">
                       {items.length === 0 ? (
                         <div className="empty-state text-center p-4">
@@ -198,11 +236,11 @@ export default function CartDropdown() {
                         items.map((item, index) => (
                           <div key={index} className="flex py-5 last:pb-0">
                             <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
-                              {item.thumbnail && (
+                              {item.product_image && (
                                 <Image
                                   fill
-                                  src={`${item.thumbnail}`}
-                                  alt={item.name}
+                                  src={`${item.product_image}`}
+                                  alt={item.name || ""}
                                   className="h-full w-full object-contain object-center"
                                 />
                               )}
@@ -226,14 +264,18 @@ export default function CartDropdown() {
                                       </Link>
                                     </h3>
                                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                                      {Array.isArray(item.attributesData) && (
+                                      {Array.isArray(item.variation) && (
                                         <>
-                                          {item.attributesData.map((att, i) => (
+                                          {item.variation.map((att, i) => (
                                             <>
                                               <p>
-                                                <span>{att.name}</span>
+                                                <span>
+                                                  {att.attribute_title}
+                                                </span>
                                                 <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                                                <span>{att.value}</span>
+                                                <span>
+                                                  {att.attribute_value}
+                                                </span>
                                               </p>
                                             </>
                                           ))}
@@ -242,8 +284,8 @@ export default function CartDropdown() {
                                     </p>
                                   </div>
                                   <Prices
-                                    price={item.price}
-                                    salePrice={item.salePrice}
+                                    price={item.prices?.regular_price}
+                                    salePrice={item.prices?.sale_price}
                                     className="mt-0.5"
                                   />
                                 </div>
@@ -255,19 +297,19 @@ export default function CartDropdown() {
                                   <button
                                     type="button"
                                     className="font-medium text-primary-6000 dark:text-primary-500 "
+                                    // onClick={() => dispatch(removeItem(item.key!))}
                                     onClick={() => {
-                                      item.productType === 'simple' ? 
-                                      dispatch(
-                                        removeItemFromCart({
-                                          id: item.id,
-                                        })
-                                      ) : 
-                                      dispatch(
-                                        removeItemFromCart({
-                                          id: item.id,
-                                          attributesData: item.attributesData,
-                                        })
-                                      ) 
+                                      if (userStatus === "authenticated") {
+                                        dispatch(
+                                          removeFromCartAsync(
+                                            item.key || 0
+                                          )
+                                        );
+                                        dispatch(syncCartWithServer());
+                                      } else {
+                                        console.log("remove locally", item.product_id);
+                                        dispatch(removeItemLocally(Number(item.product_id)));
+                                      }
                                     }}
                                   >
                                     Remove
@@ -289,7 +331,7 @@ export default function CartDropdown() {
                           Shipping and taxes calculated at checkout.
                         </span>
                       </span>
-                      <span className="">₹{totalAmount}</span>
+                      <span className="">₹{totalPrice}</span>
                     </p>
                     <div className="flex space-x-2 mt-5">
                       <ButtonSecondary

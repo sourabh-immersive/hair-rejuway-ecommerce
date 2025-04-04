@@ -1,10 +1,12 @@
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { cartSlice } from "./features/cart/cartSlice";
+import cartAReducer from "./features/cart/cartASlice";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { wishlistSlice } from "./features/wishlist/wishlistSlice";
 import authSlice from "./features/authSlice/authSlice";
+import cartBSlice from "./features/cart/cartBSlice";
 
 // Fallback to noop storage for server
 const createNoopStorage = () => {
@@ -35,6 +37,8 @@ const rootReducer = combineReducers({
   wishlist: wishlistSlice.reducer,
   cart: cartSlice.reducer,
   auth: authSlice.reducer,
+  cartA: cartAReducer,
+  cartB: cartBSlice,
 });
 
 // Persisted reducer

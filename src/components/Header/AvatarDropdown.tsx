@@ -11,6 +11,7 @@ import { signOut } from "@/auth";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { initializeSession } from "@/lib/features/authSlice/authSlice";
 import { getProfileDetails } from "@/api/protected";
+import { clearCart } from "@/lib/features/cart/cartBSlice";
 
 export default function AvatarDropdown() {
   const dispatch = useAppDispatch();
@@ -229,6 +230,7 @@ export default function AvatarDropdown() {
                       onClick={async () => {
                         await doLogout();
                         dispatch(initializeSession(null));
+                        dispatch(clearCart());
                       }}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">

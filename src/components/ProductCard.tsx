@@ -19,6 +19,18 @@ import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
+import { addToCart } from "@/api/protected";
+import {
+  addToCartAsync,
+  addToLocalCart,
+  CartItemApi,
+} from "@/lib/features/cart/cartASlice";
+import {
+  addItemLocally,
+  CartItem,
+  addToCartAsync2,
+  LocalCartItem,
+} from "@/lib/features/cart/cartBSlice";
 
 export interface ProductCardProps {
   className?: string;
@@ -54,6 +66,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   } = data;
 
   const dispatch = useAppDispatch();
+  const authStateData = useAppSelector((state) => state.auth);
   const [variantActive, setVariantActive] = useState(0);
   const [showModalQuickView, setShowModalQuickView] = useState(false);
   const [modalContent, setModalContent] = useState<Product | null>(null);
@@ -85,24 +98,25 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
   // };
 
   const getPrice = (): string | number | undefined => {
-    if (!product_variations || product_variations.length === 0) return undefined;
-  
+    if (!product_variations || product_variations.length === 0)
+      return undefined;
+
     if (product_variations.length === 1) {
-      const singlePrice = product_variations[0].sale_price || product_variations[0].price;
+      const singlePrice =
+        product_variations[0].sale_price || product_variations[0].price;
       return singlePrice;
     }
-  
+
     // For multiple variations
     const salePrices = product_variations.map((item) =>
       Number(item.sale_price) > 0 ? Number(item.sale_price) : Number(item.price)
     );
-  
+
     const lowestPrice = Math.min(...salePrices);
     const largestPrice = Math.max(...salePrices);
-  
+
     return `${lowestPrice} - ${largestPrice}`;
   };
-  
 
   const wishlistData = {
     id: String(id),
@@ -113,7 +127,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
 
   // console.log('fdfs', typeof(getPrice()))
 
-  const notifyAddTocart = ({ attribute_id }: { attribute_id?: string }) => {
+  const notifyAddTocart = async ({
+    attribute_id,
+  }: {
+    attribute_id?: string;
+  }) => {
     toast.custom(
       (t) => (
         <Transition
@@ -141,17 +159,74 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       }
     );
 
-    const cartItem = {
-      id: String(id),
+    // const cartData: CartItem[] = [{
+    //   product_id: "27",
+    //   product_qty: "3",
+    //   variation: [{
+    //     attribute_id: "625",
+    //     attribute_title: "Size",
+    //     attribute_value: "50Ml"
+    //   }]
+    // }];
+
+    // const cartData: CartItemApi[] = [
+    //   {
+    //     product_id: String(id),
+    //     product_qty: String(1),
+    //     variation: [
+    //       {
+    //         attribute_id: product_variations[0].attribute[0].attribute_id || "",
+    //         attribute_title: product_variations[0].attribute[0].attribute_title,
+    //         attribute_value: product_variations[0].attribute[0].attribute_value,
+    //       },
+    //     ],
+    //   },
+    // ];
+
+    const cartData: CartItem[] = [
+      {
+        product_id: String(id),
+        product_qty: String(1),
+        variation: [
+          {
+            attribute_id: product_variations[0].attribute[0].attribute_id || "",
+            attribute_title: product_variations[0].attribute[0].attribute_title,
+            attribute_value: product_variations[0].attribute[0].attribute_value,
+          },
+        ],
+      },
+    ];
+
+    const cartLocalData: LocalCartItem = {
+      product_id: String(id),
+      product_qty: String(1),
+      variation: [
+        {
+          attribute_id: product_variations[0].attribute[0].attribute_id || "",
+          attribute_title: product_variations[0].attribute[0].attribute_title,
+          attribute_value: product_variations[0].attribute[0].attribute_value,
+        },
+      ],
+      price: String(
+        product_variations[0].sale_price
+          ? product_variations[0].sale_price
+          : product_variations[0].price
+      ),
+      prices: {
+        regular_price: product_variations[0].price,
+        sale_price: product_variations[0].sale_price,
+      },
       name: title,
-      thumbnail: feature_image ? `${feature_image}` : null,
-      price: product_variations[0].price,
-      productType: productType,
-      salePrice: product_variations[0].sale_price,
+      product_image: feature_image,
+      key: Math.random(),
       quantity: 1,
     };
 
-    dispatch(addItemToCart(cartItem));
+    if (authStateData.status === "authenticated") {
+      dispatch(addToCartAsync2(cartData));
+    } else {
+      dispatch(addItemLocally(cartLocalData));
+    }
   };
 
   const renderProductCartOnNotify = ({
@@ -233,94 +308,94 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     return "border-transparent";
   };
 
-  const renderVariants = () => {
-    if (!variants || !variants.length || !variantType) {
-      return null;
-    }
+  // const renderVariants = () => {
+  //   if (!variants || !variants.length || !variantType) {
+  //     return null;
+  //   }
 
-    if (variantType === "color") {
-      return (
-        <div className="flex space-x-1">
-          {variants.map((variant, index) => (
-            <div
-              key={index}
-              onClick={() => setVariantActive(index)}
-              className={`relative w-6 h-6 rounded-full overflow-hidden z-10 border cursor-pointer ${
-                variantActive === index
-                  ? getBorderClass(variant.color)
-                  : "border-transparent"
-              }`}
-              title={variant.title}
-            >
-              <div
-                className={`absolute inset-0.5 rounded-full z-0 ${variant.color}`}
-              ></div>
-            </div>
-          ))}
-        </div>
-      );
-    }
+  //   if (variantType === "color") {
+  //     return (
+  //       <div className="flex space-x-1">
+  //         {variants.map((variant, index) => (
+  //           <div
+  //             key={index}
+  //             onClick={() => setVariantActive(index)}
+  //             className={`relative w-6 h-6 rounded-full overflow-hidden z-10 border cursor-pointer ${
+  //               variantActive === index
+  //                 ? getBorderClass(variant.color)
+  //                 : "border-transparent"
+  //             }`}
+  //             title={variant.title}
+  //           >
+  //             <div
+  //               className={`absolute inset-0.5 rounded-full z-0 ${variant.color}`}
+  //             ></div>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     );
+  //   }
 
-    return (
-      <div className="flex ">
-        {variants.map((variant, index) => (
-          <div
-            key={index}
-            onClick={() => setVariantActive(index)}
-            className={`relative w-11 h-6 rounded-full overflow-hidden z-10 border cursor-pointer ${
-              variantActive === index
-                ? "border-black dark:border-slate-300"
-                : "border-transparent"
-            }`}
-            title={variant.title}
-          >
-            <div
-              className="absolute inset-0.5 rounded-full overflow-hidden z-0 bg-cover"
-              style={{
-                backgroundImage: `url(${
-                  // @ts-ignore
-                  typeof variant.thumbnail?.src === "string"
-                    ? // @ts-ignore
-                      variant.thumbnail?.src
-                    : typeof variant.thumbnail === "string"
-                    ? variant.thumbnail
-                    : ""
-                })`,
-              }}
-            ></div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="flex ">
+  //       {variants.map((variant, index) => (
+  //         <div
+  //           key={index}
+  //           onClick={() => setVariantActive(index)}
+  //           className={`relative w-11 h-6 rounded-full overflow-hidden z-10 border cursor-pointer ${
+  //             variantActive === index
+  //               ? "border-black dark:border-slate-300"
+  //               : "border-transparent"
+  //           }`}
+  //           title={variant.title}
+  //         >
+  //           <div
+  //             className="absolute inset-0.5 rounded-full overflow-hidden z-0 bg-cover"
+  //             style={{
+  //               backgroundImage: `url(${
+  //                 // @ts-ignore
+  //                 typeof variant.thumbnail?.src === "string"
+  //                   ? // @ts-ignore
+  //                     variant.thumbnail?.src
+  //                   : typeof variant.thumbnail === "string"
+  //                   ? variant.thumbnail
+  //                   : ""
+  //               })`,
+  //             }}
+  //           ></div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
-  const renderGroupButtons = () => {
-    return (
-      <div className="absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-        <ButtonPrimary
-          className="shadow-lg"
-          fontSize="text-xs"
-          sizeClass="py-2 px-4"
-          onClick={() => notifyAddTocart({ attribute_id: "XL" })}
-        >
-          <BagIcon className="w-3.5 h-3.5 mb-0.5" />
-          <span className="ms-1">Add to bag</span>
-        </ButtonPrimary>
-        <ButtonSecondary
-          className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
-          fontSize="text-xs"
-          sizeClass="py-2 px-4"
-          onClick={() => {
-            setModalContent(data);
-            setShowModalQuickView(true);
-          }}
-        >
-          <ArrowsPointingOutIcon className="w-3.5 h-3.5" />
-          <span className="ms-1">Quick view</span>
-        </ButtonSecondary>
-      </div>
-    );
-  };
+  // const renderGroupButtons = () => {
+  //   return (
+  //     <div className="absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+  //       <ButtonPrimary
+  //         className="shadow-lg"
+  //         fontSize="text-xs"
+  //         sizeClass="py-2 px-4"
+  //         onClick={() => notifyAddTocart({ attribute_id: "XL" })}
+  //       >
+  //         <BagIcon className="w-3.5 h-3.5 mb-0.5" />
+  //         <span className="ms-1">Add to bag</span>
+  //       </ButtonPrimary>
+  //       <ButtonSecondary
+  //         className="ms-1.5 bg-white hover:!bg-gray-100 hover:text-slate-900 transition-colors shadow-lg"
+  //         fontSize="text-xs"
+  //         sizeClass="py-2 px-4"
+  //         onClick={() => {
+  //           setModalContent(data);
+  //           setShowModalQuickView(true);
+  //         }}
+  //       >
+  //         <ArrowsPointingOutIcon className="w-3.5 h-3.5" />
+  //         <span className="ms-1">Quick view</span>
+  //       </ButtonSecondary>
+  //     </div>
+  //   );
+  // };
 
   const renderGroupVariationButtons = () => {
     return (
@@ -381,7 +456,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       <div
         className={`nc-ProductCard relative flex flex-col bg-transparent pb-10 ${className}`}
       >
-        <Link href={`/products/${slug}`} className="absolute inset-0" prefetch={true}></Link>
+        <Link
+          href={`/products/${slug}`}
+          className="absolute inset-0"
+          prefetch={true}
+        ></Link>
 
         <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
           <Link href={`/products/${slug}`} className="block" prefetch={true}>
@@ -406,7 +485,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
         </div>
 
         <div className="space-y-4 px-2.5 pt-5 pb-2.5">
-          {renderVariants()}
+          {/* {renderVariants()} */}
           <div>
             <h2 className="nc-ProductCard__title min-h-12 text-base font-semibold transition-colors">
               {title}
@@ -416,11 +495,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             </p>
           </div>
           <div className="flex items-center mb-0.5">
-              <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
-              <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
-                {rating || ""} ({numberOfReviews || 0} reviews)
-              </span>
-            </div>
+            <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
+            <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
+              {rating || ""} ({numberOfReviews || 0} reviews)
+            </span>
+          </div>
           <div className="flex justify-between items-end ">
             <Prices
               price={

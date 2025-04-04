@@ -18,6 +18,35 @@ export const getProfileDetails = async (token: string) => {
   }
 };
 
+interface Attribute  {
+  attribute_id?: string,
+  attribute_title: string,
+  attribute_value: string
+}
+
+interface AddToCart {
+    product_id: string,
+    product_qty: number,  
+    variation: Attribute[]
+}
+
+export const addToCart = async (data: AddToCart[], token: string | undefined) => {
+  console.log('data', data , token)
+  try {
+    const response = await apiClient.post(`/user/addToCart`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log("resposnse when addto cartt api", response.data);
+    return response.data;
+  } catch (error) {
+    // console.error("Error adding product to cart:", error);
+    console.log("Error adding product to cart: custom");
+    //   throw error;
+  }
+};
+
 export const updateUserPassword = async (
   token: string,
   data: PasswordChange
@@ -48,6 +77,66 @@ export const addUpdateWishlist = async (token: string, id: string) => {
     return response.data;
   } catch (error) {
     console.error("Error updating profile:", error);
+    //   throw error;
+  }
+};
+
+export const getCart = async (token: string) => {
+  try {
+    const response = await apiClient.post(`/user/cartList`, [], {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log('getCart', response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error getting cart:", error);
+    //   throw error;
+  }
+};
+
+export const doCheckout = async (token: string, data: any) => {
+  try {
+    const response = await apiClient.post(`/front/checkout`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log('getCart', response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error in checkout:", error);
+    //   throw error;
+  }
+};
+
+export const getOrders = async (token: string) => {
+  try {
+    const response = await apiClient.post(`/user/orders`, [], {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log('getCart', response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error in checkout:", error);
+    //   throw error;
+  }
+};
+
+export const getOrderDetails = async (token: string, orderId: number) => {
+  try {
+    const response = await apiClient.get(`/user/order/${orderId}/details`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log('getCart', response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Error in checkout:", error);
     //   throw error;
   }
 };

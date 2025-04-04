@@ -8,6 +8,8 @@ export interface RadioProps {
   defaultChecked?: boolean;
   sizeClassName?: string;
   label?: string;
+  value?: string;
+  checked?: boolean;
 }
 
 const Radio: FC<RadioProps> = ({

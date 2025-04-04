@@ -8,9 +8,9 @@ import Input from "@/shared/Input/Input";
 import Radio from "@/shared/Radio/Radio";
 
 interface Props {
-  isActive: boolean;
-  onCloseActive: () => void;
-  onOpenActive: () => void;
+  isActive?: boolean;
+  onCloseActive?: () => void;
+  onOpenActive?: () => void;
 }
 
 const PaymentMethod: FC<Props> = ({

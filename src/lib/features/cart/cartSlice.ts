@@ -37,24 +37,6 @@ export const cartSlice = createAppSlice({
   name: "cart",
   initialState,
   reducers: (create) => ({
-    // addItemToCart: create.reducer(
-    //   (state, action: PayloadAction<CartItem>) => {
-    //     const itemIndex = state.items.findIndex(item => item.id === action.payload.id);
-    //     (action.payload.productType === 'simple') ? (
-    //        (itemIndex >= 0) ?
-    //         state.items[itemIndex].quantity += action.payload.quantity
-    //        :
-    //         state.items.push({ ...action.payload })
-    //     ) : (
-    //       ''
-    //     )
-        
-
-    //     state.totalItems += action.payload.quantity;
-    //     state.totalAmount += action.payload.price * action.payload.quantity;
-    //   }
-    // ),
-
     addItemToCart: create.reducer(
       (state, action: PayloadAction<CartItem>) => {
         const { id, productType, attributesData, quantity, price, salePrice } = action.payload;
@@ -72,8 +54,8 @@ export const cartSlice = createAppSlice({
               item.id === id &&
               item.attributesData?.length === attributesData?.length &&
               item.attributesData.every((attr: any, index: any) => 
-                attr.name === attributesData[index]?.name &&
-                attr.value === attributesData[index]?.value
+                attr.attribute_title === attributesData[index]?.attribute_title &&
+                attr.attribute_value === attributesData[index]?.attribute_value
               )
             );
           });
@@ -93,7 +75,7 @@ export const cartSlice = createAppSlice({
     removeItemFromCart: create.reducer(
       (
         state,
-        action: PayloadAction<{ id: string; attributesData?: { name: string; value: string }[] }>
+        action: PayloadAction<{ id: string; attributesData?: { attribute_title: string; attribute_value: string }[] }>
       ) => {
         const { id, attributesData } = action.payload;
     
@@ -108,8 +90,8 @@ export const cartSlice = createAppSlice({
               item.attributesData.length === attributesData.length &&
               item.attributesData.every((attr: any, index:any) => {
                 return (
-                  attr.name === attributesData[index].name &&
-                  attr.value === attributesData[index].value
+                  attr.attribute_title === attributesData[index].attribute_title &&
+                  attr.attribute_value === attributesData[index].attribute_value
                 );
               })
             );

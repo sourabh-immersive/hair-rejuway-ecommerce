@@ -30,7 +30,7 @@ import AccordionInfo from "@/components/AccordionInfo";
 import { getProductBySlug } from "@/api/products";
 import { usePathname } from "next/navigation";
 import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import ReviewsSlider from "@/components/Reviews/reviews";
@@ -40,7 +40,7 @@ export interface ProductDetailsItemsProps {
 }
 
 interface Variation {
-  attribute_id: number;
+  variation_id: number;
   product_qty: string;
   price: number;
   sale_price: number;
@@ -55,6 +55,7 @@ interface Variation {
 
 const ProductDetail = ({ data }: { data: Product }) => {
   const productData = data;
+  const authStateData = useAppSelector((state) => state.auth);
 
   const [selectedAttributes, setSelectedAttributes] = useState<
     Record<string, string>
@@ -170,9 +171,9 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
     const attributesArray =
       selectedVariation?.attribute?.map((attr) => ({
-        id: attr.attribute_id, // Include attribute_id
-        name: attr.attribute_title,
-        value: attr.attribute_value,
+        attribute_id: attr.attribute_id,
+        attribute_title: attr.attribute_title,
+        attribute_value: attr.attribute_value,
       })) || [];
 
     console.log("attributesArray", attributesArray);
@@ -201,12 +202,24 @@ const ProductDetail = ({ data }: { data: Product }) => {
     };
 
     dispatch(addItemToCart(cartItem));
+
+    // Need to call add to cart api only when user is logged in
+    if (authStateData.status === "authenticated") {
+      // Call add to cart api
+      const cartItemToAdd = {
+        product_id: String(productData?.id),
+        product_qty: quantitySelected,
+        variation: attributesArray
+      };
+
+      console.log('for api call', cartItemToAdd)
+    }
   };
 
   const renderVariants = () => {
     if (
-      productData?.product_variations && 
-      productData?.product_variations.length === 1 ||
+      (productData?.product_variations &&
+        productData?.product_variations.length === 1) ||
       productData?.product_variations.length === 0
     ) {
       return null;
@@ -461,7 +474,9 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <span className="hidden sm:block mx-2.5">·</span>
               <div className="hidden sm:flex items-center text-sm">
                 <SparklesIcon className="w-3.5 h-3.5" />
-                <span className="ml-1 leading-none font-medium">{productData?.category}</span>
+                <span className="ml-1 leading-none font-medium">
+                  {productData?.category}
+                </span>
               </div>
             </div>
           </div>
@@ -542,7 +557,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
         <div className="py-12">
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
-              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
+              <Image
+                className="rounded-2xl"
+                src={image}
+                alt={title}
+                height={400}
+                width={600}
+              />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
               <h3 className="text-2xl font-semibold mb-5">{title}</h3>
@@ -572,7 +593,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <AccordionInfo data={faqs} />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
-              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
+              <Image
+                className="rounded-2xl"
+                src={image}
+                alt={title}
+                height={400}
+                width={600}
+              />
             </div>
           </div>
           {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
@@ -592,7 +619,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
         <div className="py-12 container">
           <div className="lg:flex">
             <div className="w-full lg:w-[50%] ">
-              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
+              <Image
+                className="rounded-2xl"
+                src={image}
+                alt={title}
+                height={400}
+                width={600}
+              />
             </div>
             <div className="w-full lg:w-[50%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
               <h3 className="text-2xl font-semibold mb-5">{title}</h3>
@@ -624,7 +657,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
               <AccordionInfo data={faqs} />
             </div>
             <div className="w-full lg:w-[50%] ">
-              <Image className="rounded-2xl" src={image} alt={title} height={400} width={600} />
+              <Image
+                className="rounded-2xl"
+                src={image}
+                alt={title}
+                height={400}
+                width={600}
+              />
             </div>
           </div>
           {/* <div dangerouslySetInnerHTML={{ __html: productData.details }} /> */}
@@ -720,7 +759,9 @@ const ProductDetail = ({ data }: { data: Product }) => {
       {renderDetailSection()}
       <div className="container">
         <Image
-          src={"https://hairrejuway.manageprojects.in/assets/images/products/ingredients.webp"}
+          src={
+            "https://hairrejuway.manageprojects.in/assets/images/products/ingredients.webp"
+          }
           alt={"banner"}
           width={1920}
           height={600}
@@ -742,7 +783,9 @@ const ProductDetail = ({ data }: { data: Product }) => {
       <div className="container">
         <Image
           className="rounded-2xl"
-          src={"https://hairrejuway.manageprojects.in/assets/images/products/combo-img.webp"}
+          src={
+            "https://hairrejuway.manageprojects.in/assets/images/products/combo-img.webp"
+          }
           alt={"banner"}
           width={1920}
           height={600}

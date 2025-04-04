@@ -27,13 +27,14 @@ export interface ProductVariant {
 }
 
 interface Attribute  {
+  attribute_id?: string,
   attribute_title: string,
   attribute_field_type: string,
   attribute_value: string
 }
 
 interface productDetails {
-  attribute_id: number;
+  variation_id: number;
   product_qty: string;
   price: number;
   sale_price: number;
