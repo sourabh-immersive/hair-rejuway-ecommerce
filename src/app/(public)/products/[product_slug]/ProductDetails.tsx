@@ -34,6 +34,13 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addItemToCart } from "@/lib/features/cart/cartSlice";
 import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import ReviewsSlider from "@/components/Reviews/reviews";
+import {
+  addItemLocally,
+  addToCartAsync2,
+  CartItem,
+  CartItemVariation,
+  LocalCartItem,
+} from "@/lib/features/cart/cartBSlice";
 
 export interface ProductDetailsItemsProps {
   data?: Product;
@@ -178,15 +185,76 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
     console.log("attributesArray", attributesArray);
 
-    const cartItem = {
-      id: String(productData?.id),
-      name: productData?.title || "Product",
-      thumbnail: productData?.feature_image || null,
-      price:
-        productType === "simple"
-          ? productData?.product_variations?.[0]?.price || 0
-          : selectedVariation?.price ?? 0,
-      salePrice:
+    // const cartItem = {
+    //   id: String(productData?.id),
+    //   name: productData?.title || "Product",
+    //   thumbnail: productData?.feature_image || null,
+    //   price:
+    //     productType === "simple"
+    //       ? productData?.product_variations?.[0]?.price || 0
+    //       : selectedVariation?.price ?? 0,
+    //   salePrice:
+    //     productType === "simple"
+    //       ? productData?.product_variations?.[0]?.sale_price !== undefined &&
+    //         productData?.product_variations?.[0]?.sale_price > 0
+    //         ? productData?.product_variations?.[0]?.sale_price
+    //         : productData?.product_variations?.[0]?.price ?? 0
+    //       : selectedVariation?.sale_price !== undefined &&
+    //         selectedVariation?.sale_price > 0
+    //       ? selectedVariation?.sale_price
+    //       : selectedVariation?.price ?? 0,
+    //   attributesData: productType === "simple" ? [] : attributesArray,
+    //   quantity: quantitySelected,
+    //   productType,
+    // };
+
+    // dispatch(addItemToCart(cartItem));
+
+    // // Need to call add to cart api only when user is logged in
+    // if (authStateData.status === "authenticated") {
+    //   // Call add to cart api
+    //   const cartItemToAdd = {
+    //     product_id: String(productData?.id),
+    //     product_qty: quantitySelected,
+    //     variation: attributesArray
+    //   };
+
+    //   console.log('for api call', cartItemToAdd)
+    // }
+
+    // New add to cart flow started
+
+    const resultAttributes = attributesArray.map((attribute) => ({
+      attribute_id: attribute.attribute_id || "",
+      attribute_title: attribute.attribute_title,
+      attribute_value: attribute.attribute_value,
+    }));
+
+
+    // Simple product attribute pass
+    const simpleProductAttributes = [
+      {
+        attribute_id: String(productData.product_variations[0].attribute[0].attribute_id),
+        attribute_title:
+          productData.product_variations[0].attribute[0].attribute_title,
+        attribute_value:
+          productData.product_variations[0].attribute[0].attribute_value,
+      },
+    ]
+
+    const cartData: CartItem[] = [
+      {
+        product_id: String(productData?.id),
+        product_qty: String(quantitySelected),
+        variation: productType === "simple" ? simpleProductAttributes : resultAttributes,
+      },
+    ];
+
+    const cartLocalData: LocalCartItem = {
+      product_id: String(productData?.id),
+      product_qty: String(1),
+      variation: productType === "simple" ? simpleProductAttributes : resultAttributes,
+      price: String(
         productType === "simple"
           ? productData?.product_variations?.[0]?.sale_price !== undefined &&
             productData?.product_variations?.[0]?.sale_price > 0
@@ -195,24 +263,36 @@ const ProductDetail = ({ data }: { data: Product }) => {
           : selectedVariation?.sale_price !== undefined &&
             selectedVariation?.sale_price > 0
           ? selectedVariation?.sale_price
-          : selectedVariation?.price ?? 0,
-      attributesData: productType === "simple" ? [] : attributesArray,
+          : selectedVariation?.price ?? 0
+      ),
+      prices: {
+        regular_price:
+          productType === "simple"
+            ? productData?.product_variations?.[0]?.price || 0
+            : selectedVariation?.price ?? 0,
+        sale_price:
+          productType === "simple"
+            ? productData?.product_variations?.[0]?.sale_price !== undefined &&
+              productData?.product_variations?.[0]?.sale_price > 0
+              ? productData?.product_variations?.[0]?.sale_price
+              : productData?.product_variations?.[0]?.price ?? 0
+            : selectedVariation?.sale_price !== undefined &&
+              selectedVariation?.sale_price > 0
+            ? selectedVariation?.sale_price
+            : selectedVariation?.price ?? 0,
+      },
+      name: productData?.title || "Product",
+      product_image: productData?.feature_image,
+      key: Math.random(),
       quantity: quantitySelected,
-      productType,
     };
 
-    dispatch(addItemToCart(cartItem));
-
-    // Need to call add to cart api only when user is logged in
     if (authStateData.status === "authenticated") {
-      // Call add to cart api
-      const cartItemToAdd = {
-        product_id: String(productData?.id),
-        product_qty: quantitySelected,
-        variation: attributesArray
-      };
-
-      console.log('for api call', cartItemToAdd)
+      console.log("cartData when authenticated", cartData);
+      dispatch(addToCartAsync2(cartData));
+    } else {
+      console.log("cartData when not authenticated", cartLocalData);
+      dispatch(addItemLocally(cartLocalData));
     }
   };
 

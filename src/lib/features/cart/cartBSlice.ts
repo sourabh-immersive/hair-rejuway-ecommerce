@@ -107,6 +107,7 @@ export const addToCartAsync2 = createAsyncThunk(
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("resposnse when addto cartt api simple item", response.data);
         return response.data.data;
       } else {
         return { items: cartData };

@@ -223,6 +223,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     };
 
     if (authStateData.status === "authenticated") {
+      console.log("cartData product card", cartData);
       dispatch(addToCartAsync2(cartData));
     } else {
       dispatch(addItemLocally(cartLocalData));
