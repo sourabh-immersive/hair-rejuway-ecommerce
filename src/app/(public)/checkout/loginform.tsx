@@ -3,20 +3,18 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import googleSvg from "@/images/Google.svg";
-import {
-  doCredentialLogin,
-  doSocialLogin,
-  getSessionData,
-} from "../server-actions/actions";
 import { useRouter } from "next/navigation";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import { useAppDispatch } from "@/lib/hooks";
-import {
-  initializeSession,
-} from "@/lib/features/authSlice/authSlice";
+import { initializeSession } from "@/lib/features/authSlice/authSlice";
 import { object, string, z } from "zod";
 import Logo from "@/shared/Logo/Logo";
+import {
+  doCredentialLogin,
+  doSocialLogin,
+  getSessionData,
+} from "@/app/server-actions/actions";
 
 const signInSchema = z.object({
   email: z
@@ -118,7 +116,7 @@ const LoginForm = () => {
           dispatch(initializeSession(null));
         }
 
-        router.push("/");
+        // router.push("/");
       }
     } catch (e) {
       console.error(e);
@@ -133,17 +131,14 @@ const LoginForm = () => {
 
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
-      <div className="container my-10 lg:my-12">
-        <div className="mx-auto text-center mb-4">
-          <Logo />
-        </div>
+      <div className="container border border-gray-200 p-6 rounded-lg mb-6">
         <h2 className="mb-8 flex items-center text-2xl leading-[115%] md:text-2xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Sign in to Your Account
         </h2>
-        <div className="max-w-md mx-auto space-y-6">
+        <div className="space-y-6">
           {/* FORM */}
 
-          <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4">
+          <form onSubmit={onSubmit} className="grid grid-cols-3 gap-4">
             <input
               name="email"
               type="email"
@@ -166,53 +161,47 @@ const LoginForm = () => {
             {serverError && <p className="error text-red-600">{serverError}</p>}
           </form>
 
-          {/* OR */}
-          <div className="relative text-center">
-            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
-              OR
+          <div className="flex justify-between items-center mt-4">
+            {/* ==== */}
+            <span className="block text-center text-neutral-700 dark:text-neutral-300">
+              New user? {` `}
+              <Link
+                className="text-green-600 mr-2"
+                href="/register"
+                prefetch={true}
+              >
+                Create an account
+              </Link>
+              Lost password? {` `}
+              <Link className="text-green-600" href="/forgot" prefetch={true}>
+                Forgot password
+              </Link>
             </span>
-            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
+
+            <div className="grid gap-3">
+              <form action={googleLoginHandler}>
+                {loginSocials.map((item, index) => (
+                  <button
+                    key={index}
+                    type="submit"
+                    name="action"
+                    value={item.value}
+                    className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                  >
+                    <Image
+                      className="flex-shrink-0 mr-4"
+                      src={item.icon}
+                      alt={item.name}
+                      sizes="50px"
+                    />
+                    <h3 className="flex-grow text-center text-base font-medium text-neutral-700 dark:text-neutral-300">
+                      {item.name}
+                    </h3>
+                  </button>
+                ))}
+              </form>
+            </div>
           </div>
-
-          <div className="grid gap-3">
-            <form action={googleLoginHandler}>
-              {loginSocials.map((item, index) => (
-                <button
-                  key={index}
-                  type="submit"
-                  name="action"
-                  value={item.value}
-                  className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-                >
-                  <Image
-                    className="flex-shrink-0"
-                    src={item.icon}
-                    alt={item.name}
-                    sizes="40px"
-                  />
-                  <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
-                    {item.name}
-                  </h3>
-                </button>
-              ))}
-            </form>
-          </div>
-
-          {/* ==== */}
-          <span className="block text-center text-neutral-700 dark:text-neutral-300">
-            New user? {` `}
-            <Link className="text-green-600" href="/register" prefetch={true}>
-              Create an account
-            </Link>
-          </span>
-
-          {/* ==== */}
-          <span className="block text-center text-neutral-700 dark:text-neutral-300">
-            Lost password? {` `}
-            <Link className="text-green-600" href="/forgot" prefetch={true}>
-              Forgot password
-            </Link>
-          </span>
         </div>
       </div>
     </div>

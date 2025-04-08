@@ -8,13 +8,19 @@ interface ContactInfoProps {
   error?: string;
 }
 
-const ContactInfo: React.FC<ContactInfoProps> = ({ contact, onChange, error }) => (
-  <section className="space-y-2">
-    <h3 className="text-lg font-semibold">Contact Information</h3>
-    <Label>Email or Phone Number</Label>
-    <Input value={contact} onChange={onChange} />
-    {error && <p className="text-sm text-red-600">{error}</p>}
-  </section>
+const ContactInfo: React.FC<ContactInfoProps> = ({
+  contact,
+  onChange,
+  error,
+}) => (
+  <>
+    <section className="space-y-2">
+      <h3 className="text-lg font-semibold">Contact Information</h3>
+      {/* <Label>Email or Phone Number</Label> */}
+      <Input value={contact} onChange={onChange} placeholder="Email or Phone Number"/>
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </section>
+  </>
 );
 
 export default ContactInfo;

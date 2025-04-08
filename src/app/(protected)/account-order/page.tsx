@@ -6,6 +6,7 @@ import Prices from "@/components/Prices";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import { getOrderDetails, getOrders } from "@/api/protected";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface OrderItem {
   id: number;
@@ -220,12 +221,16 @@ const AccountOrder: React.FC = () => {
         {isExpanded && details && (
           <div className="border-t border-slate-200 dark:border-slate-700 p-2 sm:p-8">
             <div className="mt-0">
-              <h3 className="text-2xl font-semibold mb-6 pb-6 border-b border-gray-200">Order Details</h3>
+              <h3 className="text-2xl font-semibold mb-6 pb-6 border-b border-gray-200">
+                Order Details
+              </h3>
               <div className="divide-y divide-slate-200 dark:divide-slate-700 mt-2">
                 {details.data.ordered_products.items.map(renderProductItem)}
               </div>
               <div className="mt-10">
-                <h4 className="text-2xl font-semibold mb-6 pb-6 border-b border-gray-200">Shipping Information</h4>
+                <h4 className="text-2xl font-semibold mb-6 pb-6 border-b border-gray-200">
+                  Shipping Information
+                </h4>
                 <p>{details.data.shipping_name}</p>
                 <p>{details.data.shipping_address}</p>
                 <p>
@@ -251,7 +256,22 @@ const AccountOrder: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="container py-10">Loading...</div>;
+    return (
+      <>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key="loader"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="p-28 bg-white flex items-center justify-center z-50"
+          >
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </motion.div>
+        </AnimatePresence>
+      </>
+    );
   }
 
   if (error) {
@@ -264,9 +284,7 @@ const AccountOrder: React.FC = () => {
       {orders.length === 0 ? (
         <p>No orders found.</p>
       ) : (
-        <>
-          {orders.map(renderOrder)}
-        </>
+        <>{orders.map(renderOrder)}</>
       )}
     </div>
   );
