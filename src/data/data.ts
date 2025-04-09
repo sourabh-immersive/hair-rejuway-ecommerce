@@ -60,6 +60,7 @@ export interface Product {
   title: string;
   price: number;
   slug: string;
+  type?: string;
   details: string;
   short_description?: string;
   attributes?: AttributeOptions[];

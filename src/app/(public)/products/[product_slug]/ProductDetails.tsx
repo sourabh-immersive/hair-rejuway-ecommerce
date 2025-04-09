@@ -224,7 +224,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
     // New add to cart flow started
 
-    const resultAttributes = attributesArray.map((attribute) => ({
+ 
+    const resultAttributes = productData.type === "kit" ? [] : attributesArray.map((attribute) => ({
       attribute_id: attribute.attribute_id || "",
       attribute_title: attribute.attribute_title,
       attribute_value: attribute.attribute_value,
@@ -232,7 +233,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
 
     // Simple product attribute pass
-    const simpleProductAttributes = [
+    const simpleProductAttributes = productData.type === "kit" ? [] : [
       {
         attribute_id: String(productData.product_variations[0].attribute[0].attribute_id),
         attribute_title:
@@ -241,19 +242,20 @@ const ProductDetail = ({ data }: { data: Product }) => {
           productData.product_variations[0].attribute[0].attribute_value,
       },
     ]
+  
 
     const cartData: CartItem[] = [
       {
         product_id: String(productData?.id),
         product_qty: String(quantitySelected),
-        variation: productType === "simple" ? simpleProductAttributes : resultAttributes,
+        variation: productData.type === "kit" ? [] : productType === "simple" ? simpleProductAttributes : resultAttributes,
       },
     ];
 
     const cartLocalData: LocalCartItem = {
       product_id: String(productData?.id),
-      product_qty: String(1),
-      variation: productType === "simple" ? simpleProductAttributes : resultAttributes,
+      product_qty: String(quantitySelected),
+      variation: productData.type === "kit" ? [] : productType === "simple" ? simpleProductAttributes : resultAttributes,
       price: String(
         productType === "simple"
           ? productData?.product_variations?.[0]?.sale_price !== undefined &&

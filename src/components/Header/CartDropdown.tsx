@@ -291,7 +291,7 @@ export default function CartDropdown() {
                                 </div>
                               </div>
                               <div className="flex flex-1 items-end justify-between text-sm">
-                                <p className="text-gray-500 dark:text-slate-400">{`Qty ${item.quantity}`}</p>
+                                <p className="text-gray-500 dark:text-slate-400">{`Qty ${userStatus === 'authenticated' ? item.quantity : item.product_qty}`}</p>
 
                                 <div className="flex">
                                   <button

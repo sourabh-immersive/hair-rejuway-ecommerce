@@ -55,6 +55,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     product_variations,
     attributes,
     slug,
+    type,
     sizes,
     variants,
     variantType,
@@ -187,7 +188,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       {
         product_id: String(id),
         product_qty: String(1),
-        variation: [
+        variation: type === "kit" ? [] : [
           {
             attribute_id: product_variations[0].attribute[0].attribute_id || "",
             attribute_title: product_variations[0].attribute[0].attribute_title,
@@ -200,7 +201,7 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
     const cartLocalData: LocalCartItem = {
       product_id: String(id),
       product_qty: String(1),
-      variation: [
+      variation: type === "kit" ? [] : [
         {
           attribute_id: product_variations[0].attribute[0].attribute_id || "",
           attribute_title: product_variations[0].attribute[0].attribute_title,
