@@ -188,26 +188,38 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       {
         product_id: String(id),
         product_qty: String(1),
-        variation: type === "kit" ? [] : [
-          {
-            attribute_id: product_variations[0].attribute[0].attribute_id || "",
-            attribute_title: product_variations[0].attribute[0].attribute_title,
-            attribute_value: product_variations[0].attribute[0].attribute_value,
-          },
-        ],
+        variation:
+          type === "kit"
+            ? []
+            : [
+                {
+                  attribute_id:
+                    product_variations[0].attribute[0].attribute_id || "",
+                  attribute_title:
+                    product_variations[0].attribute[0].attribute_title,
+                  attribute_value:
+                    product_variations[0].attribute[0].attribute_value,
+                },
+              ],
       },
     ];
 
     const cartLocalData: LocalCartItem = {
       product_id: String(id),
       product_qty: String(1),
-      variation: type === "kit" ? [] : [
-        {
-          attribute_id: product_variations[0].attribute[0].attribute_id || "",
-          attribute_title: product_variations[0].attribute[0].attribute_title,
-          attribute_value: product_variations[0].attribute[0].attribute_value,
-        },
-      ],
+      variation:
+        type === "kit"
+          ? []
+          : [
+              {
+                attribute_id:
+                  product_variations[0].attribute[0].attribute_id || "",
+                attribute_title:
+                  product_variations[0].attribute[0].attribute_title,
+                attribute_value:
+                  product_variations[0].attribute[0].attribute_value,
+              },
+            ],
       price: String(
         product_variations[0].sale_price
           ? product_variations[0].sale_price
@@ -476,11 +488,12 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             />
           </Link>
           <ProductStatus status={status} />
-          <LikeButton
-            liked={isLiked}
-            data={wishlistData}
+          {/* <LikeButton
+            // liked={isLiked}
+            // data={wishlistData}
+            productId={String(id)}
             className="absolute top-3 end-3 z-10"
-          />
+          /> */}
           {/* {product_variations.length === 1
             ? renderGroupButtons()
             : renderGroupVariationButtons()} */}
@@ -513,15 +526,27 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
               priceRange={getPrice()}
               className="mt-0.5"
             />
-            <ButtonPrimary
-              className=""
-              fontSize="text-xs"
-              sizeClass="py-2 px-4"
-              onClick={() => notifyAddTocart({ attribute_id: "XL" })}
-            >
-              <BagIcon className="w-3.5 h-3.5 mb-0.5" />
-              <span className="ms-1">Add to bag</span>
-            </ButtonPrimary>
+            {productType === "variable" ? (
+              <Link href={`/products/${slug}`} className="block">
+                <ButtonPrimary
+                  className=""
+                  fontSize="text-xs"
+                  sizeClass="py-2 px-4"
+                >
+                  <span>View Product</span>
+                </ButtonPrimary>
+              </Link>
+            ) : (
+              <ButtonPrimary
+                className=""
+                fontSize="text-xs"
+                sizeClass="py-2 px-4"
+                onClick={() => notifyAddTocart({ attribute_id: "XL" })}
+              >
+                <BagIcon className="w-3.5 h-3.5 mb-0.5" />
+                <span className="ms-1">Add to Bag</span>
+              </ButtonPrimary>
+            )}
           </div>
         </div>
       </div>

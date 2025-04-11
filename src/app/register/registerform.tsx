@@ -44,6 +44,27 @@ interface RegValues {
   password: string;
 }
 
+const loginSocials = [
+  // {
+  //   name: "Continue with Facebook",
+  //   href: "#",
+  //   icon: facebookSvg,
+  //   value: "facebook"
+  // },
+  // {
+  //   name: "Continue with Twitter",
+  //   href: "#",
+  //   icon: twitterSvg,
+  //   value: "twitter"
+  // },
+  {
+    name: "Continue with Google",
+    href: "#",
+    icon: googleSvg,
+    value: "google",
+  },
+];
+
 const RegisterForm = () => {
   const router = useRouter();
   const [error, setError] = useState<Record<string, string[]>>({});
@@ -241,22 +262,26 @@ const RegisterForm = () => {
           </div>
 
           <div className="grid gap-3">
-            <form onSubmit={googleLoginHandler}>
-              <button
-                type="submit"
-                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform hover:translate-y-[-2px]"
-              >
-                <Image
-                  className="flex-shrink-0"
-                  src={googleSvg}
-                  alt="Continue with Google"
-                  width={20}
-                  height={20}
-                />
-                <span className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                  Continue with Google
-                </span>
-              </button>
+            <form action={googleLoginHandler}>
+              {loginSocials.map((item, index) => (
+                <button
+                  key={index}
+                  type="submit"
+                  name="action"
+                  value={item.value}
+                  className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
+                >
+                  <Image
+                    className="flex-shrink-0"
+                    src={item.icon}
+                    alt={item.name}
+                    sizes="40px"
+                  />
+                  <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
+                    {item.name}
+                  </h3>
+                </button>
+              ))}
             </form>
           </div>
 

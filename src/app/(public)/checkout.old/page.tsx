@@ -93,7 +93,7 @@ const CheckoutPage = () => {
       userStatus === "authenticated" ? userCart?.items : cartData.localItems;
     const totalItems =
       userStatus === "authenticated"
-        ? userCart?.totals?.total_items
+        ? userCart?.totals.total_items
         : cartData.localTotalItems;
     const totalPrice =
       userStatus === "authenticated"
@@ -555,7 +555,7 @@ const CheckoutPage = () => {
             <div className="w-full lg:w-[36%]">
               <h3 className="text-lg font-semibold">Order summary</h3>
               <div className="mt-8 divide-y divide-slate-200/70">
-                {items && items.map((item, index) => renderProduct(item, index))}
+                {items && items.map((item: any, index: any) => renderProduct(item, index))}
               </div>
               <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700">
                 <div>

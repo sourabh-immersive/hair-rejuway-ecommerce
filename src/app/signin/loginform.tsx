@@ -128,7 +128,7 @@ const LoginForm = () => {
 
   const googleLoginHandler = async (formData: any) => {
     const googleLoginData = await doSocialLogin(formData);
-    // console.log("googleLoginData", googleLoginData);
+    console.log("googleLoginData", googleLoginData);
   };
 
   return (

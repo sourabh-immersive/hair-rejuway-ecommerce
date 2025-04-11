@@ -5,6 +5,7 @@ import { getSessionData } from "./server-actions/actions";
 import { initializeSession } from "@/lib/features/authSlice/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { syncCartWithServer } from "@/lib/features/cart/cartBSlice";
+import { syncWishlistWithServer } from "@/lib/features/wishlist/wishlistSlice";
 
 interface Props {
   readonly children: React.ReactNode;
@@ -17,6 +18,7 @@ export const RefreshSession = ({ children }: Props) => {
   useEffect(() => {
     if (auth.status === "authenticated") {
       dispatch(syncCartWithServer());
+      // dispatch(syncWishlistWithServer());
     }
   }, [auth, dispatch]);
 

@@ -181,6 +181,7 @@ export const getWishlist = async (token: string) => {
 };
 
 export const updateProfile = async (token: string, formData: FormData) => {
+  console.log('formData 22222', formData)
   try {
     const response = await apiClient.post(`/user/profile/update`, formData, {
       headers: {

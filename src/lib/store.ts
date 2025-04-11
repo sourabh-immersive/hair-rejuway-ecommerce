@@ -4,7 +4,7 @@ import { cartSlice } from "./features/cart/cartSlice";
 import cartAReducer from "./features/cart/cartASlice";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
-import { wishlistSlice } from "./features/wishlist/wishlistSlice";
+import wishlistSlice from "./features/wishlist/wishlistSlice";
 import authSlice from "./features/authSlice/authSlice";
 import cartBSlice from "./features/cart/cartBSlice";
 
@@ -34,7 +34,7 @@ const persistConfig = {
 
 // Root reducer
 const rootReducer = combineReducers({
-  wishlist: wishlistSlice.reducer,
+  wishlist: wishlistSlice,
   cart: cartSlice.reducer,
   auth: authSlice.reducer,
   cartA: cartAReducer,

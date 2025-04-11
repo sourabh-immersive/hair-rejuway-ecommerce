@@ -122,7 +122,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             <div className="m-auto md:m-0">
               <ul className="list-none flex space-x-4 ">
                 <li><Link href={'/about-us'} prefetch={true}>About Us</Link></li>
-                <li><Link href={'/wishlist'} prefetch={true}>Wishlist</Link></li>
+                {/* <li><Link href={'/wishlist'} prefetch={true}>Wishlist</Link></li> */}
                 {authStateData.status === "authenticated" ? (
                   <li>
                     <Link href={"/account"}>My Account</Link>

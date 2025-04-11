@@ -13,10 +13,10 @@ const pages: {
     name: "Account info",
     link: "/account",
   },
-  {
-    name: "Save lists",
-    link: "/account-savelists",
-  },
+  // {
+  //   name: "Save lists",
+  //   link: "/account-savelists",
+  // },
   {
     name: "My order",
     link: "/account-order",

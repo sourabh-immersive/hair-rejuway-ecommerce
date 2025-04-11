@@ -53,28 +53,10 @@ const CartPage = () => {
       : cartData.localTotalItems;
   const totalPrice =
     userStatus === "authenticated"
-      ? userCart?.totals.total_price
+      ? userCart?.totals.total_discount
       : cartData.localTotalPrice;
 
   // console.log("items", items);
-
-  const renderStatusSoldout = () => {
-    return (
-      <div className="rounded-full flex items-center justify-center px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-        <NoSymbolIcon className="w-3.5 h-3.5" />
-        <span className="ml-1 leading-none">Sold Out</span>
-      </div>
-    );
-  };
-
-  const renderStatusInstock = () => {
-    return (
-      <div className="rounded-full flex items-center justify-center px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-        <CheckIcon className="w-3.5 h-3.5" />
-        <span className="ml-1 leading-none">In Stock</span>
-      </div>
-    );
-  };
 
   const renderProduct = (item: LocalCartItem | CartItem, index: number) => {
     const { product_image, prices, name, key, product_id, variation, quantity } = item;
@@ -206,7 +188,7 @@ const CartPage = () => {
 
         <div className="flex flex-col lg:flex-row">
           <div className="w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-200 dark:divide-slate-700 ">
-            {items && items.map((item, index) => renderProduct(item, index))}
+            {items && items.map((item: any, index: any) => renderProduct(item, index))}
           </div>
           <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0"></div>
           <div className="flex-1">

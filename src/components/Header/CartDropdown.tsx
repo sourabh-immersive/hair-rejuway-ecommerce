@@ -233,7 +233,7 @@ export default function CartDropdown() {
                           <p>No items available</p>
                         </div>
                       ) : (
-                        items.map((item, index) => (
+                        items.map((item: any, index: any) => (
                           <div key={index} className="flex py-5 last:pb-0">
                             <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
                               {item.product_image && (
@@ -266,7 +266,7 @@ export default function CartDropdown() {
                                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                       {Array.isArray(item.variation) && (
                                         <>
-                                          {item.variation.map((att, i) => (
+                                          {item.variation.map((att: any, i: any) => (
                                             <>
                                               <p>
                                                 <span>
