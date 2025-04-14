@@ -64,7 +64,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
     ""
   );
 
-  // console.log("selectedVariation", selectedVariation);
+  console.log("selectedVariation", selectedVariation);
 
   useEffect(() => {
     if (productData?.feature_image) {
@@ -94,6 +94,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
         });
       }
     );
+
+    console.log("matchingVariation", matchingVariation);
 
     setSelectedVariation(matchingVariation || null);
   }, [selectedAttributes]);
@@ -498,24 +500,22 @@ const ProductDetail = ({ data }: { data: Product }) => {
                 <>
                   <div className="grid grid-cols-2 sm:grid-cols-4 overflow-x-auto gap-3 relative">
                     {productData.ingredient.map((s, i) => (
-                      <>
-                        <div
-                          key={i}
-                          className={`flex flex-col items-center p-5 pb-0 rounded-2xl dark:bg-opacity-90`}
-                        >
-                          <Image
-                            src={s.image}
-                            width={60}
-                            height={60}
-                            alt={s.title}
-                          />
-                          <div className="mt-2.5">
-                            <p className="text-xs text-center font-semibold text-slate-900">
-                              {s.title}
-                            </p>
-                          </div>
+                      <div
+                        key={i}
+                        className={`flex flex-col items-center p-5 pb-0 rounded-2xl dark:bg-opacity-90`}
+                      >
+                        <Image
+                          src={s.image}
+                          width={60}
+                          height={60}
+                          alt={s.title}
+                        />
+                        <div className="mt-2.5">
+                          <p className="text-xs text-center font-semibold text-slate-900">
+                            {s.title}
+                          </p>
                         </div>
-                      </>
+                      </div>
                     ))}
                   </div>
                 </>
@@ -582,6 +582,13 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
         {/* ---------- 3 VARIANTS AND SIZE LIST ----------  */}
         <div className="">{renderVariants()}</div>
+        {productType === "variable" && productData?.attributes &&
+          Object.keys(selectedAttributes).length ===
+            productData.attributes.length &&
+          selectedVariation === null && (
+            <p className="text-red-600 text-base font-medium">Out of stock</p>
+          )}
+
         {/* <div className="">{renderSizeList()}</div> */}
 
         {/*  ---------- 4  QTY AND ADD TO CART BUTTON */}

@@ -92,7 +92,7 @@ export default function AvatarDropdown() {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute z-10 w-screen max-w-[260px] px-4 mt-3.5 -right-10 sm:right-0 sm:px-0">
+              <Popover.Panel className="absolute z-10 w-screen max-w-[300px] px-4 mt-3.5 -right-10 sm:right-0 sm:px-0">
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
                     <div className="flex items-center space-x-3">
@@ -194,7 +194,7 @@ export default function AvatarDropdown() {
                     </Link>
 
                     {/* ------------------ 2 --------------------- */}
-                    <Link
+                    {/* <Link
                       href={"/account-savelists"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
@@ -218,7 +218,7 @@ export default function AvatarDropdown() {
                       <div className="ml-4">
                         <p className="text-sm font-medium ">{"Wishlist"}</p>
                       </div>
-                    </Link>
+                    </Link> */}
 
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
 

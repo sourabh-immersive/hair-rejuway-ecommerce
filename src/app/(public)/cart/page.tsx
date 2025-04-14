@@ -221,7 +221,7 @@ const CartPage = () => {
               <ButtonPrimary href="/checkout" className="mt-8 w-full">
                 Checkout
               </ButtonPrimary>
-              <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
+              {/* <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
                 <p className="block relative pl-5">
                   <svg
                     className="w-4 h-4 absolute -left-1 top-0.5"
@@ -272,7 +272,7 @@ const CartPage = () => {
                   </a>
                   {` `} infomation
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
