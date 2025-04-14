@@ -3,7 +3,7 @@
 import { getProductsByCatSlug, getProductsByIds } from "@/api/products";
 import { getWishlist } from "@/api/protected";
 import ProductCard from "@/components/ProductCard";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product } from "@/data/data";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
