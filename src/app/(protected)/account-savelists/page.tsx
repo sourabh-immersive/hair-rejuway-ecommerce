@@ -4,7 +4,7 @@ import { getProductsByIds } from "@/api/products";
 import { getWishlist } from "@/api/protected";
 import Prices from "@/components/Prices";
 import ProductCard from "@/components/ProductCard";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product } from "@/data/data";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
