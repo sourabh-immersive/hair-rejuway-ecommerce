@@ -542,11 +542,11 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
       </div>
 
       {/* QUICKVIEW */}
-      <ModalQuickView
+      {/* <ModalQuickView
         show={showModalQuickView}
         content={modalContent}
         onCloseModalQuickView={() => setShowModalQuickView(false)}
-      />
+      /> */}
     </>
   );
 };
