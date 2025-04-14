@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Transition } from "@/app/headlessui";
 import Prices from "@/components/Prices";
-import { PRODUCTS } from "@/data/data";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 interface Props {
   show: boolean;
@@ -25,7 +25,6 @@ const NotifyAddTocart: FC<Props> = ({
   price,
   salePrice,
 }) => {
-
   const renderProductCartOnNotify = () => {
     return (
       <div className="flex ">
@@ -52,23 +51,21 @@ const NotifyAddTocart: FC<Props> = ({
                   <span>{sizeSelected || "XL"}</span>
                 </p> */}
               </div>
-              <Prices
-                price={price}
-                salePrice={salePrice}
-                className="mt-0.5"
-              />
+              <Prices price={price} salePrice={salePrice} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
             <p className="text-gray-500 dark:text-slate-400">{`Qty ${quantitySelected}`}</p>
 
             <div className="flex">
-              <button
-                type="button"
-                className="font-medium text-primary-6000 dark:text-primary-500 "
-              >
-                View cart
-              </button>
+              <Link href={"/cart"}>
+                <button
+                  type="button"
+                  className="font-medium text-primary-6000 dark:text-primary-500 "
+                >
+                  View cart
+                </button>
+              </Link>
             </div>
           </div>
         </div>

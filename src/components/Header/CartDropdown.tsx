@@ -2,7 +2,7 @@
 
 import { Popover, Transition } from "@/app/headlessui";
 import Prices from "@/components/Prices";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product } from "@/data/data";
 import { Fragment } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
@@ -266,9 +266,9 @@ export default function CartDropdown() {
                                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                       {Array.isArray(item.variation) && (
                                         <>
-                                          {item.variation.map((att: any, i: any) => (
-                                            <>
-                                              <p>
+                                          {item.variation.map(
+                                            (att: any, i: any) => (
+                                              <p key={i}>
                                                 <span>
                                                   {att.attribute_title}
                                                 </span>
@@ -277,8 +277,8 @@ export default function CartDropdown() {
                                                   {att.attribute_value}
                                                 </span>
                                               </p>
-                                            </>
-                                          ))}
+                                            )
+                                          )}
                                         </>
                                       )}
                                     </p>
@@ -291,7 +291,11 @@ export default function CartDropdown() {
                                 </div>
                               </div>
                               <div className="flex flex-1 items-end justify-between text-sm">
-                                <p className="text-gray-500 dark:text-slate-400">{`Qty ${userStatus === 'authenticated' ? item.quantity : item.product_qty}`}</p>
+                                <p className="text-gray-500 dark:text-slate-400">{`Qty ${
+                                  userStatus === "authenticated"
+                                    ? item.quantity
+                                    : item.product_qty
+                                }`}</p>
 
                                 <div className="flex">
                                   <button
@@ -301,14 +305,19 @@ export default function CartDropdown() {
                                     onClick={() => {
                                       if (userStatus === "authenticated") {
                                         dispatch(
-                                          removeFromCartAsync(
-                                            item.key || 0
-                                          )
+                                          removeFromCartAsync(item.key || 0)
                                         );
                                         dispatch(syncCartWithServer());
                                       } else {
-                                        console.log("remove locally", item.product_id);
-                                        dispatch(removeItemLocally(Number(item.product_id)));
+                                        console.log(
+                                          "remove locally",
+                                          item.product_id
+                                        );
+                                        dispatch(
+                                          removeItemLocally(
+                                            Number(item.product_id)
+                                          )
+                                        );
                                       }
                                     }}
                                   >

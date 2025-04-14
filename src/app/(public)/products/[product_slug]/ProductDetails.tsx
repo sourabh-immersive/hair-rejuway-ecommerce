@@ -2,37 +2,19 @@
 
 import React, { FC, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
-import LikeButton from "@/components/LikeButton";
 import { StarIcon } from "@heroicons/react/24/solid";
 import BagIcon from "@/components/BagIcon";
 import NcInputNumber from "@/components/NcInputNumber";
-import { Product, PRODUCTS } from "@/data/data";
-import {
-  NoSymbolIcon,
-  ClockIcon,
-  SparklesIcon,
-} from "@heroicons/react/24/outline";
-import IconDiscount from "@/components/IconDiscount";
+import { Product } from "@/data/data";
+import { SparklesIcon } from "@heroicons/react/24/outline";
 import Prices from "@/components/Prices";
 import toast from "react-hot-toast";
-import SectionSliderProductCard from "@/components/SectionSliderProductCard";
-import detail1JPG from "@/images/products/detail1.jpg";
-import detail2JPG from "@/images/products/detail2.jpg";
-import detail3JPG from "@/images/products/detail3.jpg";
 import Policy from "./Policy";
-import ReviewItem from "@/components/ReviewItem";
-import ButtonSecondary from "@/shared/Button/ButtonSecondary";
-import SectionPromo2 from "@/components/SectionPromo2";
 import ModalViewAllReviews from "./ModalViewAllReviews";
 import NotifyAddTocart from "@/components/NotifyAddTocart";
 import Image, { StaticImageData } from "next/image";
 import AccordionInfo from "@/components/AccordionInfo";
-import { getProductBySlug } from "@/api/products";
-import { usePathname } from "next/navigation";
-import SectionGridFeatureItems from "@/components/SectionGridFeatureItems";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addItemToCart } from "@/lib/features/cart/cartSlice";
-import SectionClientSay from "@/components/SectionClientSay/SectionClientSay";
 import ReviewsSlider from "@/components/Reviews/reviews";
 import {
   addItemLocally,
@@ -41,6 +23,8 @@ import {
   CartItemVariation,
   LocalCartItem,
 } from "@/lib/features/cart/cartBSlice";
+import { getProducts } from "@/api/products";
+import ProductSliders from "@/components/ProductSliders";
 
 export interface ProductDetailsItemsProps {
   data?: Product;
@@ -70,6 +54,8 @@ const ProductDetail = ({ data }: { data: Product }) => {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   );
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+
   const dispatch = useAppDispatch();
   const productType =
     productData?.product_variations?.length === 1 ? "simple" : "variable";
@@ -78,12 +64,24 @@ const ProductDetail = ({ data }: { data: Product }) => {
     ""
   );
 
-  console.log("selectedVariation", selectedVariation);
+  // console.log("selectedVariation", selectedVariation);
 
   useEffect(() => {
     if (productData?.feature_image) {
       setSelectedImage(productData?.feature_image);
     }
+
+    async function fetchRelatedProduct() {
+      const fetchedProducts = await getProducts({
+        product_type: "Hair",
+        paginate: 10,
+      });
+
+      setRelatedProducts(fetchedProducts.data);
+      // console.log("fetchedProducts related", relatedProducts);
+    }
+
+    fetchRelatedProduct();
   }, [productData]);
 
   useEffect(() => {
@@ -183,7 +181,7 @@ const ProductDetail = ({ data }: { data: Product }) => {
         attribute_value: attr.attribute_value,
       })) || [];
 
-    console.log("attributesArray", attributesArray);
+    // console.log("attributesArray", attributesArray);
 
     // const cartItem = {
     //   id: String(productData?.id),
@@ -224,38 +222,53 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
     // New add to cart flow started
 
- 
-    const resultAttributes = productData.type === "kit" ? [] : attributesArray.map((attribute) => ({
-      attribute_id: attribute.attribute_id || "",
-      attribute_title: attribute.attribute_title,
-      attribute_value: attribute.attribute_value,
-    }));
-
+    const resultAttributes =
+      productData.type === "kit"
+        ? []
+        : attributesArray.map((attribute) => ({
+            attribute_id: attribute.attribute_id || "",
+            attribute_title: attribute.attribute_title,
+            attribute_value: attribute.attribute_value,
+          }));
 
     // Simple product attribute pass
-    const simpleProductAttributes = productData.type === "kit" ? [] : [
-      {
-        attribute_id: String(productData.product_variations[0].attribute[0].attribute_id),
-        attribute_title:
-          productData.product_variations[0].attribute[0].attribute_title,
-        attribute_value:
-          productData.product_variations[0].attribute[0].attribute_value,
-      },
-    ]
-  
+    const simpleProductAttributes =
+      productData.type === "kit"
+        ? []
+        : [
+            {
+              attribute_id: String(
+                productData.product_variations[0].attribute[0].attribute_id
+              ),
+              attribute_title:
+                productData.product_variations[0].attribute[0].attribute_title,
+              attribute_value:
+                productData.product_variations[0].attribute[0].attribute_value,
+            },
+          ];
 
     const cartData: CartItem[] = [
       {
         product_id: String(productData?.id),
         product_qty: String(quantitySelected),
-        variation: productData.type === "kit" ? [] : productType === "simple" ? simpleProductAttributes : resultAttributes,
+        variation:
+          productData.type === "kit"
+            ? []
+            : productType === "simple"
+            ? simpleProductAttributes
+            : resultAttributes,
       },
     ];
 
     const cartLocalData: LocalCartItem = {
       product_id: String(productData?.id),
       product_qty: String(quantitySelected),
-      variation: productData.type === "kit" ? [] : productType === "simple" ? simpleProductAttributes : resultAttributes,
+      variation:
+        productData.type === "kit"
+          ? []
+          : productType === "simple"
+          ? simpleProductAttributes
+          : resultAttributes,
       price: String(
         productType === "simple"
           ? productData?.product_variations?.[0]?.sale_price !== undefined &&
@@ -290,10 +303,10 @@ const ProductDetail = ({ data }: { data: Product }) => {
     };
 
     if (authStateData.status === "authenticated") {
-      console.log("cartData when authenticated", cartData);
+      // console.log("cartData when authenticated", cartData);
       dispatch(addToCartAsync2(cartData));
     } else {
-      console.log("cartData when not authenticated", cartLocalData);
+      // console.log("cartData when not authenticated", cartLocalData);
       dispatch(addItemLocally(cartLocalData));
     }
   };
@@ -468,6 +481,9 @@ const ProductDetail = ({ data }: { data: Product }) => {
       <div className="space-y-7 2xl:space-y-8">
         {/* ---------- 1 HEADING ----------  */}
         <div>
+          <p className="p-1 px-4 mb-3 inline-block text-sm rounded-2xl bg-blue-100">
+            {productData.category}
+          </p>
           <h2 className="text-2xl sm:text-3xl font-semibold">
             {productData?.title}
           </h2>
@@ -837,7 +853,6 @@ const ProductDetail = ({ data }: { data: Product }) => {
       </main>
 
       {/* DETAIL AND REVIEW */}
-
       {renderDetailSection()}
       <div className="container">
         <Image
@@ -876,10 +891,12 @@ const ProductDetail = ({ data }: { data: Product }) => {
 
       <div className="container">
         <ReviewsSlider />
+        {/* RELATED PRODUCTS SECTION */}
+        <ProductSliders
+          heading={"Related Products"}
+          initialData={relatedProducts}
+        />
       </div>
-
-      {/* RELATED PRODUCTS SECTION */}
-      <SectionGridFeatureItems />
 
       {/* MODAL VIEW ALL REVIEW */}
       <ModalViewAllReviews

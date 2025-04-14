@@ -3,7 +3,7 @@
 import { NoSymbolIcon, CheckIcon } from "@heroicons/react/24/outline";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product } from "@/data/data";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,7 +43,7 @@ const CartPage = () => {
       }
     }
     getCartData();
-  }, [auth, userStatus]);
+  }, [auth, userStatus, cartData]);
 
   const items =
     userStatus === "authenticated" ? userCart?.items : cartData.localItems;
@@ -141,16 +141,16 @@ const CartPage = () => {
               ? renderStatusSoldout()
               : renderStatusInstock()} */}
 
-            <p className="text-gray-500 dark:text-slate-400">{`Qty ${quantity}`}</p>
+<p className="text-gray-500 dark:text-slate-400">{`Qty ${userStatus === 'authenticated' ? item.quantity : item.product_qty}`}</p>
 
             <p
               className="relative cursor-pointer z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
               onClick={async () => {
                 if (userStatus === "authenticated") {
                   try {
-                    await dispatch(removeFromCartAsync(key || 0)).unwrap();
+                    await dispatch(removeFromCartAsync(key || 0));
                     // Optional: Sync only if needed for server consistency
-                    // await dispatch(syncCartWithServer()).unwrap();
+                    await dispatch(syncCartWithServer());
                   } catch (error) {
                     console.error('Failed to remove item:', error);
                   }

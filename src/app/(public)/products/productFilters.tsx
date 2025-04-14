@@ -115,9 +115,9 @@ const ProductFilters: React.FC<SwiperSliderProps> = ({
         <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
           Choose Category:
         </h3>
-        <ul className="flex flex-wrap space-x-3 w-full">
+        <ul className="block max-w-[900px] overflow-hidden overflow-x-scroll whitespace-nowrap space-x-3 w-full">
           {categories.map((c) => (
-            <li key={c.id} className="mb-2">
+            <li key={c.id} className="mb-2 inline-block">
               <input
                 type="checkbox"
                 id={`category-${c.id}`}

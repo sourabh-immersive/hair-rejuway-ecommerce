@@ -1,10 +1,9 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import LikeButton from "./LikeButton";
 import Prices from "./Prices";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
-import { Product, PRODUCTS } from "@/data/data";
+import { Product } from "@/data/data";
 import { StarIcon } from "@heroicons/react/24/solid";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
@@ -18,13 +17,6 @@ import Image from "next/image";
 import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { addItemToCart } from "@/lib/features/cart/cartSlice";
-import { addToCart } from "@/api/protected";
-import {
-  addToCartAsync,
-  addToLocalCart,
-  CartItemApi,
-} from "@/lib/features/cart/cartASlice";
 import {
   addItemLocally,
   CartItem,
@@ -280,16 +272,14 @@ const ProductCard: FC<ProductCardProps> = ({ className, data, isLiked }) => {
             <p className="text-gray-500 dark:text-slate-400">Qty 1</p>
 
             <div className="flex">
-              <button
-                type="button"
-                className="font-medium text-primary-6000 dark:text-primary-500 "
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push("/cart");
-                }}
-              >
-                View cart
-              </button>
+              <Link href={"/cart"}>
+                <button
+                  type="button"
+                  className="font-medium text-primary-6000 dark:text-primary-500 "
+                >
+                  View cart
+                </button>
+              </Link>
             </div>
           </div>
         </div>

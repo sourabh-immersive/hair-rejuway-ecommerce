@@ -68,13 +68,13 @@ const ReviewsSlider = () => {
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={20}
         slidesPerView={3}
-        navigation
-        // pagination={{ clickable: true }}
+        // navigation
+        pagination={{ clickable: true }}
         loop
       >
         {reviews.map((review, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-white p-6 border border-gray-300 rounded-lg flex flex-col max-w-md mx-auto min-h-[550px]">
+            <div className="bg-white p-6 border mb-10 border-gray-300 rounded-lg flex flex-col max-w-md mx-auto min-h-[550px]">
               <Image
                 src={review.image}
                 alt={review.name}
